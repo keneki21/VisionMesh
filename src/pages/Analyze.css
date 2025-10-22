@@ -1,6 +1,6 @@
 .analyze {
   flex: 1;
-  padding: 4rem 2rem;
+  padding: 0;
   min-height: 100vh;
 }
 
@@ -12,6 +12,7 @@
 .analyze-header {
   text-align: center;
   margin-bottom: 3rem;
+  margin-top: -3rem;
 }
 
 .analyze-header h1 {

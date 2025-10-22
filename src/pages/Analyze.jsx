@@ -25,13 +25,25 @@ function Analyze() {
 
   return (
     <div className="analyze">
-      <div className="analyze-container">
-        <div className="analyze-header">
-          <h1>Analyze Your Design</h1>
-          <p>Upload a screenshot or enter a website URL to get started with AI-powered UX analysis</p>
-        </div>
+      <div
+        className="analyze-hero"
+        style={{
+          backgroundImage: "url('https://4kwallpapers.com/images/wallpapers/earth-sunrise-2732x2732-12523.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '80vh',
+          width: '100%',
+          padding: '4rem 2rem',
+        }}
+      >
+        <div className="analyze-container">
+          <div className="analyze-header">
+            <h1>Analyze Your Design</h1>
+            <p>Upload a screenshot or enter a website URL to get started with AI-powered UX analysis</p>
+          </div>
 
-        <Card className="analyze-card" variant="highlight">
+          <Card className="analyze-card" variant="highlight">
           <div className="tab-buttons">
             <button
               className={`tab-button ${activeTab === 'upload' ? 'active' : ''}`}
@@ -113,7 +125,10 @@ function Analyze() {
             </div>
           </Card>
         )}
+        </div>
+      </div>
 
+      <div className="analyze-container" style={{ padding: '4rem 2rem' }}>
         <div className="analysis-info">
           <h2>What We Analyze</h2>
           <div className="info-grid">
