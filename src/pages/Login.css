@@ -5,7 +5,8 @@
   display:flex;
   min-height:100vh;
   position:relative;
-  background: transparent; /* use global site background */
+  /* keep the login page visually neutral — do not show the site wallpaper here */
+  background: transparent !important; /* use global site background elsewhere, but keep login transparent */
 }
 
 /* ensure content sits above the glow layers */

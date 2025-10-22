@@ -5,7 +5,7 @@ import './Home.css';
 function Home() {
   return (
     <div className="home">
-      <section className="hero">
+  <section className="hero site-hero">
         <div className="hero-background">
           <div className="mesh-pattern"></div>
         </div>

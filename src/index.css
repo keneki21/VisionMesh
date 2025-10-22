@@ -33,6 +33,30 @@ body {
   flex-direction: column;
 }
 
+/* site-hero: use the supplied image sized to the viewport for hero areas only.
+   Apply this class to the hero/header container of pages where you want the image.
+   The rule ensures the hero covers the viewport height without applying the image to the whole page. */
+.site-hero {
+  position: relative;
+  min-height: 100vh; /* make hero fill the screen height */
+  background-image: url('https://4kwallpapers.com/images/wallpapers/earth-sunrise-2732x2732-12523.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  /* overlay for readability */
+  --hero-overlay: linear-gradient(rgba(10,10,10,0.55), rgba(10,10,10,0.55));
+}
+
+/* place a dark overlay inside the site-hero so content stays readable */
+.site-hero::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--hero-overlay);
+  z-index: 0;
+}
+
+
 a {
   color: var(--text-white);
   text-decoration: none;
