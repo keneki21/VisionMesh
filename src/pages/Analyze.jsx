@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import './Analyze.css';
@@ -8,6 +9,7 @@ function Analyze() {
   const [url, setUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeTab, setActiveTab] = useState('upload');
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -20,6 +22,14 @@ function Analyze() {
     setIsAnalyzing(true);
     setTimeout(() => {
       setIsAnalyzing(false);
+      // Navigate to results page with analysis data
+      navigate('/results', { 
+        state: { 
+          file: file?.name || url,
+          timestamp: new Date().toISOString(),
+          type: activeTab
+        } 
+      });
     }, 3000);
   };
 
@@ -28,7 +38,7 @@ function Analyze() {
       <div
         className="analyze-hero"
         style={{
-          backgroundImage: "url('https://4kwallpapers.com/images/wallpapers/earth-sunrise-2732x2732-12523.jpg')",
+          backgroundImage: "url('')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -132,7 +142,7 @@ function Analyze() {
         <div className="analysis-info">
           <h2>What We Analyze</h2>
           <div className="info-grid">
-            <div className="info-item">
+            <Card className="info-item">
               <div className="info-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -141,9 +151,9 @@ function Analyze() {
               </div>
               <h4>Layout Structure</h4>
               <p>Visual hierarchy, spacing, and content organization</p>
-            </div>
+            </Card>
 
-            <div className="info-item">
+            <Card className="info-item">
               <div className="info-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10"/>
@@ -152,9 +162,9 @@ function Analyze() {
               </div>
               <h4>Color Harmony</h4>
               <p>Color contrast, accessibility, and aesthetic appeal</p>
-            </div>
+            </Card>
 
-            <div className="info-item">
+            <Card className="info-item">
               <div className="info-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="4 17 10 11 4 5"/>
@@ -163,9 +173,9 @@ function Analyze() {
               </div>
               <h4>User Flow</h4>
               <p>Navigation patterns and interaction design</p>
-            </div>
+            </Card>
 
-            <div className="info-item">
+            <Card className="info-item">
               <div className="info-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -176,7 +186,7 @@ function Analyze() {
               </div>
               <h4>Accessibility</h4>
               <p>WCAG compliance and inclusive design principles</p>
-            </div>
+            </Card>
           </div>
         </div>
       </div>

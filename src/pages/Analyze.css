@@ -2,11 +2,14 @@
   flex: 1;
   padding: 0;
   min-height: 100vh;
+  background: linear-gradient(180deg, var(--primary-black) -10%, var(--red-glow) 100%);
 }
 
 .analyze-container {
   max-width: 900px;
   margin: 0 auto;
+  
+  
 }
 
 .analyze-header {
@@ -27,6 +30,7 @@
 
 .analyze-card {
   margin-bottom: 3rem;
+  background: var(--dark-gray);
 }
 
 .tab-buttons {
@@ -202,6 +206,7 @@
 
 .analysis-info {
   margin-top: 4rem;
+  
 }
 
 .analysis-info h2 {
@@ -231,6 +236,9 @@
   justify-content: center;
   margin: 0 auto 1rem;
   color: var(--secondary-red);
+  border-color: rgba(229, 9, 20, 0.3);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(229, 9, 20, 0.15);
 }
 
 .info-item h4 {
