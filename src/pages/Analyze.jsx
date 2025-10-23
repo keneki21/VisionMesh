@@ -5,11 +5,11 @@ import Card from '../components/Card';
 import './Analyze.css';
 
 function Analyze() {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeTab, setActiveTab] = useState('upload');
-  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -22,14 +22,7 @@ function Analyze() {
     setIsAnalyzing(true);
     setTimeout(() => {
       setIsAnalyzing(false);
-      // Navigate to results page with analysis data
-      navigate('/results', { 
-        state: { 
-          file: file?.name || url,
-          timestamp: new Date().toISOString(),
-          type: activeTab
-        } 
-      });
+      navigate('/results');
     }, 3000);
   };
 
