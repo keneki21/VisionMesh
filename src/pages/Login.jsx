@@ -16,11 +16,265 @@ export default function Login() {
 
   return (
     // <div className="min-h-screen flex relative bg-linear-to-r from-black via-gray-900 to-black">
-    <div className="min-h-screen flex relative bg-gray-950">
+    <div className="min-h-screen h-screen flex relative bg-gray-950 overflow-hidden">
+      {/* Curved Horizon with Glowing Edge */}
+      <div className="absolute inset-0 overflow-hidden z-0">
+        {/* Dark gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628] via-[#0d1b2a] to-black" />
+        
+        {/* Curved horizon element */}
+        <div className="absolute bottom-0 left-0 right-0 h-[60vh]">
+          {/* The curved surface */}
+          <div 
+            className="absolute inset-x-0 bottom-0 h-full"
+            style={{
+              background: 'linear-gradient(180deg, transparent 0%, #000000 50%)',
+            }}
+          />
+          
+          {/* SVG for the curved glowing edge */}
+          <svg 
+            className="absolute inset-x-0 bottom-0 w-full h-full"
+            viewBox="0 0 1440 800"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style={{ stopColor: '#60a5fa', stopOpacity: 0 }} />
+                <stop offset="15%" style={{ stopColor: '#3b82f6', stopOpacity: 0.8 }} />
+                <stop offset="50%" style={{ stopColor: '#60a5fa', stopOpacity: 1 }} />
+                <stop offset="85%" style={{ stopColor: '#3b82f6', stopOpacity: 0.8 }} />
+                <stop offset="100%" style={{ stopColor: '#60a5fa', stopOpacity: 0 }} />
+              </linearGradient>
+              
+              
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            
+            {/* Curved path for the horizon */}
+            <path
+              d="M0,280 Q360,80 720,60 T1440,280 L1440,800 L0,800 Z"
+              fill="#000000"
+            />
+            
+            
+            {/* Glowing edge line */}
+            <path
+              d="M0,280 Q360,80 720,60 T1440,280"
+              fill="none"
+              stroke="url(#glowGradient)"
+              strokeWidth="3"
+              filter="url(#glow)"
+            />
+            <path
+              d="M0,300 Q360,80 720,60 T1440,300"
+              fill="none"
+              stroke="url(#glowGradient)"
+              strokeWidth="3"
+              filter="url(#glow)"
+              
+            />
+            <path
+              d="M0,290 Q360,80 720,60 T1440,290"
+              fill="none"
+              stroke="url(#glowGradient)"
+              strokeWidth="3"
+              filter="url(#glow)"
+            />
+            <path
+              d="M0,295 Q360,80 720,60 T1440,295"
+              fill="none"
+              stroke="url(#glowGradient)"
+              strokeWidth="3"
+              filter="url(#glow)"
+            />
+            <path
+              d="M0,299 Q360,80 720,60 T1440,299"
+              fill="none"
+              stroke="url(#glowGradient)"
+              strokeWidth="3"
+              filter="url(#glow)"
+            />
+            {/* Stars under the horizon */}
+            <g>
+              {/* Stars above horizon line (cy < 280) */}
+              <circle cx="100" cy="50" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="250" cy="80" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="380" cy="120" r="1.4" fill="white" opacity="0.9" />
+              <circle cx="520" cy="90" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="670" cy="140" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="800" cy="100" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="940" cy="160" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="1080" cy="110" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="1220" cy="180" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="1350" cy="130" r="1.1" fill="white" opacity="0.7" />
+              
+              <circle cx="150" cy="200" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="300" cy="220" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="460" cy="190" r="0.8" fill="white" opacity="0.6" />
+              <circle cx="600" cy="240" r="1.4" fill="white" opacity="0.9" />
+              <circle cx="750" cy="210" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="890" cy="260" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="1030" cy="230" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="1170" cy="250" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="1310" cy="200" r="1.3" fill="white" opacity="0.8" />
+              
+              <circle cx="70" cy="150" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="180" cy="60" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="340" cy="170" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="490" cy="140" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="630" cy="70" r="1.4" fill="white" opacity="0.9" />
+              <circle cx="770" cy="180" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="910" cy="120" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="1050" cy="160" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="1190" cy="90" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="1330" cy="270" r="1.3" fill="white" opacity="0.8" />
+              
+              {/* Additional dense star layer above horizon */}
+              <circle cx="45" cy="100" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="125" cy="135" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="210" cy="110" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="285" cy="155" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="365" cy="95" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="420" cy="145" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="505" cy="175" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="575" cy="115" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="655" cy="165" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="715" cy="135" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="835" cy="85" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="875" cy="195" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="965" cy="105" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="1015" cy="185" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="1105" cy="145" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="1155" cy="65" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="1245" cy="125" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="1295" cy="155" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="1375" cy="95" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="1415" cy="235" r="1.1" fill="white" opacity="0.7" />
+              
+              <circle cx="55" cy="185" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="135" cy="225" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="225" cy="245" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="315" cy="265" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="405" cy="215" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="535" cy="255" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="645" cy="235" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="695" cy="195" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="825" cy="245" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="955" cy="225" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="995" cy="265" r="1.2" fill="white" opacity="0.8" />
+              <circle cx="1115" cy="205" r="1.0" fill="white" opacity="0.7" />
+              <circle cx="1205" cy="235" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="1265" cy="245" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="1385" cy="175" r="1.3" fill="white" opacity="0.8" />
+              
+              {/* Original stars below horizon */}
+              <circle cx="120" cy="250" r="1.5" fill="white" opacity="0.8" />
+              <circle cx="280" cy="320" r="1" fill="white" opacity="0.6" />
+              <circle cx="450" cy="280" r="1.2" fill="white" opacity="0.9" />
+              <circle cx="580" cy="350" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="720" cy="240" r="1.5" fill="white" opacity="0.8" />
+              <circle cx="850" cy="310" r="1" fill="white" opacity="0.7" />
+              <circle cx="980" cy="270" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="1150" cy="340" r="0.9" fill="white" opacity="0.6" />
+              <circle cx="1280" cy="290" r="1.2" fill="white" opacity="0.7" />
+              
+              
+              <circle cx="200" cy="380" r="1" fill="white" opacity="0.5" />
+              <circle cx="350" cy="420" r="1.2" fill="white" opacity="0.7" />
+              <circle cx="520" cy="450" r="0.8" fill="white" opacity="0.6" />
+              <circle cx="680" cy="390" r="1.4" fill="white" opacity="0.8" />
+              <circle cx="820" cy="460" r="1" fill="white" opacity="0.6" />
+              <circle cx="950" cy="410" r="1.1" fill="white" opacity="0.7" />
+              <circle cx="1100" cy="480" r="0.9" fill="white" opacity="0.5" />
+              <circle cx="1240" cy="430" r="1.3" fill="white" opacity="0.8" />
+              
+              <circle cx="90" cy="520" r="1.2" fill="white" opacity="0.6" />
+              <circle cx="240" cy="560" r="0.9" fill="white" opacity="0.7" />
+              <circle cx="410" cy="590" r="1.1" fill="white" opacity="0.6" />
+              <circle cx="560" cy="540" r="1.4" fill="white" opacity="0.9" />
+              <circle cx="740" cy="580" r="0.8" fill="white" opacity="0.5" />
+              <circle cx="890" cy="620" r="1.2" fill="white" opacity="0.7" />
+              <circle cx="1030" cy="570" r="1" fill="white" opacity="0.8" />
+              <circle cx="1180" cy="610" r="1.3" fill="white" opacity="0.7" />
+              <circle cx="1320" cy="550" r="0.9" fill="white" opacity="0.6" />
+              
+              <circle cx="160" cy="680" r="1.1" fill="white" opacity="0.6" />
+              <circle cx="310" cy="720" r="1.3" fill="white" opacity="0.8" />
+              <circle cx="480" cy="690" r="0.9" fill="white" opacity="0.5" />
+              <circle cx="640" cy="740" r="1.2" fill="white" opacity="0.7" />
+              <circle cx="780" cy="710" r="1.4" fill="white" opacity="0.9" />
+              <circle cx="920" cy="760" r="1" fill="white" opacity="0.6" />
+              <circle cx="1070" cy="700" r="1.2" fill="white" opacity="0.7" />
+              <circle cx="1210" cy="730" r="0.8" fill="white" opacity="0.5" />
+            </g>
+          </svg>
+          
+          {/* Additional glow overlay */}
+          <div 
+            className="absolute inset-x-0 top-1/2 h-32 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(96, 165, 250, 0.15), transparent)',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Sun in top right corner with rays */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] overflow-visible pointer-events-none z-[5]">
+        {/* Sun glow */}
+        <div className="absolute -top-20 -right-20 w-[500px] h-[500px]">
+          <div className="absolute inset-0 bg-gradient-radial from-yellow-300/50 via-orange-400/30 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-radial from-yellow-200/60 via-orange-300/40 to-transparent rounded-full blur-2xl"></div>
+        </div>
+        
+        {/* Sun rays */}
+        <div className="absolute -top-20 -right-20 w-[500px] h-[500px]">
+          <div className="absolute inset-0 opacity-40">
+            {/* Multiple light rays at different angles */}
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[20deg] blur-md"></div>
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[35deg] blur-md"></div>
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[50deg] blur-md"></div>
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[65deg] blur-md"></div>
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[80deg] blur-md"></div>
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[95deg] blur-md"></div>
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[110deg] blur-md"></div>
+            <div className="absolute top-1/2 left-1/2 w-4 h-[1000px] bg-gradient-to-b from-yellow-200/80 via-yellow-300/50 to-transparent transform -translate-x-1/2 -translate-y-1/2 rotate-[125deg] blur-md"></div>
+          </div>
+        </div>
+        
+        {/* Actual sun circle */}
+        <div className="absolute -top-20 -right-20 w-[500px] h-[500px] flex items-center justify-center">
+          <div className="relative w-48 h-48">
+            {/* Main sun gradient */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow-100 via-orange-400 to-orange-500 shadow-2xl shadow-orange-400/80"></div>
+            
+            {/* Sunspots - darker areas */}
+            <div className="absolute top-8 right-12 w-6 h-6 rounded-full bg-orange-600/40 blur-[2px]"></div>
+            <div className="absolute top-16 right-20 w-4 h-4 rounded-full bg-orange-700/30 blur-[1px]"></div>
+            <div className="absolute bottom-20 left-16 w-8 h-8 rounded-full bg-orange-600/35 blur-[3px]"></div>
+            <div className="absolute bottom-12 right-16 w-5 h-5 rounded-full bg-orange-700/40 blur-[2px]"></div>
+            <div className="absolute top-20 left-14 w-3 h-3 rounded-full bg-orange-600/30 blur-[1px]"></div>
+            <div className="absolute top-12 left-20 w-7 h-7 rounded-full bg-orange-700/35 blur-[2px]"></div>
+            
+            {/* Brighter highlights for texture */}
+            <div className="absolute top-10 left-10 w-10 h-10 rounded-full bg-yellow-200/30 blur-md"></div>
+            <div className="absolute bottom-14 right-14 w-8 h-8 rounded-full bg-yellow-100/25 blur-md"></div>
+          </div>
+        </div>
+      </div>
+
       {/* Full Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://4kwallpapers.com/images/wallpapers/earth-sunrise-2732x2732-12523.jpg" 
+          src="" 
           alt="" 
           className="w-full h-full object-cover"
         />
@@ -106,7 +360,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Side - 16:9 Image Container */}
+      {/* Right Side - 16:9 Image Container
       <div className="hidden lg:flex flex-1 items-center justify-center p-8 pt-20 relative z-10">
         <div className="w-full max-w-[800px] aspect-video bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
           <img 
@@ -115,7 +369,7 @@ export default function Login() {
             className="w-full h-full object-cover"
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
