@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
+import Evaluation from './pages/Evaluation';
 // import Analyze from './pages/Analyze';
 // import Results from './pages/Results';
 // import About from './pages/About';
@@ -21,6 +22,7 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/home" element={<Home />} />
+                <Route path="/evaluation" element={<Evaluation />} />
                 {/* <Route path="/analyze" element={<Analyze />} />
                 <Route path="/results" element={<Results />} />
                 <Route path="/about" element={<About />} />

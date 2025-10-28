@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 
 function Home() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('upload');
   const [dragActive, setDragActive] = useState(false);
 
@@ -33,7 +34,13 @@ function Home() {
       console.log(e.target.files[0]);
     }
   };
-
+const icons = [
+    { id: 1, src: '/images/image1.png', alt: 'VisionMesh Icon 1 - Dashboard Preview' },
+    { id: 2, src: '/images/image2.png', alt: 'VisionMesh Icon 2 - Report Generator' },
+    { id: 3, src: '/images/image3.png', alt: 'VisionMesh Icon 3 - AI Analysis Tool' },
+    { id: 4, src: '/images/image4.png', alt: 'VisionMesh Icon 4 - Code Preview' },
+    { id: 5, src: '/images/image5.png', alt: 'VisionMesh Icon 5 - Accessibility Checker' },
+  ];
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
       {/* Curved Horizon with Glowing Edge */}
@@ -299,10 +306,14 @@ function Home() {
                   />
                 </div>
               )}
+              
 
               {/* Start Analysis Button */}
               <div className="mt-8 flex justify-center">
-                <button className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50">
+                <button 
+                  onClick={() => navigate('/evaluation')}
+                  className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50"
+                >
                   Start Analysis
                 </button>
               </div>
