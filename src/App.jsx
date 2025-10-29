@@ -3,6 +3,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Evaluation from './pages/Evaluation';
+import Settings from './pages/Settings';
+import CodeGeneration from './pages/CodeGeneration';
 // import Analyze from './pages/Analyze';
 // import Results from './pages/Results';
 // import About from './pages/About';
@@ -23,6 +25,8 @@ function App() {
               <Routes>
                 <Route path="/home" element={<Home />} />
                 <Route path="/evaluation" element={<Evaluation />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/code-generation" element={<CodeGeneration />} />
                 {/* <Route path="/analyze" element={<Analyze />} />
                 <Route path="/results" element={<Results />} />
                 <Route path="/about" element={<About />} />

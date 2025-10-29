@@ -18,7 +18,7 @@ function Evaluation() {
   const [designs, setDesigns] = useState([]);
 
   return (
-    <div className="min-h-screen bg-black flex overflow-hidden pt-20">
+    <div className="min-h-screen bg-[#0a1628] flex overflow-hidden pt-20">
       {/* Floating History Button - Bottom Left */}
       <button
         onMouseEnter={() => setShowSidebar(true)}
@@ -38,7 +38,7 @@ function Evaluation() {
       >
         {/* Header */}
         <div className="p-6 border-b border-white/10">
-          <div className="flex items-center justify-between mb-4">
+          {/* <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-white">History</h2>
             <button
               onClick={() => navigate('/home')}
@@ -48,7 +48,7 @@ function Evaluation() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-          </div>
+          </div> */}
           
           {/* Search Bar */}
           <div className="relative mb-3">
@@ -275,14 +275,15 @@ function Evaluation() {
                 Upload a screenshot or enter a URL from the home page to start analyzing and get design suggestions
               </p>
               <button
-                onClick={() => navigate('/home')}
+                onClick={() => navigate('/code-generation')}
                 className="px-6 py-3 bg-[#e50914] hover:bg-[#b20710] text-white rounded-lg font-medium transition-all duration-300 shadow-lg shadow-red-600/30 flex items-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
-                Start New Analysis
+                Generate Code
               </button>
+              
             </div>
           )}
         </div>
