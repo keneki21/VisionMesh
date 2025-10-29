@@ -153,9 +153,9 @@ const icons = [
 
       
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 pt-20 pb-32">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-32">
         {/* Badge */}
-        <div className="mb-12">
+        <div className="mb-8 sm:mb-12">
           {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 backdrop-blur-sm">
             <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -165,27 +165,27 @@ const icons = [
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-5xl md:text-6xl lg:text-4xl font-bold text-center mb-6 max-w-5xl">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4 sm:mb-6 max-w-5xl px-4">
           <span className="text-white">What </span>
           <span className="italic bg-gradient-to-r from-red-700 to-red-500 bg-clip-text text-transparent">Vision</span>
           <span className="text-white">  will you transform into design today?</span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg md:text-xl text-gray-400 text-center mb-12 max-w-2xl">
+        <p className="text-base sm:text-lg md:text-xl text-gray-400 text-center mb-8 sm:mb-12 max-w-2xl px-4">
           Upload. Design. VisionMesh makes it stunning
         </p>
 
         {/* Upload Section */}
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl px-4">
           <div className="relative bg-[#1a1a1a] backdrop-blur-xl rounded-2xl border-2 border-gray-700 hover:border-red-600 shadow-2xl overflow-hidden transition-colors">
             {/* Tabs */}
             <div className="flex border-b border-gray-800">
               <button
                 onClick={() => setActiveTab('upload')}
-                className={`relative flex-1 px-6 py-3 text-sm font-medium transition-colors ${
+                className={`relative flex-1 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'upload'
-                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-red-600'
+                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-red-600'
                     : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
@@ -193,9 +193,9 @@ const icons = [
               </button>
               <button
                 onClick={() => setActiveTab('url')}
-                className={`relative flex-1 px-6 py-3 text-sm font-medium transition-colors ${
+                className={`relative flex-1 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'url'
-                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-0.5 after:bg-red-600'
+                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-red-600'
                     : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
@@ -204,14 +204,14 @@ const icons = [
             </div>
 
             {/* Upload Area */}
-            <div className="p-8">
+            <div className="p-4 sm:p-6 lg:p-8">
               {activeTab === 'upload' ? (
                 <div
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
                   onDragOver={handleDrag}
                   onDrop={handleDrop}
-                  className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all ${
+                  className={`relative border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all ${
                     dragActive
                       ? 'border-red-500 bg-red-500/5'
                       : 'border-gray-700 hover:border-red-500'
@@ -227,11 +227,11 @@ const icons = [
                   
                   <label htmlFor="file-upload" className="cursor-pointer">
                     {/* Upload Icon with Red Glow */}
-                    <div className="flex justify-center mb-4">
+                    <div className="flex justify-center mb-3 sm:mb-4">
                       <div className="relative">
                         <div className="absolute inset-0 bg-red-600/20 blur-2xl rounded-full"></div>
                         <svg
-                          className="w-16 h-16 text-red-600 relative z-10"
+                          className="w-12 h-12 sm:w-16 sm:h-16 text-red-600 relative z-10"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -246,10 +246,10 @@ const icons = [
                       </div>
                     </div>
 
-                    <p className="text-white text-base mb-2">
+                    <p className="text-white text-sm sm:text-base mb-1 sm:mb-2">
                       Click to upload or drag and drop
                     </p>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-gray-500 text-xs sm:text-sm">
                       PNG, JPG, or JPEG (max. 10MB)
                     </p>
                   </label>
@@ -259,17 +259,17 @@ const icons = [
                   <input
                     type="url"
                     placeholder="Enter website URL..."
-                    className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-600 transition-colors"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-600 transition-colors"
                   />
                 </div>
               )}
               
 
               {/* Start Analysis Button */}
-              <div className="mt-8 flex justify-center">
+              <div className="mt-6 sm:mt-8 flex justify-center">
                 <button 
                   onClick={() => navigate('/evaluation')}
-                  className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50"
+                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50"
                 >
                   Start Analysis
                 </button>

@@ -18,11 +18,11 @@ function Evaluation() {
   const [designs, setDesigns] = useState([]);
 
   return (
-    <div className="min-h-screen bg-[#0a1628] flex overflow-hidden pt-20">
+    <div className="min-h-screen bg-[#0a1628] flex overflow-hidden pt-16 sm:pt-20">
       {/* Floating History Button - Bottom Left */}
       <button
         onMouseEnter={() => setShowSidebar(true)}
-        className="fixed left-3 bottom-6 z-40 w-8 h-8 rounded-lg bg-black hover:bg-[#b20710] border-2 border-white/20 hover:border-white/40 shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:scale-110"
+        className="fixed left-2 sm:left-3 bottom-4 sm:bottom-6 z-40 w-10 h-10 sm:w-8 sm:h-8 rounded-lg bg-black hover:bg-[#b20710] border-2 border-white/20 hover:border-white/40 shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:scale-110">
       >
         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
@@ -31,13 +31,13 @@ function Evaluation() {
 
       {/* Left Sidebar - History */}
       <div 
-        className={`fixed left-0 top-20 bottom-0 bg-[#0a0a0a] border-r border-white/10 flex flex-col transition-transform duration-300 z-50 ${
-          showSidebar ? 'translate-x-0 w-[280px]' : '-translate-x-full w-[280px]'
+        className={`fixed left-0 top-16 sm:top-20 bottom-0 bg-[#0a0a0a] border-r border-white/10 flex flex-col transition-transform duration-300 z-50 ${
+          showSidebar ? 'translate-x-0 w-[240px] sm:w-[280px]' : '-translate-x-full w-[240px] sm:w-[280px]'
         }`}
         onMouseLeave={() => setShowSidebar(false)}
       >
         {/* Header */}
-        <div className="p-6 border-b border-white/10">
+        <div className="p-4 sm:p-6 border-b border-white/10">
           {/* <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-white">History</h2>
             <button
@@ -130,41 +130,41 @@ function Evaluation() {
       {/* Right Side - Designs (Full Width) */}
       <div className="flex-1 w-full bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-black overflow-y-auto">
         {/* Header */}
-        <div className="p-8 border-b border-white/10">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl font-bold text-white text-center items-center flex-1">
+        <div className="p-4 sm:p-6 lg:p-8 border-b border-white/10">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white text-center sm:text-left flex-1">
               Design Evaluation
             </h1>
             {historyItems.length > 0 && (
-              <div className="flex items-center gap-3">
-                <button className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-lg font-medium transition-all duration-300 flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <button className="px-3 sm:px-4 py-2 text-sm sm:text-base bg-white/5 hover:bg-white/10 text-white rounded-lg font-medium transition-all duration-300 flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
                   Export
                 </button>
-                <button className="px-4 py-2 bg-[#e50914] hover:bg-[#b20710] text-white rounded-lg font-medium transition-all duration-300 shadow-lg shadow-red-600/30">
+                <button className="px-3 sm:px-4 py-2 text-sm sm:text-base bg-[#e50914] hover:bg-[#b20710] text-white rounded-lg font-medium transition-all duration-300 shadow-lg shadow-red-600/30">
                   Apply Design
                 </button>
               </div>
             )}
           </div>
           {historyItems.length > 0 ? (
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-sm sm:text-base px-4 sm:px-8">
               {historyItems[selectedHistory].name} - Analyzed on {historyItems[selectedHistory].date}
             </p>
           ) : (
-            <p className="text-gray-400 text-center items-center flex-1">
+            <p className="text-gray-400 text-sm sm:text-base text-center px-4 sm:px-8">
               Upload a design to start analyzing
             </p>
           )}
         </div>
 
         {/* Designs Grid */}
-        <div className="p-8">
+        <div className="p-4 sm:p-6 lg:p-8">
           {designs.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {designs.map((design) => (
                   <div
                     key={design.id}
@@ -201,17 +201,17 @@ function Evaluation() {
                     </div>
 
                     {/* Design Info */}
-                    <div className="p-5">
-                      <h3 className="text-xl font-bold text-white mb-2">{design.title}</h3>
-                      <p className="text-gray-400 text-sm mb-4">
+                    <div className="p-4 sm:p-5">
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{design.title}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm mb-4">
                         AI-generated design based on best practices and modern trends
                       </p>
 
                       {/* Metrics */}
-                      <div className="grid grid-cols-3 gap-3 mb-4">
-                        <div className="bg-white/5 rounded-lg p-3 text-center">
+                      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
+                        <div className="bg-white/5 rounded-lg p-2 sm:p-3 text-center">
                           <div className="text-xs text-gray-400 mb-1">Layout</div>
-                          <div className="text-lg font-bold text-white">A+</div>
+                          <div className="text-base sm:text-lg font-bold text-white">A+</div>
                         </div>
                         <div className="bg-white/5 rounded-lg p-3 text-center">
                           <div className="text-xs text-gray-400 mb-1">Colors</div>
@@ -238,8 +238,8 @@ function Evaluation() {
               </div>
 
               {/* Analysis Insights */}
-              <div className="mt-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-6">
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <div className="mt-6 sm:mt-8 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
@@ -268,15 +268,15 @@ function Evaluation() {
               </div>
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center py-24">
-              <div className="text-8xl mb-6 opacity-30">🎨</div>
-              <h3 className="text-2xl font-bold text-white mb-2">No Designs Yet</h3>
-              <p className="text-gray-400 text-center mb-8 max-w-md">
+            <div className="flex flex-col items-center justify-center py-12 sm:py-24">
+              <div className="text-6xl sm:text-8xl mb-4 sm:mb-6 opacity-30">🎨</div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">No Designs Yet</h3>
+              <p className="text-gray-400 text-center text-sm sm:text-base mb-6 sm:mb-8 max-w-md px-4">
                 Upload a screenshot or enter a URL from the home page to start analyzing and get design suggestions
               </p>
               <button
                 onClick={() => navigate('/code-generation')}
-                className="px-6 py-3 bg-[#e50914] hover:bg-[#b20710] text-white rounded-lg font-medium transition-all duration-300 shadow-lg shadow-red-600/30 flex items-center gap-2"
+                className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#e50914] hover:bg-[#b20710] text-white rounded-lg font-medium transition-all duration-300 shadow-lg shadow-red-600/30 flex items-center gap-2">
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />

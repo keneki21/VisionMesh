@@ -98,13 +98,13 @@ function CodeGeneration() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex pt-20">
+    <div className="min-h-screen bg-black flex flex-col lg:flex-row pt-20">
       {/* Left Side - Process */}
-      <div className="w-[350px] bg-[#0a0a0a] border-r border-white/10 flex flex-col overflow-y-auto">
+      <div className="w-full lg:w-[350px] bg-[#0a0a0a] border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col overflow-y-auto max-h-[50vh] lg:max-h-none">
         {/* Header */}
-        <div className="p-6 border-b border-white/10">
+        <div className="p-4 sm:p-6 border-b border-white/10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Code Generation</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-white">Code Generation</h2>
             <button
               onClick={() => navigate('/evaluation')}
               className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
@@ -133,8 +133,8 @@ function CodeGeneration() {
         </div>
 
         {/* Process Steps */}
-        <div className="p-6 border-b border-white/10">
-          <h3 className="text-sm font-semibold text-gray-400 mb-4 uppercase tracking-wide">Process</h3>
+        <div className="p-4 sm:p-6 border-b border-white/10">
+          <h3 className="text-xs sm:text-sm font-semibold text-gray-400 mb-3 sm:mb-4 uppercase tracking-wide">Process</h3>
           <div className="space-y-4">
             {steps.length > 0 ? (
               steps.map((step, index) => {
@@ -188,8 +188,8 @@ function CodeGeneration() {
         </div>
 
         {/* File Structure */}
-        <div className="p-6 flex-1">
-          <h3 className="text-sm font-semibold text-gray-400 mb-4 uppercase tracking-wide">File Structure</h3>
+        <div className="p-4 sm:p-6 flex-1">
+          <h3 className="text-xs sm:text-sm font-semibold text-gray-400 mb-3 sm:mb-4 uppercase tracking-wide">File Structure</h3>
           <div className="bg-[#0d0d0d] rounded-lg p-3 border border-white/10">
             {fileStructure.length > 0 ? (
               renderFileTree(fileStructure)
@@ -203,10 +203,10 @@ function CodeGeneration() {
         </div>
 
         {/* Actions */}
-        <div className="p-6 border-t border-white/10 space-y-3">
+        <div className="p-4 sm:p-6 border-t border-white/10 space-y-3">
           <button
             disabled={isGenerating}
-            className={`w-full px-4 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+            className={`w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
               isGenerating
                 ? 'bg-white/5 text-gray-500 cursor-not-allowed'
                 : 'bg-[#e50914] hover:bg-[#b20710] text-white shadow-lg shadow-red-600/30'
@@ -234,13 +234,13 @@ function CodeGeneration() {
       </div>
 
       {/* Right Side - Code/Preview */}
-      <div className="flex-1 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-black flex flex-col">
+      <div className="flex-1 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-black flex flex-col min-h-[50vh]">
         {/* Tabs */}
         <div className="border-b border-white/10 bg-black/30 backdrop-blur-md">
-          <div className="flex items-center px-6">
+          <div className="flex items-center px-3 sm:px-6 overflow-x-auto">
             <button
               onClick={() => setActiveTab('code')}
-              className={`px-6 py-4 font-medium transition-all duration-300 border-b-2 ${
+              className={`px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium transition-all duration-300 border-b-2 whitespace-nowrap ${
                 activeTab === 'code'
                   ? 'text-white border-red-500'
                   : 'text-gray-400 border-transparent hover:text-white'
@@ -255,7 +255,7 @@ function CodeGeneration() {
             </button>
             <button
               onClick={() => setActiveTab('preview')}
-              className={`px-6 py-4 font-medium transition-all duration-300 border-b-2 ${
+              className={`px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium transition-all duration-300 border-b-2 whitespace-nowrap ${
                 activeTab === 'preview'
                   ? 'text-white border-red-500'
                   : 'text-gray-400 border-transparent hover:text-white'
@@ -290,17 +290,17 @@ function CodeGeneration() {
         {/* Content */}
         <div className="flex-1 overflow-hidden">
           {activeTab === 'code' && (
-            <div className="h-full overflow-y-auto p-6">
+            <div className="h-full overflow-y-auto p-3 sm:p-6">
               <div className="bg-[#0d0d0d] rounded-xl border border-white/10 overflow-hidden">
                 {/* Code Header */}
-                <div className="flex items-center justify-between px-6 py-3 bg-white/5 border-b border-white/10">
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-2">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <div className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-3 bg-white/5 border-b border-white/10">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex gap-1 sm:gap-2">
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500"></div>
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500"></div>
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
                     </div>
-                    <span className="text-sm text-gray-400 font-mono"></span>
+                    <span className="text-xs sm:text-sm text-gray-400 font-mono"></span>
                   </div>
                   <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,8 +309,8 @@ function CodeGeneration() {
                   </button>
                 </div>
                 {/* Code Content */}
-                <pre className="p-6 overflow-x-auto">
-                  <code className="text-sm text-gray-300 font-mono leading-relaxed">
+                <pre className="p-3 sm:p-6 overflow-x-auto">
+                  <code className="text-xs sm:text-sm text-gray-300 font-mono leading-relaxed">
                     {generatedCode || (
                       <div className="flex flex-col items-center justify-center py-12 text-center">
                         <div className="text-5xl mb-4 opacity-30">💻</div>
@@ -325,16 +325,16 @@ function CodeGeneration() {
           )}
 
           {activeTab === 'preview' && (
-            <div className="h-full overflow-y-auto p-6">
+            <div className="h-full overflow-y-auto p-3 sm:p-6">
               <div className="bg-white rounded-xl border border-white/10 overflow-hidden shadow-2xl">
                 {/* Browser Header */}
-                <div className="flex items-center gap-3 px-6 py-3 bg-gray-100 border-b border-gray-300">
-                  <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-2 sm:py-3 bg-gray-100 border-b border-gray-300">
+                  <div className="flex gap-1 sm:gap-2">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <div className="flex-1 flex items-center gap-2 px-4 py-1.5 bg-white rounded-lg">
+                  <div className="hidden sm:flex flex-1 items-center gap-2 px-4 py-1.5 bg-white rounded-lg">
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -342,10 +342,10 @@ function CodeGeneration() {
                   </div>
                 </div>
                 {/* Preview Content */}
-                <div className="p-12 bg-gradient-to-br from-blue-50 to-purple-50 min-h-[600px]">
+                <div className="p-4 sm:p-8 lg:p-12 bg-gradient-to-br from-blue-50 to-purple-50 min-h-[400px] sm:min-h-[600px]">
                   <div className="max-w-6xl mx-auto">
-                    <div className="text-center mb-12">
-                      <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                    <div className="text-center mb-8 sm:mb-12">
+                      <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-gray-900 mb-4">
                         
                       </h1>
                       <p className="text-xl text-gray-600 mb-8">
