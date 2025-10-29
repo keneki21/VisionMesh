@@ -4,21 +4,38 @@ import { useNavigate } from 'react-router-dom';
 function Evaluation() {
   const navigate = useNavigate();
   const [selectedHistory, setSelectedHistory] = useState(0);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
    // Sample design data
-  const designs = [
-    { id: 1, title: 'Original Design', score: 78, category: 'Current' },
-    { id: 2, title: 'Improved Layout', score: 92, category: 'Suggested' },
-    { id: 3, title: 'Color Variant', score: 85, category: 'Suggested' },
-    { id: 4, title: 'Modern Style', score: 88, category: 'Suggested' },
-  ];
+  // const designs = [
+  //   { id: 1, title: 'Original Design', score: 78, category: 'Current' },
+  //   { id: 2, title: 'Improved Layout', score: 92, category: 'Suggested' },
+  //   { id: 3, title: 'Color Variant', score: 85, category: 'Suggested' },
+  //   { id: 4, title: 'Modern Style', score: 88, category: 'Suggested' },
+  // ];
 
   const [historyItems, setHistoryItems] = useState([]);
-//   const [designs, setDesigns] = useState([]);
+  const [designs, setDesigns] = useState([]);
 
   return (
     <div className="min-h-screen bg-black flex overflow-hidden pt-20">
-      {/* Left Sidebar - History (20%) */}
-      <div className="w-[20%] bg-[#0a0a0a] border-r border-white/10 flex flex-col">
+      {/* Floating History Button - Bottom Left */}
+      <button
+        onMouseEnter={() => setShowSidebar(true)}
+        className="fixed left-3 bottom-6 z-40 w-8 h-8 rounded-lg bg-black hover:bg-[#b20710] border-2 border-white/20 hover:border-white/40 shadow-lg shadow-red-600/50 flex items-center justify-center transition-all duration-300 hover:scale-110"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+      </button>
+
+      {/* Left Sidebar - History */}
+      <div 
+        className={`fixed left-0 top-20 bottom-0 bg-[#0a0a0a] border-r border-white/10 flex flex-col transition-transform duration-300 z-50 ${
+          showSidebar ? 'translate-x-0 w-[280px]' : '-translate-x-full w-[280px]'
+        }`}
+        onMouseLeave={() => setShowSidebar(false)}
+      >
         {/* Header */}
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center justify-between mb-4">
@@ -32,6 +49,21 @@ function Evaluation() {
               </svg>
             </button>
           </div>
+          
+          {/* Search Bar */}
+          <div className="relative mb-3">
+            <input
+              type="text"
+              placeholder="Search history..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 pl-10 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 text-sm focus:outline-none focus:border-red-500 transition-colors"
+            />
+            <svg className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          
           <p className="text-sm text-gray-400 font-bold">Your analysis history</p>
         </div>
 
@@ -95,12 +127,12 @@ function Evaluation() {
         </div>
       </div>
 
-      {/* Right Side - Designs (70%) */}
-      <div className="flex-1 bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-black overflow-y-auto">
+      {/* Right Side - Designs (Full Width) */}
+      <div className="flex-1 w-full bg-gradient-to-br from-[#0a1628] via-[#0d1b2a] to-black overflow-y-auto">
         {/* Header */}
         <div className="p-8 border-b border-white/10">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-white text-center items-center flex-1">
               Design Evaluation
             </h1>
             {historyItems.length > 0 && (
@@ -122,7 +154,7 @@ function Evaluation() {
               {historyItems[selectedHistory].name} - Analyzed on {historyItems[selectedHistory].date}
             </p>
           ) : (
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-center items-center flex-1">
               Upload a design to start analyzing
             </p>
           )}

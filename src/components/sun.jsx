@@ -1,4 +1,7 @@
-{/* Sun in top right corner with rays */}
+export default function Sun() {
+  return (
+    <>
+      {/* Sun in top right corner with rays */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] overflow-visible pointer-events-none z-[5]">
         {/* Sun glow */}
         <div className="absolute -top-20 -right-20 w-[500px] h-[500px]">
@@ -41,3 +44,6 @@
           </div>
         </div>
       </div>
+    </>
+  );
+}
