@@ -34,134 +34,78 @@ function Home() {
       console.log(e.target.files[0]);
     }
   };
-const icons = [
+
+  const icons = [
     { id: 1, src: '/images/image1.png', alt: 'VisionMesh Icon 1 - Dashboard Preview' },
     { id: 2, src: '/images/image2.png', alt: 'VisionMesh Icon 2 - Report Generator' },
     { id: 3, src: '/images/image3.png', alt: 'VisionMesh Icon 3 - AI Analysis Tool' },
     { id: 4, src: '/images/image4.png', alt: 'VisionMesh Icon 4 - Code Preview' },
     { id: 5, src: '/images/image5.png', alt: 'VisionMesh Icon 5 - Accessibility Checker' },
   ];
+
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
-      {/* Curved Horizon with Glowing Edge */}
+      {/* Red and Black Abstract Background */}
       <div className="absolute inset-0 overflow-hidden z-0">
-        {/* Dark gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628] via-[#0d1b2a] to-black" />
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-[#1a0000] to-[#330000]" />
         
-        {/* Curved horizon element */}
-        <div className="absolute bottom-0 left-0 right-0 h-[60vh]">
-          {/* The curved surface */}
-          <div 
-            className="absolute inset-x-0 bottom-0 h-full"
-            style={{
-              background: 'linear-gradient(180deg, transparent 0%, #000000 50%)',
-            }}
-          />
-          
-          {/* SVG for the curved glowing edge */}
-          <svg 
-            className="absolute inset-x-0 bottom-0 w-full h-full"
-            viewBox="0 0 1440 800"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style={{ stopColor: '#60a5fa', stopOpacity: 0 }} />
-                <stop offset="15%" style={{ stopColor: '#3b82f6', stopOpacity: 0.8 }} />
-                <stop offset="50%" style={{ stopColor: '#60a5fa', stopOpacity: 1 }} />
-                <stop offset="85%" style={{ stopColor: '#3b82f6', stopOpacity: 0.8 }} />
-                <stop offset="100%" style={{ stopColor: '#60a5fa', stopOpacity: 0 }} />
-              </linearGradient>
-              
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-                <feMerge>
-                  <feMergeNode in="coloredBlur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-            
-            {/* Curved path for the horizon */}
-            <path
-              d="M0,280 Q360,80 720,60 T1440,280 L1440,800 L0,800 Z"
-              fill="#000000"
-            />
-            
-            {/* Glowing edge line */}
-            <path
-              d="M0,280 Q360,80 720,60 T1440,280"
-              fill="none"
-              stroke="url(#glowGradient)"
-              strokeWidth="3"
-              filter="url(#glow)"
-            />
-            
-            {/* Stars under the horizon */}
-            <g>
-              {/* Create random-looking stars with varying sizes and opacity */}
-              <circle cx="120" cy="250" r="1.5" fill="white" opacity="0.8" />
-              <circle cx="280" cy="320" r="1" fill="white" opacity="0.6" />
-              <circle cx="450" cy="280" r="1.2" fill="white" opacity="0.9" />
-              <circle cx="580" cy="350" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="720" cy="240" r="1.5" fill="white" opacity="0.8" />
-              <circle cx="850" cy="310" r="1" fill="white" opacity="0.7" />
-              <circle cx="980" cy="270" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="1150" cy="340" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1280" cy="290" r="1.2" fill="white" opacity="0.7" />
-              
-              <circle cx="200" cy="380" r="1" fill="white" opacity="0.5" />
-              <circle cx="350" cy="420" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="520" cy="450" r="0.8" fill="white" opacity="0.6" />
-              <circle cx="680" cy="390" r="1.4" fill="white" opacity="0.8" />
-              <circle cx="820" cy="460" r="1" fill="white" opacity="0.6" />
-              <circle cx="950" cy="410" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="1100" cy="480" r="0.9" fill="white" opacity="0.5" />
-              <circle cx="1240" cy="430" r="1.3" fill="white" opacity="0.8" />
-              
-              <circle cx="90" cy="520" r="1.2" fill="white" opacity="0.6" />
-              <circle cx="240" cy="560" r="0.9" fill="white" opacity="0.7" />
-              <circle cx="410" cy="590" r="1.1" fill="white" opacity="0.6" />
-              <circle cx="560" cy="540" r="1.4" fill="white" opacity="0.9" />
-              <circle cx="740" cy="580" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="890" cy="620" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="1030" cy="570" r="1" fill="white" opacity="0.8" />
-              <circle cx="1180" cy="610" r="1.3" fill="white" opacity="0.7" />
-              <circle cx="1320" cy="550" r="0.9" fill="white" opacity="0.6" />
-              
-              {/* <circle cx="160" cy="680" r="1.1" fill="white" opacity="0.6" />
-              <circle cx="310" cy="720" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="480" cy="690" r="0.9" fill="white" opacity="0.5" />
-              <circle cx="640" cy="740" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="780" cy="710" r="1.4" fill="white" opacity="0.9" />
-              <circle cx="920" cy="760" r="1" fill="white" opacity="0.6" />
-              <circle cx="1070" cy="700" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="1210" cy="730" r="0.8" fill="white" opacity="0.5" /> */}
-            </g>
-          </svg>
-          
-          {/* Additional glow overlay */}
-          <div 
-            className="absolute inset-x-0 top-1/2 h-32 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(96, 165, 250, 0.15), transparent)',
-            }}
-          />
+        {/* Animated fluid red shapes */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-30">
+          <div className="absolute top-1/4 -left-10 w-72 h-72 bg-red-600 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse"></div>
+          <div className="absolute top-1/2 right-0 w-96 h-96 bg-red-800 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-bounce delay-1000"></div>
+          <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-red-900 rounded-full mix-blend-screen filter blur-3xl opacity-40 animate-pulse delay-500"></div>
         </div>
+
+        {/* Geometric red patterns */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-1 bg-red-500 animate-pulse"></div>
+          <div className="absolute top-20 right-0 w-1 h-64 bg-red-600 animate-pulse delay-300"></div>
+          <div className="absolute bottom-40 left-10 w-2 h-32 bg-red-700 animate-pulse delay-700"></div>
+          <div className="absolute top-1/3 left-1/4 w-48 h-1 bg-red-600 transform rotate-45 animate-pulse delay-1000"></div>
+        </div>
+
+        {/* Floating particles */}
+        <div className="absolute inset-0">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-red-500 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${3 + Math.random() * 4}s`,
+                opacity: 0.3 + Math.random() * 0.4,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Grid overlay */}
+        <div 
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(220, 38, 38, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(220, 38, 38, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+          }}
+        />
+
+        {/* Glowing horizon effect */}
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black to-transparent"></div>
+        
+        {/* Central glow */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-900 rounded-full filter blur-3xl opacity-10 animate-pulse"></div>
       </div>
 
-      
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-32">
         {/* Badge */}
         <div className="mb-8 sm:mb-12">
-          {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 backdrop-blur-sm">
-            <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-            <span className="text-sm text-blue-300 font-medium">Introducing Bolt V2</span>
-          </div> */}
+          {/* Optional badge can be added here */}
         </div>
 
         {/* Main Headline */}
@@ -172,21 +116,21 @@ const icons = [
         </h1>
 
         {/* Subtitle */}
-        <p className="text-base sm:text-lg md:text-xl text-gray-400 text-center mb-8 sm:mb-12 max-w-2xl px-4">
+        <p className="text-base sm:text-lg md:text-xl text-gray-300 text-center mb-8 sm:mb-12 max-w-2xl px-4">
           Upload. Design. VisionMesh makes it stunning
         </p>
 
         {/* Upload Section */}
         <div className="w-full max-w-2xl px-4">
-          <div className="relative bg-[#1a1a1a] backdrop-blur-xl rounded-2xl border-2 border-gray-700 hover:border-red-600 shadow-2xl overflow-hidden transition-colors">
+          <div className="relative bg-black/60 backdrop-blur-xl rounded-2xl border-2 border-red-900/50 hover:border-red-600 shadow-2xl shadow-red-900/20 overflow-hidden transition-all duration-300">
             {/* Tabs */}
-            <div className="flex border-b border-gray-800">
+            <div className="flex border-b border-red-900/30">
               <button
                 onClick={() => setActiveTab('upload')}
                 className={`relative flex-1 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'upload'
                     ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-red-600'
-                    : 'text-gray-500 hover:text-gray-300'
+                    : 'text-red-300/70 hover:text-red-200'
                 }`}
               >
                 Upload Screenshot
@@ -196,7 +140,7 @@ const icons = [
                 className={`relative flex-1 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'url'
                     ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-red-600'
-                    : 'text-gray-500 hover:text-gray-300'
+                    : 'text-red-300/70 hover:text-red-200'
                 }`}
               >
                 Enter URL
@@ -213,8 +157,8 @@ const icons = [
                   onDrop={handleDrop}
                   className={`relative border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all ${
                     dragActive
-                      ? 'border-red-500 bg-red-500/5'
-                      : 'border-gray-700 hover:border-red-500'
+                      ? 'border-red-500 bg-red-500/10 backdrop-blur-sm'
+                      : 'border-red-800/50 hover:border-red-500 bg-red-900/10'
                   }`}
                 >
                   <input
@@ -229,9 +173,9 @@ const icons = [
                     {/* Upload Icon with Red Glow */}
                     <div className="flex justify-center mb-3 sm:mb-4">
                       <div className="relative">
-                        <div className="absolute inset-0 bg-red-600/20 blur-2xl rounded-full"></div>
+                        <div className="absolute inset-0 bg-red-600/30 blur-2xl rounded-full"></div>
                         <svg
-                          className="w-12 h-12 sm:w-16 sm:h-16 text-red-600 relative z-10"
+                          className="w-12 h-12 sm:w-16 sm:h-16 text-red-500 relative z-10"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -249,7 +193,7 @@ const icons = [
                     <p className="text-white text-sm sm:text-base mb-1 sm:mb-2">
                       Click to upload or drag and drop
                     </p>
-                    <p className="text-gray-500 text-xs sm:text-sm">
+                    <p className="text-red-300/70 text-xs sm:text-sm">
                       PNG, JPG, or JPEG (max. 10MB)
                     </p>
                   </label>
@@ -259,17 +203,16 @@ const icons = [
                   <input
                     type="url"
                     placeholder="Enter website URL..."
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-gray-900/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-600 transition-colors"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-red-900/20 border border-red-800/50 rounded-lg text-white placeholder-red-300/50 focus:outline-none focus:border-red-600 transition-colors"
                   />
                 </div>
               )}
-              
 
               {/* Start Analysis Button */}
               <div className="mt-6 sm:mt-8 flex justify-center">
                 <button 
                   onClick={() => navigate('/evaluation')}
-                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50"
+                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold rounded-lg transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50 transform hover:scale-105"
                 >
                   Start Analysis
                 </button>
@@ -278,6 +221,17 @@ const icons = [
           </div>
         </div>
       </div>
+
+      {/* Add custom animations */}
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        .animate-float {
+          animation: float linear infinite;
+        }
+      `}</style>
     </div>
   );
 }

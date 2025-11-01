@@ -231,7 +231,7 @@ export default function Login() {
       {/* Full Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="" 
+          src="https://png.pngtree.com/thumb_back/fh260/background/20231226/pngtree-elegant-black-design-with-red-curved-mesh-texture-image_13922406.png" 
           alt="" 
           className="w-full h-full object-cover"
         />
