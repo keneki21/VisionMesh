@@ -228,11 +228,25 @@ export default function Login() {
       </div>
 
 
+      {/* Full Background Video - YouTube Embed */}
+      {/* <div className="absolute inset-0 z-0 overflow-hidden">
+        <iframe
+          className="absolute w-full h-full object-cover scale-150"
+          src="https://www.youtube.com/embed/xJ_fFLgGHiU?autoplay=1&mute=1&loop=1&playlist=xJ_fFLgGHiU&controls=0&showinfo=0&modestbranding=1&rel=0&fs=0&start=305"
+          title="Background Video"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+          style={{ pointerEvents: 'none' }}
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+      </div> */}
+
       {/* Full Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://png.pngtree.com/thumb_back/fh260/background/20231226/pngtree-elegant-black-design-with-red-curved-mesh-texture-image_13922406.png" 
+          src="https://t3.ftcdn.net/jpg/08/93/83/12/360_F_893831245_0rldpUgiXOFu6ijoksW2rUMNZWmeG9nv.jpg" 
           alt="" 
+          
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>
