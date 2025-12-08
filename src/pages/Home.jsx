@@ -244,20 +244,6 @@ function Home() {
             </div>
           </div>
         </div>
-
-        {/* Features Grid - White icons */}
-        <div className="mt-16 sm:mt-20 grid grid-cols-2 sm:grid-cols-5 gap-4 sm:gap-6 px-4 max-w-4xl opacity-80">
-          {[1, 2, 3, 4, 5].map((item) => (
-            <div key={item} className="flex flex-col items-center">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 mb-2 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-gray-200 to-white rounded"></div>
-              </div>
-              <div className="text-[10px] sm:text-xs text-gray-300 text-center">
-                Feature {item}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Add custom animations */}
