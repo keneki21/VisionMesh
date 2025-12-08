@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const navigate = useNavigate();
@@ -51,99 +50,76 @@ function Home() {
     }
   };
 
-  const icons = [
-    { id: 1, src: '/images/image1.png', alt: 'VisionMesh Icon 1 - Dashboard Preview' },
-    { id: 2, src: '/images/image2.png', alt: 'VisionMesh Icon 2 - Report Generator' },
-    { id: 3, src: '/images/image3.png', alt: 'VisionMesh Icon 3 - AI Analysis Tool' },
-    { id: 4, src: '/images/image4.png', alt: 'VisionMesh Icon 4 - Code Preview' },
-    { id: 5, src: '/images/image5.png', alt: 'VisionMesh Icon 5 - Accessibility Checker' },
-  ];
-
   return (
-    <div className="relative min-h-screen bg-black overflow-hidden">
-      {/* Sky Blue and Dark Blue Abstract Background */}
-      <div className="absolute inset-0 overflow-hidden z-0">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a192f] via-[#112240] to-[#1a365d]" />
+    <div className="relative min-h-screen bg-white overflow-hidden">
+      {/* Beautiful Black Background with White Particles */}
+      <div className="absolute inset-0 overflow-hidden z-0 bg-black">
+        {/* Subtle gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900" />
         
-        {/* Animated fluid blue shapes */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-40">
-          <div className="absolute top-1/4 -left-10 w-72 h-72 bg-sky-500 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-pulse"></div>
-          <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-700 rounded-full mix-blend-screen filter blur-3xl opacity-40 animate-bounce delay-1000"></div>
-          <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-blue-900 rounded-full mix-blend-screen filter blur-3xl opacity-50 animate-pulse delay-500"></div>
-          <div className="absolute top-10 right-1/4 w-64 h-64 bg-cyan-400 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-pulse delay-1500"></div>
+        {/* White geometric patterns for contrast */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-10">
+          <div className="absolute top-1/4 -left-10 w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/2 right-0 w-96 h-96 bg-gray-300 rounded-full mix-blend-overlay filter blur-3xl opacity-70 animate-bounce delay-1000"></div>
+          <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-gray-200 rounded-full mix-blend-overlay filter blur-3xl opacity-80 animate-pulse delay-500"></div>
         </div>
 
-        {/* Geometric blue patterns */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-full h-1 bg-cyan-400 animate-pulse"></div>
-          <div className="absolute top-20 right-0 w-1 h-64 bg-sky-500 animate-pulse delay-300"></div>
-          <div className="absolute bottom-40 left-10 w-2 h-32 bg-blue-600 animate-pulse delay-700"></div>
-          <div className="absolute top-1/3 left-1/4 w-48 h-1 bg-sky-400 transform rotate-45 animate-pulse delay-1000"></div>
-          <div className="absolute bottom-1/4 right-20 w-32 h-1 bg-cyan-300 transform -rotate-45 animate-pulse delay-1200"></div>
-        </div>
+        {/* Grid overlay in white for subtle structure */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+          }}
+        />
 
-        {/* Floating particles */}
+        {/* Beautiful White Floating Particles */}
         <div className="absolute inset-0">
           {[...Array(30)].map((_, i) => (
             <div
               key={i}
               className="absolute rounded-full animate-float"
               style={{
-                width: `${2 + Math.random() * 4}px`,
-                height: `${2 + Math.random() * 4}px`,
+                width: `${1 + Math.random() * 4}px`,
+                height: `${1 + Math.random() * 4}px`,
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`,
-                opacity: 0.4 + Math.random() * 0.5,
-                backgroundColor: Math.random() > 0.5 ? '#22d3ee' : '#0ea5e9',
-                boxShadow: `0 0 ${5 + Math.random() * 10}px ${Math.random() > 0.5 ? '#22d3ee' : '#0ea5e9'}`
+                animationDuration: `${4 + Math.random() * 6}s`,
+                opacity: 0.2 + Math.random() * 0.4,
+                backgroundColor: '#ffffff',
+                boxShadow: `0 0 ${4 + Math.random() * 8}px rgba(255,255,255,0.5)`,
+                filter: 'blur(0.5px)'
               }}
             />
           ))}
         </div>
 
-        {/* Grid overlay */}
-        <div 
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(14, 165, 233, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(14, 165, 233, 0.3) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-          }}
-        />
-
-        {/* Glowing horizon effect */}
-        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#0a192f] to-transparent"></div>
+        {/* Subtle glow effect at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-gray-900/50 to-transparent"></div>
         
-        {/* Central glow */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-700 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+        {/* Central focus effect in white */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-300 rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse"></div>
 
-        {/* Wave-like patterns */}
-        <div className="absolute bottom-0 w-full h-32">
-          <svg className="absolute bottom-0 w-full h-full" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" className="fill-blue-900/30"></path>
-            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" className="fill-blue-800/30"></path>
-            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" className="fill-blue-700/20"></path>
-          </svg>
+        {/* Subtle white lines for accent */}
+        <div className="absolute inset-0 opacity-15">
+          <div className="absolute top-0 left-0 w-full h-px bg-white animate-pulse"></div>
+          <div className="absolute top-20 right-0 w-px h-64 bg-gray-300 animate-pulse delay-300"></div>
+          <div className="absolute bottom-40 left-10 w-0.5 h-32 bg-gray-200 animate-pulse delay-700"></div>
+          <div className="absolute top-1/3 left-1/4 w-48 h-px bg-gray-400 transform rotate-45 animate-pulse delay-1000"></div>
         </div>
       </div>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-32">
-        {/* Badge */}
-        <div className="mb-8 sm:mb-12">
-          {/* Optional badge can be added here */}
-        </div>
-
-        {/* Animated Main Headline */}
+        {/* Main Headline */}
         <div className="h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center mb-4 sm:mb-6 max-w-5xl px-4">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center">
             <span className="text-white">What </span>
-            <span className="italic bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent animate-gradient bg-300%">
+            <span className="italic bg-gradient-to-r from-gray-300 via-white to-gray-300 bg-clip-text text-transparent animate-gradient bg-300%">
               Vision
             </span>
             <span className="text-white"> will you transform into design today?</span>
@@ -170,15 +146,15 @@ function Home() {
 
         {/* Upload Section */}
         <div className="w-full max-w-2xl px-4">
-          <div className="relative bg-black/40 backdrop-blur-xl rounded-2xl border-2 border-blue-800/50 hover:border-blue-500 shadow-2xl shadow-blue-900/20 overflow-hidden transition-all duration-300">
+          <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 hover:border-white/30 shadow-xl shadow-black/30 overflow-hidden transition-all duration-300">
             {/* Tabs */}
-            <div className="flex border-b border-blue-900/30">
+            <div className="flex border-b border-white/20">
               <button
                 onClick={() => setActiveTab('upload')}
                 className={`relative flex-1 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'upload'
-                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-blue-500'
-                    : 'text-blue-300/70 hover:text-blue-200'
+                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-white'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
                 Upload Screenshot
@@ -187,8 +163,8 @@ function Home() {
                 onClick={() => setActiveTab('url')}
                 className={`relative flex-1 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors ${
                   activeTab === 'url'
-                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-blue-500'
-                    : 'text-blue-300/70 hover:text-blue-200'
+                    ? 'text-white after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 sm:after:w-16 after:h-0.5 after:bg-white'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
                 Enter URL
@@ -205,8 +181,8 @@ function Home() {
                   onDrop={handleDrop}
                   className={`relative border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all ${
                     dragActive
-                      ? 'border-blue-400 bg-blue-500/20 backdrop-blur-sm'
-                      : 'border-blue-700/50 hover:border-blue-400 bg-blue-900/10'
+                      ? 'border-white bg-white/10 backdrop-blur-sm'
+                      : 'border-white/30 hover:border-white/60 bg-white/5'
                   }`}
                 >
                   <input
@@ -218,12 +194,12 @@ function Home() {
                   />
                   
                   <label htmlFor="file-upload" className="cursor-pointer">
-                    {/* Upload Icon with Blue Glow */}
+                    {/* Upload Icon with White Style */}
                     <div className="flex justify-center mb-3 sm:mb-4">
                       <div className="relative">
-                        <div className="absolute inset-0 bg-blue-500/40 blur-2xl rounded-full"></div>
+                        <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full opacity-50"></div>
                         <svg
-                          className="w-12 h-12 sm:w-16 sm:h-16 text-blue-400 relative z-10"
+                          className="w-12 h-12 sm:w-16 sm:h-16 text-white relative z-10"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -241,7 +217,7 @@ function Home() {
                     <p className="text-white text-sm sm:text-base mb-1 sm:mb-2">
                       Click to upload or drag and drop
                     </p>
-                    <p className="text-blue-300/70 text-xs sm:text-sm">
+                    <p className="text-gray-300 text-xs sm:text-sm">
                       PNG, JPG, or JPEG (max. 10MB)
                     </p>
                   </label>
@@ -251,7 +227,7 @@ function Home() {
                   <input
                     type="url"
                     placeholder="Enter website URL..."
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-blue-900/20 border border-blue-800/50 rounded-lg text-white placeholder-blue-300/50 focus:outline-none focus:border-blue-400 transition-colors"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors"
                   />
                 </div>
               )}
@@ -260,13 +236,27 @@ function Home() {
               <div className="mt-6 sm:mt-8 flex justify-center">
                 <button 
                   onClick={() => navigate('/evaluation')}
-                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:scale-105 animate-pulse"
+                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-white to-gray-300 hover:from-gray-200 hover:to-white text-black font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                 >
                   Start Analysis
                 </button>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Features Grid - White icons */}
+        <div className="mt-16 sm:mt-20 grid grid-cols-2 sm:grid-cols-5 gap-4 sm:gap-6 px-4 max-w-4xl opacity-80">
+          {[1, 2, 3, 4, 5].map((item) => (
+            <div key={item} className="flex flex-col items-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 mb-2 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-gray-200 to-white rounded"></div>
+              </div>
+              <div className="text-[10px] sm:text-xs text-gray-300 text-center">
+                Feature {item}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
