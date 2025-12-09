@@ -127,7 +127,7 @@ function Home() {
         </div>
 
         {/* Animated Text Variations */}
-        <div className="h-12 sm:h-14 md:h-16 mb-6 sm:mb-8 overflow-hidden">
+        <div className="h-12 sm:h-14 md:h-16 -mb-10 sm:-mb-16 overflow-hidden">
           <div className="relative">
             {textVariations.map((text, index) => (
               <p
@@ -145,7 +145,7 @@ function Home() {
         </div>
 
         {/* Upload Section */}
-        <div className="w-full max-w-2xl px-4">
+        <div className="w-full  max-w-2xl px-4">
           <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 hover:border-white/30 shadow-xl shadow-black/30 overflow-hidden transition-all duration-300">
             {/* Tabs */}
             <div className="flex border-b border-white/20">
@@ -244,7 +244,82 @@ function Home() {
             </div>
           </div>
         </div>
+        <div className="h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center mb-4 sm:mb-6 max-w-5xl px-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center">
+            <span className="text-white">Enabling </span>
+            <span className="italic bg-gradient-to-r from-gray-300 via-white to-gray-300 bg-clip-text text-transparent animate-gradient bg-300%">
+              creators
+            </span>
+            <span className="text-white"> through advanced AI-driven design analysis</span>
+          </h1>
+        </div>
+        <div className="w-full -mt-6 sm:-mt-8 md:-mt-10 max-w-7xl px-4 relative">
+
+          {/* Glowing Background SVG */}
+          {/* <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 pointer-events-none ">
+            <div className="absolute inset-0 rounded-full animate-glow-pulse blur-2xl"
+              style={{
+                background: 'radial-gradient(circle, rgba(34, 211, 238, 0.8) 20%, rgba(96, 165, 250, 0.5) 40%, rgba(34, 211, 238, 0.2) 100%)',
+                boxShadow: '0 0 60px rgba(34, 211, 238, 0.7), 0 0 90px rgba(96, 165, 250, 0.3), inset 0 0 60px rgba(34, 211, 238, 0.4)'
+              }}
+            />
+          </div> */}
+          
+          <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl  hover:border-white/30 shadow-xl shadow-black/30 overflow-hidden transition-all duration-300 z-40"></div>
+          <div className="absolute -inset-20 pointer-events-none opacity-60 animate-glow-pulse">
+            <img 
+              src="/glow.svg" 
+              alt="glow" 
+              className="w-full h-full object-contain"
+            />
+          </div> 
       </div>
+      <div className="h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center px-4">
+          <h1 className="text-xl text-white sm:text-2xl md:text-3xl lg:text-xl font-bold text-center">
+            Let VisionMesh do the heavy work, freeing you to<br />focus on creativity instead of chasing UI issues.
+          </h1>
+      </div>
+
+      {/* Feature Showcase Section */}
+      <div className="w-full max-w-7xl mx-auto px-4 py-16 sm:py-2 space-y-6">
+        {/* Top Card - Full Width */}
+        <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 p-8 lg:p-10">
+          <h2 className="text-white text-2xl sm:text-3xl font-bold mb-6">Always the best, without switching tools</h2>
+          <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+            VisionMesh integrates the frontier design analysis tools from the AI labs directly inside one familiar visual interface. 
+            No more AI anxiety or juggling multiple platforms.
+          </p>
+        </div>
+
+        {/* Bottom - Two Equal Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 98% less errors */}
+          <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 p-8 lg:p-10 flex flex-col items-center justify-center text-center">
+            <div className="mb-6">
+              <div className="text-7xl sm:text-8xl font-bold text-white mb-2">98%</div>
+              <div className="text-2xl sm:text-3xl text-gray-400 font-semibold">less errors</div>
+            </div>
+            <p className="text-gray-300 text-sm sm:text-base max-w-sm">
+              VisionMesh automatically tests, refactors, and iterates reducing errors so you keep building instead of fixing.
+            </p>
+          </div>
+
+          {/* Build big without breaking */}
+          <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/20 p-8 lg:p-10 flex flex-col">
+            <h3 className="text-white text-2xl sm:text-3xl font-bold mb-4">Build big without breaking</h3>
+            <p className="text-gray-300 text-sm sm:text-base mb-6">
+              VisionMesh handles <span className="text-white font-semibold">projects 1,000 times larger</span> than before. 
+              It's improved built-in context management can handle complexity and keep your projects running smoothly.
+            </p>
+            <div className="flex-1 bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl mt-4 flex items-center justify-center">
+              <div className="text-6xl sm:text-7xl font-bold text-white/30">1000x</div>
+            </div>
+          </div>
+        </div>
+      </div>
+          
+      </div>
+      
 
       {/* Add custom animations */}
       <style jsx>{`

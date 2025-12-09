@@ -269,7 +269,7 @@ export default function Login() {
                   type="email" 
                   placeholder="Enter your email" 
                   required 
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 rounded-lg text-white placeholder-[#666] transition-all duration-300 focus:outline-none focus:border-[#e50914] focus:shadow-[0_0_15px_rgba(229,9,20,0.2)]"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 rounded-lg text-white placeholder-[#666] transition-all duration-300 focus:outline-none focus:border-white focus:shadow-[0_0_15px_rgba(229,9,20,0.2)]"
                 />
               </div>
 
@@ -280,7 +280,7 @@ export default function Login() {
                   type="password" 
                   placeholder="Enter your password" 
                   required 
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 rounded-lg text-white placeholder-[#666] transition-all duration-300 focus:outline-none focus:border-[#e50914] focus:shadow-[0_0_15px_rgba(229,9,20,0.2)]"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 rounded-lg text-white placeholder-[#666] transition-all duration-300 focus:outline-none focus:border-white focus:shadow-[0_0_15px_rgba(229,9,20,0.2)]"
                 />
               </div>
 
@@ -303,7 +303,7 @@ export default function Login() {
               <div className="space-y-2 sm:space-y-3">
                 <button 
                   type="button" 
-                  className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-[#e50914] hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
+                  className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-white hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
                   onClick={handleLogin}
                 >
                   <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -316,7 +316,7 @@ export default function Login() {
                 </button>
                 <button 
                   type="button" 
-                  className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-[#e50914] hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
+                  className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-white hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
                   onClick={handleLogin}
                 >
                   <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -326,13 +326,13 @@ export default function Login() {
                 </button>
               </div>
             </form>
-            <p className="mt-4 sm:mt-6 text-xs text-[#666] text-center">By continuing, you acknowledge our Privacy Policy.</p>
+            <p className="mt-4 sm:mt-6 text-xs text-gray-200 text-center">By continuing, you acknowledge our Privacy Policy.</p>
           </div>
         </div>
       </div>
 
-      {/* Right Side - 16:9 Image Container
-      <div className="hidden lg:flex flex-1 items-center justify-center p-8 pt-20 relative z-10">
+      {/* Right Side - 16:9 Image Container*/}
+      {/* <div className="hidden lg:flex flex-1 items-center justify-center p-8 pt-20 relative z-10">
         <div className="w-full max-w-[800px] aspect-video bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
           <img 
             src="https://4kwallpapers.com/images/wallpapers/earth-sunrise-2732x2732-12523.jpg" 
@@ -340,7 +340,7 @@ export default function Login() {
             className="w-full h-full object-cover"
           />
         </div>
-      </div> */}
+      </div>  */}
     </div>
   );
 }
