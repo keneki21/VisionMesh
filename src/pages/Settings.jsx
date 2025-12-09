@@ -59,7 +59,7 @@ function Settings() {
                 onClick={() => setActiveTab('profile')}
                 className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-all duration-300 flex items-center gap-2 sm:gap-3 whitespace-nowrap ${
                   activeTab === 'profile'
-                    ? 'bg-[#e50914] text-white shadow-lg shadow-red-600/30'
+                    ? 'bg-cyan-400 text-white shadow-lg shadow-cyan-600/30'
                     : 'text-gray-300 hover:bg-white/5'
                 }`}
               >
@@ -73,7 +73,7 @@ function Settings() {
                 onClick={() => setActiveTab('account')}
                 className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-all duration-300 flex items-center gap-2 sm:gap-3 mt-0 lg:mt-1 whitespace-nowrap ${
                   activeTab === 'account'
-                    ? 'bg-[#e50914] text-white shadow-lg shadow-red-600/30'
+                    ? 'bg-cyan-400 text-white shadow-lg shadow-cyan-600/30'
                     : 'text-gray-300 hover:bg-white/5'
                 }`}
               >
@@ -88,7 +88,7 @@ function Settings() {
                 onClick={() => setActiveTab('security')}
                 className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-all duration-300 flex items-center gap-2 sm:gap-3 mt-0 lg:mt-1 whitespace-nowrap ${
                   activeTab === 'security'
-                    ? 'bg-[#e50914] text-white shadow-lg shadow-red-600/30'
+                    ? 'bg-cyan-400 text-white shadow-lg shadow-cyan-600/30'
                     : 'text-gray-300 hover:bg-white/5'
                 }`}
               >
@@ -102,7 +102,7 @@ function Settings() {
                 onClick={() => setActiveTab('notifications')}
                 className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-all duration-300 flex items-center gap-2 sm:gap-3 mt-0 lg:mt-1 whitespace-nowrap ${
                   activeTab === 'notifications'
-                    ? 'bg-[#e50914] text-white shadow-lg shadow-red-600/30'
+                    ? 'bg-cyan-400 text-white shadow-lg shadow-cyan-600/30'
                     : 'text-gray-300 hover:bg-white/5'
                 }`}
               >
@@ -125,7 +125,7 @@ function Settings() {
                 <div className="mb-6 sm:mb-8">
                   <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2 sm:mb-3">Profile Picture</label>
                   <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-red-600 to-red-800 border-2 border-white/20 flex items-center justify-center">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-cyan-600 to-cyan-800 border-2 border-white/20 flex items-center justify-center">
                       <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
@@ -151,7 +151,7 @@ function Settings() {
                         value={formData.fullName}
                         onChange={handleInputChange}
                         placeholder="John Doe"
-                        className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors"
+                        className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
                       />
                     </div>
 
@@ -163,7 +163,7 @@ function Settings() {
                         value={formData.username}
                         onChange={handleInputChange}
                         placeholder="johndoe"
-                        className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors"
+                        className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
                       />
                     </div>
                   </div>
@@ -176,7 +176,7 @@ function Settings() {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="john@example.com"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
                     />
                   </div>
 
@@ -188,7 +188,7 @@ function Settings() {
                       onChange={handleInputChange}
                       placeholder="Tell us about yourself..."
                       rows={4}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors resize-none"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors resize-none"
                     />
                   </div>
 
@@ -202,7 +202,7 @@ function Settings() {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#e50914] hover:bg-[#b20710] text-white rounded-lg font-medium transition-colors shadow-lg shadow-red-600/30"
+                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30"
                     >
                       Save Changes
                     </button>
@@ -220,7 +220,7 @@ function Settings() {
                   <div className="pb-4 sm:pb-6 border-b border-white/10">
                     <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Language</h3>
                     <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">Select your preferred language</p>
-                    <select className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-red-500 transition-colors">
+                    <select className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-colors">
                       <option value="en">English</option>
                       <option value="es">Spanish</option>
                       <option value="fr">French</option>
@@ -231,7 +231,7 @@ function Settings() {
                   <div className="pb-4 sm:pb-6 border-b border-white/10">
                     <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Timezone</h3>
                     <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">Set your timezone</p>
-                    <select className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-red-500 transition-colors">
+                    <select className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition-colors">
                       <option value="utc">UTC</option>
                       <option value="est">Eastern Time</option>
                       <option value="pst">Pacific Time</option>
@@ -242,7 +242,7 @@ function Settings() {
                   <div className="pb-4 sm:pb-6 border-b border-white/10">
                     <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Delete Account</h3>
                     <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">Permanently delete your account and all data</p>
-                    <button className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors">
+                    <button className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors">
                       Delete Account
                     </button>
                   </div>
@@ -264,7 +264,7 @@ function Settings() {
                       value={formData.currentPassword}
                       onChange={handleInputChange}
                       placeholder="Enter current password"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
                     />
                   </div>
 
@@ -276,7 +276,7 @@ function Settings() {
                       value={formData.newPassword}
                       onChange={handleInputChange}
                       placeholder="Enter new password"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
                     />
                   </div>
 
@@ -288,7 +288,7 @@ function Settings() {
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                       placeholder="Confirm new password"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors"
+                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
                     />
                   </div>
 
@@ -301,7 +301,7 @@ function Settings() {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#e50914] hover:bg-[#b20710] text-white rounded-lg font-medium transition-colors shadow-lg shadow-red-600/30"
+                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30"
                     >
                       Update Password
                     </button>
@@ -331,7 +331,7 @@ function Settings() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer self-start sm:self-center">
                       <input type="checkbox" className="sr-only peer" defaultChecked />
-                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#e50914]"></div>
+                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
                     </label>
                   </div>
 
@@ -342,7 +342,7 @@ function Settings() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer self-start sm:self-center">
                       <input type="checkbox" className="sr-only peer" />
-                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#e50914]"></div>
+                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
                     </label>
                   </div>
 
@@ -353,7 +353,7 @@ function Settings() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer self-start sm:self-center">
                       <input type="checkbox" className="sr-only peer" defaultChecked />
-                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#e50914]"></div>
+                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
                     </label>
                   </div>
 
@@ -364,7 +364,7 @@ function Settings() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer self-start sm:self-center">
                       <input type="checkbox" className="sr-only peer" />
-                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#e50914]"></div>
+                      <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
                     </label>
                   </div>
                 </div>

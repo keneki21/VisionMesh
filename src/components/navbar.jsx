@@ -23,7 +23,7 @@ function Navbar() {
         <div className="flex items-center gap-3 sm:gap-4 ml-6 sm:ml-10 relative">
           <button 
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black border-2 border-white/20 hover:border-red-500 hover:scale-110 transition-all duration-300 shadow-lg shadow-red-600/30 flex items-center justify-center group"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black border-2 border-white/20 hover:border-cyan-400 hover:scale-110 transition-all duration-300 shadow-lg shadow-cyan-600/30 flex items-center justify-center group"
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

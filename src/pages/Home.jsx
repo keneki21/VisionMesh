@@ -827,8 +827,8 @@ function Home() {
         </div>
 
         {/* Bottom Text */}
-        <div className="mt-16 text-center">
-          <p className="text-white text-xl sm:text-2xl lg:text-3xl font-semibold max-w-4xl mx-auto leading-relaxed">
+        <div className="mt-16 pt-10 pb-0 text-center">
+          <p className="text-white text-xl sm:text-2xl lg:text-2xl font-semibold max-w-4xl mx-auto leading-relaxed">
             VisionMesh gives you everything you need inside one familiar interface. Instantly preview your AI-enhanced UI design in real time — no setup required.
           </p>
         </div>

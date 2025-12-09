@@ -193,7 +193,7 @@ export default function Login() {
 
               <button 
                 type="submit" 
-                className="w-full px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium transition-all duration-300 hover:from-cyan-600 hover:to-blue-600 hover:shadow-[0_4px_20px_rgba(34,211,238,0.4)]"
+                className="w-full px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-blue-500 text-white rounded-lg font-medium transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_4px_20px_rgba(34,211,238,0.4)]"
               >
                 Continue with email
               </button>
