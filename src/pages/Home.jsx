@@ -115,15 +115,24 @@ function Home() {
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-32">
-        {/* Cool Background Designs for Hero Section */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* Colorful gradient blobs */}
+        
+        {/* Main Headline */}
+        <div className="h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center mb-4 sm:mb-6 max-w-5xl px-4 relative z-10">
+          {/* Cool Background Designs for Hero Section - Start from here */}
+          <div className="absolute inset-0 z-0 overflow-hidden" style={{ width: '200vw', height: '300vh', left: '-50vw', top: '-100vh' }}>
+          {/* Colorful gradient blobs - Enhanced with more layers */}
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }}></div>
           <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-gradient-to-tl from-cyan-500/25 to-blue-500/25 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }}></div>
           <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-gradient-to-tr from-indigo-600/20 to-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }}></div>
           <div className="absolute bottom-1/3 right-1/3 w-64 h-64 bg-gradient-to-bl from-teal-500/20 to-cyan-400/20 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '0.5s' }}></div>
           
-          {/* Flowing wave lines with gradient */}
+          {/* Additional gradient blobs for richness */}
+          <div className="absolute top-1/2 left-1/6 w-56 h-56 bg-gradient-to-br from-fuchsia-600/15 to-purple-600/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6.5s', animationDelay: '1.5s' }}></div>
+          <div className="absolute top-1/5 right-1/3 w-64 h-64 bg-gradient-to-bl from-blue-500/20 to-indigo-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '0.8s' }}></div>
+          <div className="absolute bottom-1/5 right-1/5 w-72 h-72 bg-gradient-to-tr from-emerald-500/15 to-teal-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7.5s', animationDelay: '2.5s' }}></div>
+          <div className="absolute top-2/3 left-1/2 w-48 h-48 bg-gradient-to-br from-pink-500/20 to-rose-600/20 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '3s' }}></div>
+          
+          {/* Flowing wave lines with gradient - Multiple layers */}
           <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1000 1000" preserveAspectRatio="none">
             <defs>
               <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -131,50 +140,106 @@ function Home() {
                 <stop offset="50%" style={{ stopColor: 'rgb(34, 211, 238)', stopOpacity: 0.6 }} />
                 <stop offset="100%" style={{ stopColor: 'rgb(236, 72, 153)', stopOpacity: 0.6 }} />
               </linearGradient>
+              <linearGradient id="heroGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style={{ stopColor: 'rgb(59, 130, 246)', stopOpacity: 0.5 }} />
+                <stop offset="50%" style={{ stopColor: 'rgb(168, 85, 247)', stopOpacity: 0.5 }} />
+                <stop offset="100%" style={{ stopColor: 'rgb(20, 184, 166)', stopOpacity: 0.5 }} />
+              </linearGradient>
             </defs>
             <path d="M0,200 Q250,150 500,200 T1000,200" stroke="url(#heroGrad1)" strokeWidth="3" fill="none" className="animate-pulse" style={{ animationDuration: '4s' }}/>
             <path d="M0,400 Q250,500 500,400 T1000,400" stroke="url(#heroGrad1)" strokeWidth="3" fill="none" className="animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}/>
             <path d="M0,600 Q250,550 500,600 T1000,600" stroke="url(#heroGrad1)" strokeWidth="2" fill="none" className="animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}/>
+            <path d="M0,300 Q200,250 400,300 T800,300" stroke="url(#heroGrad2)" strokeWidth="2" fill="none" className="animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '0.5s' }}/>
+            <path d="M200,100 Q400,50 600,100 T1000,100" stroke="url(#heroGrad2)" strokeWidth="2" fill="none" className="animate-pulse" style={{ animationDuration: '7s', animationDelay: '1.5s' }}/>
           </svg>
           
-          {/* Scattered light particles */}
-          {[...Array(25)].map((_, i) => (
+          {/* Scattered light particles - Increased count */}
+          {[...Array(40)].map((_, i) => (
             <div
               key={i}
               className="absolute rounded-full animate-float"
               style={{
-                width: `${3 + Math.random() * 6}px`,
-                height: `${3 + Math.random() * 6}px`,
-                left: `${10 + Math.random() * 80}%`,
-                top: `${10 + Math.random() * 80}%`,
-                background: `rgba(${Math.random() > 0.66 ? '168, 85, 247' : Math.random() > 0.33 ? '34, 211, 238' : '236, 72, 153'}, ${0.3 + Math.random() * 0.5})`,
-                animationDelay: `${Math.random() * 4}s`,
-                animationDuration: `${5 + Math.random() * 5}s`,
-                boxShadow: `0 0 ${10 + Math.random() * 15}px rgba(${Math.random() > 0.5 ? '168, 85, 247' : '34, 211, 238'}, 0.6)`,
+                width: `${2 + Math.random() * 7}px`,
+                height: `${2 + Math.random() * 7}px`,
+                left: `${5 + Math.random() * 90}%`,
+                top: `${5 + Math.random() * 90}%`,
+                background: `rgba(${Math.random() > 0.75 ? '168, 85, 247' : Math.random() > 0.5 ? '34, 211, 238' : Math.random() > 0.25 ? '236, 72, 153' : '59, 130, 246'}, ${0.3 + Math.random() * 0.6})`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${4 + Math.random() * 6}s`,
+                boxShadow: `0 0 ${10 + Math.random() * 20}px rgba(${Math.random() > 0.5 ? '168, 85, 247' : '34, 211, 238'}, 0.7)`,
               }}
             />
           ))}
           
-          {/* Radial burst effects */}
+          {/* Radial burst effects - Enhanced with more layers */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 opacity-15">
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/40 to-transparent animate-ping" style={{ animationDuration: '5s' }}></div>
           </div>
           <div className="absolute top-1/4 right-1/4 w-64 h-64 opacity-10">
             <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/40 to-transparent animate-ping" style={{ animationDuration: '6s', animationDelay: '1.5s' }}></div>
           </div>
+          <div className="absolute bottom-1/4 left-1/4 w-80 h-80 opacity-12">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500/35 to-transparent animate-ping" style={{ animationDuration: '7s', animationDelay: '2s' }}></div>
+          </div>
+          <div className="absolute top-1/3 right-1/3 w-72 h-72 opacity-10">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/35 to-transparent animate-ping" style={{ animationDuration: '6.5s', animationDelay: '0.8s' }}></div>
+          </div>
           
-          {/* Geometric accents */}
+          {/* Geometric accents - More variety */}
           <div className="absolute top-1/3 left-1/5 w-32 h-32 border-2 border-cyan-400/20 rounded-lg rotate-12 animate-pulse opacity-30"></div>
           <div className="absolute bottom-1/3 right-1/5 w-24 h-24 border-2 border-purple-400/20 rounded-full animate-pulse opacity-25" style={{ animationDuration: '4s' }}></div>
+          <div className="absolute top-1/5 left-1/3 w-28 h-28 border-2 border-pink-400/20 rounded-lg -rotate-12 animate-pulse opacity-28" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+          <div className="absolute bottom-1/5 right-1/3 w-20 h-20 border-2 border-indigo-400/20 rounded-full animate-pulse opacity-30" style={{ animationDuration: '4.5s', animationDelay: '2s' }}></div>
+          <div className="absolute top-2/3 left-2/3 w-36 h-36 border border-fuchsia-400/15 rounded-lg rotate-45 animate-pulse opacity-25" style={{ animationDuration: '6s', animationDelay: '1.5s' }}></div>
           
-          {/* Color streaks */}
+          {/* Color streaks - More dynamic */}
           <div className="absolute top-1/4 left-1/3 w-2 h-48 bg-gradient-to-b from-purple-500/30 to-transparent opacity-30 animate-pulse" style={{ animationDuration: '4s' }}></div>
           <div className="absolute bottom-1/4 right-1/3 w-2 h-40 bg-gradient-to-t from-cyan-500/30 to-transparent opacity-30 animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+          <div className="absolute top-1/3 right-1/4 w-2 h-56 bg-gradient-to-b from-pink-500/25 to-transparent opacity-25 animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '2s' }}></div>
+          <div className="absolute bottom-1/3 left-1/4 w-1.5 h-44 bg-gradient-to-t from-indigo-500/25 to-transparent opacity-25 animate-pulse" style={{ animationDuration: '6s', animationDelay: '0.5s' }}></div>
+          <div className="absolute top-1/2 left-1/5 w-64 h-2 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent opacity-25 animate-pulse" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
+          <div className="absolute top-2/3 right-1/6 w-56 h-1.5 bg-gradient-to-l from-transparent via-purple-500/20 to-transparent opacity-25 animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '2.5s' }}></div>
+          
+          {/* Additional sparkle effects */}
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={`sparkle-${i}`}
+              className="absolute"
+              style={{
+                left: `${10 + Math.random() * 80}%`,
+                top: `${10 + Math.random() * 80}%`,
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="animate-pulse" style={{ animationDuration: `${2 + Math.random() * 3}s`, animationDelay: `${Math.random() * 3}s` }}>
+                <path d="M12 2L15 9L22 9L16.5 14L19 21L12 16.5L5 21L7.5 14L2 9L9 9L12 2Z" 
+                  fill={`rgba(${Math.random() > 0.5 ? '168, 85, 247' : Math.random() > 0.25 ? '34, 211, 238' : '236, 72, 153'}, ${0.2 + Math.random() * 0.3})`}
+                />
+              </svg>
+            </div>
+          ))}
+          
+          {/* Mesh grid pattern overlay */}
+          <div className="absolute top-0 right-0 w-1/2 h-1/2 opacity-10" 
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(34, 211, 238, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(168, 85, 247, 0.3) 1px, transparent 1px)
+              `,
+              backgroundSize: '30px 30px',
+            }}
+          />
+          <div className="absolute bottom-0 left-0 w-1/2 h-1/2 opacity-8" 
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(236, 72, 153, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.25) 1px, transparent 1px)
+              `,
+              backgroundSize: '25px 25px',
+            }}
+          />
         </div>
-        
-        {/* Main Headline */}
-        <div className="h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center mb-4 sm:mb-6 max-w-5xl px-4 relative z-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center">
+          
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center relative z-10">
             <span className="text-white">What </span>
             <span className="italic bg-gradient-to-r from-gray-300 via-white to-gray-300 bg-clip-text text-transparent animate-gradient bg-300%">
               Vision
