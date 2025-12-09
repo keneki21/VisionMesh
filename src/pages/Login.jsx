@@ -17,216 +17,123 @@ export default function Login() {
   return (
     // <div className="min-h-screen flex relative bg-linear-to-r from-black via-gray-900 to-black">
     <div className="min-h-screen h-screen flex relative bg-gray-950 overflow-hidden">
-      {/* Curved Horizon with Glowing Edge */}
+      {/* Cool Background Designs - Full Page - MUCH MORE VISIBLE */}
       <div className="absolute inset-0 overflow-hidden z-0">
-        {/* Dark gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1628] via-[#0d1b2a] to-black" />
+        {/* Colorful gradient blobs - ENHANCED VISIBILITY */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-600/60 to-pink-600/50 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }}></div>
+        <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-to-tl from-cyan-500/65 to-blue-500/55 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-gradient-to-tr from-indigo-600/55 to-purple-500/50 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/3 right-1/3 w-[380px] h-[380px] bg-gradient-to-bl from-teal-500/50 to-cyan-400/50 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '0.5s' }}></div>
         
-        {/* Curved horizon element */}
-        <div className="absolute bottom-0 left-0 right-0 h-[60vh]">
-          {/* The curved surface */}
-          <div 
-            className="absolute inset-x-0 bottom-0 h-full"
+        {/* Additional gradient blobs for richness */}
+        <div className="absolute top-1/2 left-1/6 w-[350px] h-[350px] bg-gradient-to-br from-fuchsia-600/45 to-purple-600/45 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6.5s', animationDelay: '1.5s' }}></div>
+        <div className="absolute top-1/5 right-1/3 w-[420px] h-[420px] bg-gradient-to-bl from-blue-500/50 to-indigo-600/50 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '0.8s' }}></div>
+        <div className="absolute bottom-1/5 right-1/5 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-500/45 to-teal-500/45 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7.5s', animationDelay: '2.5s' }}></div>
+        <div className="absolute top-2/3 left-1/2 w-[320px] h-[320px] bg-gradient-to-br from-pink-500/50 to-rose-600/50 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '3s' }}></div>
+        <div className="absolute top-10 left-10 w-[300px] h-[300px] bg-gradient-to-br from-violet-600/45 to-fuchsia-500/45 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-gradient-to-tl from-cyan-600/50 to-blue-600/50 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '1s' }}></div>
+        
+        {/* Flowing wave lines with gradient - MUCH MORE VISIBLE */}
+        <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="loginGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{ stopColor: 'rgb(168, 85, 247)', stopOpacity: 0.9 }} />
+              <stop offset="50%" style={{ stopColor: 'rgb(34, 211, 238)', stopOpacity: 0.9 }} />
+              <stop offset="100%" style={{ stopColor: 'rgb(236, 72, 153)', stopOpacity: 0.9 }} />
+            </linearGradient>
+            <linearGradient id="loginGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style={{ stopColor: 'rgb(59, 130, 246)', stopOpacity: 0.8 }} />
+              <stop offset="50%" style={{ stopColor: 'rgb(168, 85, 247)', stopOpacity: 0.8 }} />
+              <stop offset="100%" style={{ stopColor: 'rgb(20, 184, 166)', stopOpacity: 0.8 }} />
+            </linearGradient>
+          </defs>
+          <path d="M0,200 Q250,150 500,200 T1000,200" stroke="url(#loginGrad1)" strokeWidth="4" fill="none" className="animate-pulse" style={{ animationDuration: '4s' }}/>
+          <path d="M0,400 Q250,500 500,400 T1000,400" stroke="url(#loginGrad1)" strokeWidth="4" fill="none" className="animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}/>
+          <path d="M0,600 Q250,550 500,600 T1000,600" stroke="url(#loginGrad1)" strokeWidth="3" fill="none" className="animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}/>
+          <path d="M0,300 Q200,250 400,300 T800,300" stroke="url(#loginGrad2)" strokeWidth="3" fill="none" className="animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '0.5s' }}/>
+          <path d="M200,100 Q400,50 600,100 T1000,100" stroke="url(#loginGrad2)" strokeWidth="3" fill="none" className="animate-pulse" style={{ animationDuration: '7s', animationDelay: '1.5s' }}/>
+          <path d="M0,800 Q300,750 600,800 T1000,800" stroke="url(#loginGrad1)" strokeWidth="3" fill="none" className="animate-pulse" style={{ animationDuration: '6.5s', animationDelay: '2.5s' }}/>
+        </svg>
+        
+        {/* Scattered light particles - Balanced */}
+        {[...Array(35)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full animate-float"
             style={{
-              background: 'linear-gradient(180deg, transparent 0%, #000000 50%)',
+            width: `${2 + Math.random() * 6}px`,
+            height: `${2 + Math.random() * 6}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            background: `rgba(${Math.random() > 0.75 ? '168, 85, 247' : Math.random() > 0.5 ? '34, 211, 238' : Math.random() > 0.25 ? '236, 72, 153' : '59, 130, 246'}, ${0.3 + Math.random() * 0.4})`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${3 + Math.random() * 5}s`,
+            boxShadow: `0 0 ${10 + Math.random() * 20}px rgba(${Math.random() > 0.5 ? '168, 85, 247' : '34, 211, 238'}, 0.6)`,
             }}
           />
-          
-          {/* SVG for the curved glowing edge */}
-          <svg 
-            className="absolute inset-x-0 bottom-0 w-full h-full"
-            viewBox="0 0 1440 800"
-            preserveAspectRatio="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style={{ stopColor: '#60a5fa', stopOpacity: 0 }} />
-                <stop offset="15%" style={{ stopColor: '#3b82f6', stopOpacity: 0.8 }} />
-                <stop offset="50%" style={{ stopColor: '#60a5fa', stopOpacity: 1 }} />
-                <stop offset="85%" style={{ stopColor: '#3b82f6', stopOpacity: 0.8 }} />
-                <stop offset="100%" style={{ stopColor: '#60a5fa', stopOpacity: 0 }} />
-              </linearGradient>
-              
-              
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-                <feMerge>
-                  <feMergeNode in="coloredBlur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-            
-            {/* Curved path for the horizon */}
-            <path
-              d="M0,280 Q360,80 720,60 T1440,280 L1440,800 L0,800 Z"
-              fill="#000000"
-            />
-            
-            
-            {/* Glowing edge line */}
-            <path
-              d="M0,280 Q360,80 720,60 T1440,280"
-              fill="none"
-              stroke="url(#glowGradient)"
-              strokeWidth="3"
-              filter="url(#glow)"
-            />
-            <path
-              d="M0,300 Q360,80 720,60 T1440,300"
-              fill="none"
-              stroke="url(#glowGradient)"
-              strokeWidth="3"
-              filter="url(#glow)"
-              
-            />
-            <path
-              d="M0,290 Q360,80 720,60 T1440,290"
-              fill="none"
-              stroke="url(#glowGradient)"
-              strokeWidth="3"
-              filter="url(#glow)"
-            />
-            <path
-              d="M0,295 Q360,80 720,60 T1440,295"
-              fill="none"
-              stroke="url(#glowGradient)"
-              strokeWidth="3"
-              filter="url(#glow)"
-            />
-            <path
-              d="M0,299 Q360,80 720,60 T1440,299"
-              fill="none"
-              stroke="url(#glowGradient)"
-              strokeWidth="3"
-              filter="url(#glow)"
-            />
-            {/* Stars under the horizon */}
-            <g>
-              {/* Stars above horizon line (cy < 280) */}
-              <circle cx="100" cy="50" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="250" cy="80" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="380" cy="120" r="1.4" fill="white" opacity="0.9" />
-              <circle cx="520" cy="90" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="670" cy="140" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="800" cy="100" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="940" cy="160" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="1080" cy="110" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="1220" cy="180" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1350" cy="130" r="1.1" fill="white" opacity="0.7" />
-              
-              <circle cx="150" cy="200" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="300" cy="220" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="460" cy="190" r="0.8" fill="white" opacity="0.6" />
-              <circle cx="600" cy="240" r="1.4" fill="white" opacity="0.9" />
-              <circle cx="750" cy="210" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="890" cy="260" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1030" cy="230" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="1170" cy="250" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="1310" cy="200" r="1.3" fill="white" opacity="0.8" />
-              
-              <circle cx="70" cy="150" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="180" cy="60" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="340" cy="170" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="490" cy="140" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="630" cy="70" r="1.4" fill="white" opacity="0.9" />
-              <circle cx="770" cy="180" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="910" cy="120" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="1050" cy="160" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1190" cy="90" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="1330" cy="270" r="1.3" fill="white" opacity="0.8" />
-              
-              {/* Additional dense star layer above horizon */}
-              <circle cx="45" cy="100" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="125" cy="135" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="210" cy="110" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="285" cy="155" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="365" cy="95" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="420" cy="145" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="505" cy="175" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="575" cy="115" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="655" cy="165" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="715" cy="135" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="835" cy="85" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="875" cy="195" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="965" cy="105" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1015" cy="185" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="1105" cy="145" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="1155" cy="65" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="1245" cy="125" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="1295" cy="155" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="1375" cy="95" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1415" cy="235" r="1.1" fill="white" opacity="0.7" />
-              
-              <circle cx="55" cy="185" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="135" cy="225" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="225" cy="245" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="315" cy="265" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="405" cy="215" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="535" cy="255" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="645" cy="235" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="695" cy="195" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="825" cy="245" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="955" cy="225" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="995" cy="265" r="1.2" fill="white" opacity="0.8" />
-              <circle cx="1115" cy="205" r="1.0" fill="white" opacity="0.7" />
-              <circle cx="1205" cy="235" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1265" cy="245" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="1385" cy="175" r="1.3" fill="white" opacity="0.8" />
-              
-              {/* Original stars below horizon */}
-              <circle cx="120" cy="250" r="1.5" fill="white" opacity="0.8" />
-              <circle cx="280" cy="320" r="1" fill="white" opacity="0.6" />
-              <circle cx="450" cy="280" r="1.2" fill="white" opacity="0.9" />
-              <circle cx="580" cy="350" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="720" cy="240" r="1.5" fill="white" opacity="0.8" />
-              <circle cx="850" cy="310" r="1" fill="white" opacity="0.7" />
-              <circle cx="980" cy="270" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="1150" cy="340" r="0.9" fill="white" opacity="0.6" />
-              <circle cx="1280" cy="290" r="1.2" fill="white" opacity="0.7" />
-              
-              
-              <circle cx="200" cy="380" r="1" fill="white" opacity="0.5" />
-              <circle cx="350" cy="420" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="520" cy="450" r="0.8" fill="white" opacity="0.6" />
-              <circle cx="680" cy="390" r="1.4" fill="white" opacity="0.8" />
-              <circle cx="820" cy="460" r="1" fill="white" opacity="0.6" />
-              <circle cx="950" cy="410" r="1.1" fill="white" opacity="0.7" />
-              <circle cx="1100" cy="480" r="0.9" fill="white" opacity="0.5" />
-              <circle cx="1240" cy="430" r="1.3" fill="white" opacity="0.8" />
-              
-              <circle cx="90" cy="520" r="1.2" fill="white" opacity="0.6" />
-              <circle cx="240" cy="560" r="0.9" fill="white" opacity="0.7" />
-              <circle cx="410" cy="590" r="1.1" fill="white" opacity="0.6" />
-              <circle cx="560" cy="540" r="1.4" fill="white" opacity="0.9" />
-              <circle cx="740" cy="580" r="0.8" fill="white" opacity="0.5" />
-              <circle cx="890" cy="620" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="1030" cy="570" r="1" fill="white" opacity="0.8" />
-              <circle cx="1180" cy="610" r="1.3" fill="white" opacity="0.7" />
-              <circle cx="1320" cy="550" r="0.9" fill="white" opacity="0.6" />
-              
-              <circle cx="160" cy="680" r="1.1" fill="white" opacity="0.6" />
-              <circle cx="310" cy="720" r="1.3" fill="white" opacity="0.8" />
-              <circle cx="480" cy="690" r="0.9" fill="white" opacity="0.5" />
-              <circle cx="640" cy="740" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="780" cy="710" r="1.4" fill="white" opacity="0.9" />
-              <circle cx="920" cy="760" r="1" fill="white" opacity="0.6" />
-              <circle cx="1070" cy="700" r="1.2" fill="white" opacity="0.7" />
-              <circle cx="1210" cy="730" r="0.8" fill="white" opacity="0.5" />
-            </g>
-          </svg>
-          
-          {/* Additional glow overlay */}
-          <div 
-            className="absolute inset-x-0 top-1/2 h-32 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(96, 165, 250, 0.15), transparent)',
-            }}
-          />
+        ))}
+        
+        {/* Radial burst effects - MUCH MORE VISIBLE */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-40">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/60 to-transparent animate-ping" style={{ animationDuration: '5s' }}></div>
         </div>
+        <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] opacity-35">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/60 to-transparent animate-ping" style={{ animationDuration: '6s', animationDelay: '1.5s' }}></div>
+        </div>
+        <div className="absolute bottom-1/4 left-1/4 w-[450px] h-[450px] opacity-35">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-500/55 to-transparent animate-ping" style={{ animationDuration: '7s', animationDelay: '2s' }}></div>
+        </div>
+        <div className="absolute top-1/3 right-1/3 w-[380px] h-[380px] opacity-30">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/55 to-transparent animate-ping" style={{ animationDuration: '6.5s', animationDelay: '0.8s' }}></div>
+        </div>
+        
+        {/* Geometric accents - MUCH MORE VISIBLE */}
+        <div className="absolute top-1/3 left-1/5 w-40 h-40 border-3 border-cyan-400/50 rounded-lg rotate-12 animate-pulse opacity-60"></div>
+        <div className="absolute bottom-1/3 right-1/5 w-32 h-32 border-3 border-purple-400/50 rounded-full animate-pulse opacity-55" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute top-1/5 left-1/3 w-36 h-36 border-3 border-pink-400/50 rounded-lg -rotate-12 animate-pulse opacity-58" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/5 right-1/3 w-28 h-28 border-3 border-indigo-400/50 rounded-full animate-pulse opacity-60" style={{ animationDuration: '4.5s', animationDelay: '2s' }}></div>
+        <div className="absolute top-2/3 left-2/3 w-44 h-44 border-2 border-fuchsia-400/45 rounded-lg rotate-45 animate-pulse opacity-55" style={{ animationDuration: '6s', animationDelay: '1.5s' }}></div>
+        
+        {/* Color streaks - MUCH MORE VISIBLE */}
+        <div className="absolute top-1/4 left-1/3 w-3 h-64 bg-gradient-to-b from-purple-500/60 to-transparent opacity-60 animate-pulse" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute bottom-1/4 right-1/3 w-3 h-56 bg-gradient-to-t from-cyan-500/60 to-transparent opacity-60 animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+        <div className="absolute top-1/3 right-1/4 w-3 h-72 bg-gradient-to-b from-pink-500/55 to-transparent opacity-55 animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/3 left-1/4 w-2.5 h-60 bg-gradient-to-t from-indigo-500/55 to-transparent opacity-55 animate-pulse" style={{ animationDuration: '6s', animationDelay: '0.5s' }}></div>
+        <div className="absolute top-1/2 left-1/5 w-80 h-3 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent opacity-55 animate-pulse" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
+        <div className="absolute top-2/3 right-1/6 w-72 h-2.5 bg-gradient-to-l from-transparent via-purple-500/50 to-transparent opacity-55 animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '2.5s' }}></div>
+        
+        {/* Additional sparkle effects - Subtle */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`sparkle-${i}`}
+            className="absolute"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="animate-pulse" style={{ animationDuration: `${2 + Math.random() * 3}s`, animationDelay: `${Math.random() * 3}s` }}>
+              <path d="M12 2L15 9L22 9L16.5 14L19 21L12 16.5L5 21L7.5 14L2 9L9 9L12 2Z" 
+                fill={`rgba(${Math.random() > 0.5 ? '168, 85, 247' : Math.random() > 0.25 ? '34, 211, 238' : '236, 72, 153'}, ${0.5 + Math.random() * 0.5})`}
+              />
+            </svg>
+          </div>
+        ))}
+        
+        {/* Mesh grid pattern overlay - Subtle */}
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 opacity-12" 
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(34, 211, 238, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(168, 85, 247, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+          }}
+        />
+        
+        {/* Dark overlay for subtle effect */}
+        <div className="absolute inset-0 bg-black/30"></div>
       </div>
-
 
       {/* Full Background Video - YouTube Embed */}
       {/* <div className="absolute inset-0 z-0 overflow-hidden">
@@ -242,7 +149,7 @@ export default function Login() {
       </div> */}
 
       {/* Full Background Image */}
-      <div className="absolute inset-0 z-0">
+      {/* <div className="absolute inset-0 z-0">
         <img 
           src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAL8AzQMBIgACEQEDEQH/xAAbAAEBAQEBAQEBAAAAAAAAAAACAwEABQQHBv/EAB4QAQEBAAMBAQEBAQAAAAAAAAIAAQMEYRESUSET/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/APl1U9VmqnqgSUEopU0oElTSilTSgSVNKKVNKBJU0opU0oElTSilTSgSVNKKVNKBJQSjqp6oElT1RShqgWqnqs1Q1Qbqhu2ao7sC3Ybtm7Hdg3dj9utzIP0tKmlFKmlAkqaUUqaUCSppRSppQJKmlFKmlAkqaUUqaUCSppRSppQJKGqOqnqgWqGqOqGqBaqeqzVHdg7VZux3Y7sG7sd2zdsg77d8tzJZkGZksy3MnmQf3CVNKKVNKBJU0opU0oElTSilTSgSVNKKVNKBJU0opQSgSVNKOqGqBaqeqzVDVBuqG7duw3YFuw3bN2O7Bv2O7dbmQZ8lmSzLcyDsyWZbmTwwZhlhnmSwwf0aVNKKVNKBJU0opU0oElTSilTSgSUNUdVNKBaoao6oaoN1Q3bNUd2DtVm7Hdjuwbux3bN2yDvt1uZPMgOZPMuzJ5kGZk8NuGphgOGeGRM8MGYZYZ4Z4YPsSppRSppQJKmlFKCUC1U9UdUNUC1U9VmqGqDd2G7duw3YN3Y7sd2zdg3dj9utzIMzJZksy3Mg7MlmW5k8MGYZ4ZYZkwHDUw24amGA4amGRMyYCTUwyJqYYPjSppWaqeqBaqeqzVT1QLVDVZqjuwdux3bN2O7Bu7Hds3bIOuzLcyeZAcyeZdmTzIMzJZk8M8MBwzwywzwwZhnhkTUJgOGoTaTUJgJNQmRNQmAkz/MyamGD+c1Q1R1R1Qbqhu3bsN2DtVm7Zux3YN3Y/brcyDMyWZLMtzIOzJZluZUwwHDPDLDPDAcNTDbhqEwHDUwywzJgwmZMiahMBJqEyJqEwEmoTImoTASamGRNTDB/D7sd2zdjuwbux3bN2yDt275bmTzIDmTzJZluZB2ZLDbmVMMBwzwywzJgzDMmRNQmA4ahMsMyYCTUJkTUJgJNQmRNQmAk1CZE1CYCTUJkTUJgJM/zMmeGD823Y/brcyDPksyWZPMgOZLMtzKmGA5k8MsM8MGYZ4ZYZ4YCTUwyJqYYCTPDImoTASahMiahMBJqEyJqkwAmoTMmoTASZkyJqEwEmoTImeGDCZYZ4ZfmD8szJZk8yWGA5k8yWGeGA4amG3DUJgOGZMiahMBJqYZE1CYCTMmRNQmAk1CZk1CYCTUJkTUJgJNQmRNQmAE1CZE1CYCTUJkTPDASZ4ZYZ4YMwywyzJZkH5XmVMMM5MnnJkDwzwwzkNTOQwImoTA8hqHkP9yBk1CYHkPkzyHyBk1CYHkPlQ8uQUJqE0zymoeU+QUJqEwPIfJnkPkFCahMDyHyZ5D5AyahMM5DUPIfIHhnhgeQ1M5D5A8M8MM5DPOQwPDLMjnJk8eQbmTzI4zL95B+P/Fd9V9m8OR3iyD585NtzmqbxZT3iyB5zSzmo/8APY/nYPrzn2pnPfB/v9u/S/sHonsbUzse3mZy7bnLsHqnse1D2Pbyc5dnnNsHrns7/ah7Pt4+c2zzm2D2T2fah7Pt4uc+1M59g9o9n2oe17eKefZnn2D2z2fah7Pt4h7G1D2Ng9s9n2Z7Ht4p7G1D2Ng9o9j2pnY9vFPY2oexsHtZ2PZZ2Pbxz2NqZz7B/9k=" 
           alt="" 
@@ -250,13 +157,13 @@ export default function Login() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>
-      </div>
+      </div> */}
 
       {/* Left Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-20">
         <div className="w-full max-w-[450px]">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl mb-2 text-center text-white font-extrabold">
-            Vision<span className="text-[#e50914]">Mesh</span>
+            Vision<span className="text-cyan-400">Mesh</span>
           </h1>
           <p className="text-sm sm:text-base lg:text-lg text-[#b3b3b3] mb-8 sm:mb-12 text-center">Analyzing and Weaving Better Visuals</p>
 
@@ -286,7 +193,7 @@ export default function Login() {
 
               <button 
                 type="submit" 
-                className="w-full px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#e50914] text-white rounded-lg font-medium transition-all duration-300 hover:bg-[#b20710] hover:shadow-[0_4px_20px_rgba(229,9,20,0.4)]"
+                className="w-full px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium transition-all duration-300 hover:from-cyan-600 hover:to-blue-600 hover:shadow-[0_4px_20px_rgba(34,211,238,0.4)]"
               >
                 Continue with email
               </button>

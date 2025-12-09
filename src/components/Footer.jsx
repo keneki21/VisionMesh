@@ -9,7 +9,7 @@ function Footer() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1 text-2xl font-bold hover:opacity-80 transition-opacity">
             <span className="text-white">Vision</span>
-            <span className="text-red-600">Mesh</span>
+            <span className="text-cyan-400">Mesh</span>
           </Link>
 
           {/* Tagline */}
