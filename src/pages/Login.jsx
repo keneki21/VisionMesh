@@ -1,17 +1,118 @@
-﻿import React from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Login() {
   const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(true); // true for login, false for signup
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    try { localStorage.setItem('vm_auth', 'true'); } catch (e) {}
+  // API base URL - adjust according to your backend
+  const API_BASE_URL = 'http://localhost:5000';
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleLogin = (token) => {
+    try { 
+      localStorage.setItem('vm_auth', 'true');
+      localStorage.setItem('vm_token', token);
+    } catch (e) {
+      console.error('Local storage error:', e);
+    }
     navigate('/home');
   };
 
-  const handleSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    handleLogin();
+    setError('');
+    setLoading(true);
+
+    // Validate form
+    if (!formData.email || !formData.password) {
+      setError('Email and password are required');
+      setLoading(false);
+      return;
+    }
+
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      if (isLogin) {
+        // Login request with credentials to receive cookies
+        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+          email: formData.email,
+          password: formData.password
+        }, {
+          withCredentials: true // Important: allows cookies to be set
+        });
+        
+        if (response.data.token) {
+          // Store user data
+          localStorage.setItem('vm_user', JSON.stringify(response.data.user));
+          handleLogin(response.data.token);
+        } else {
+          setError(response.data.msg || 'Login failed');
+        }
+      } else {
+        // Signup request - need username, email, password
+        const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+          username: formData.email.split('@')[0], // Use email prefix as username
+          email: formData.email,
+          password: formData.password
+        }, {
+          withCredentials: true // Important: allows cookies to be set
+        });
+        
+        if (response.data.token) {
+          // Registration now returns token directly
+          localStorage.setItem('vm_user', JSON.stringify(response.data.user));
+          handleLogin(response.data.token);
+        } else {
+          setError(response.data.msg || 'Signup failed');
+        }
+      }
+    } catch (err) {
+      console.error('Auth error:', err);
+      setError(err.response?.data?.msg || 'An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    // Handle Google OAuth
+    window.location.href = `${API_BASE_URL}/auth/google`;
+  };
+
+  const handleGitHubLogin = async () => {
+    // Handle GitHub OAuth
+    window.location.href = `${API_BASE_URL}/auth/github`;
+  };
+
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setError('');
+    setFormData({
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
   };
 
   return (
@@ -168,7 +269,28 @@ export default function Login() {
           <p className="text-sm sm:text-base lg:text-lg text-[#b3b3b3] mb-8 sm:mb-12 text-center">Analyzing and Weaving Better Visuals</p>
 
           <div className="bg-white/5 backdrop-blur-md border-b rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/5">
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <div className="flex justify-center mb-6">
+              <button
+                onClick={() => setIsLogin(true)}
+                className={`px-6 py-2 rounded-l-lg transition-all ${isLogin ? 'bg-blue-500 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+              >
+                Login
+              </button>
+              <button
+                onClick={() => setIsLogin(false)}
+                className={`px-6 py-2 rounded-r-lg transition-all ${!isLogin ? 'bg-blue-500 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+              >
+                Sign Up
+              </button>
+            </div>
+
+            <form onSubmit={handleEmailSubmit} className="space-y-3 sm:space-y-4">
+              {error && (
+                <div className="bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+
               <div>
                 <label className="sr-only">Email</label>
                 <input 
@@ -176,6 +298,8 @@ export default function Login() {
                   type="email" 
                   placeholder="Enter your email" 
                   required 
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 rounded-lg text-white placeholder-[#666] transition-all duration-300 focus:outline-none focus:border-white focus:shadow-[0_0_15px_rgba(229,9,20,0.2)]"
                 />
               </div>
@@ -187,16 +311,56 @@ export default function Login() {
                   type="password" 
                   placeholder="Enter your password" 
                   required 
+                  value={formData.password}
+                  onChange={handleInputChange}
                   className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 rounded-lg text-white placeholder-[#666] transition-all duration-300 focus:outline-none focus:border-white focus:shadow-[0_0_15px_rgba(229,9,20,0.2)]"
                 />
               </div>
 
+              {!isLogin && (
+                <div>
+                  <label className="sr-only">Confirm Password</label>
+                  <input 
+                    name="confirmPassword" 
+                    type="password" 
+                    placeholder="Confirm your password" 
+                    required 
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 rounded-lg text-white placeholder-[#666] transition-all duration-300 focus:outline-none focus:border-white focus:shadow-[0_0_15px_rgba(229,9,20,0.2)]"
+                  />
+                </div>
+              )}
+
               <button 
                 type="submit" 
-                className="w-full px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-blue-500 text-white rounded-lg font-medium transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_4px_20px_rgba(34,211,238,0.4)]"
+                disabled={loading}
+                className="w-full px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-blue-500 text-white rounded-lg font-medium transition-all duration-300 hover:bg-blue-600 hover:shadow-[0_4px_20px_rgba(34,211,238,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continue with email
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Processing...
+                  </span>
+                ) : (
+                  isLogin ? 'Continue with email' : 'Create Account'
+                )}
               </button>
+
+              {isLogin && (
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={toggleMode}
+                    className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    Don't have an account? Sign up
+                  </button>
+                </div>
+              )}
 
               <div className="relative my-4 sm:my-6">
                 <div className="absolute inset-0 flex items-center">
@@ -211,7 +375,7 @@ export default function Login() {
                 <button 
                   type="button" 
                   className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-white hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
-                  onClick={handleLogin}
+                  onClick={() => handleSocialLogin('google')}
                 >
                   <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#EA4335" d="M24 9.5c3.9 0 7.3 1.4 10 3.9l7.5-7.5C36.8 2.7 30.8 0 24 0 14.9 0 6.9 5 2.7 12.5l8.8 6.8C12.8 15 17.9 9.5 24 9.5z"/>
@@ -224,7 +388,7 @@ export default function Login() {
                 <button 
                   type="button" 
                   className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-white hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
-                  onClick={handleLogin}
+                  onClick={() => handleSocialLogin('github')}
                 >
                   <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.64 3.01 8.57 7.19 9.96.53.1.72-.23.72-.51 0-.25-.01-.92-.01-1.8-2.92.64-3.53-1.4-3.53-1.4-.48-1.22-1.17-1.55-1.17-1.55-.96-.66.07-.65.07-.65 1.06.08 1.62 1.09 1.62 1.09.94 1.61 2.47 1.14 3.07.87.1-.68.37-1.14.67-1.4-2.33-.27-4.78-1.17-4.78-5.2 0-1.15.41-2.09 1.09-2.82-.11-.27-.48-1.36.1-2.83 0 0 .89-.29 2.92 1.08a10.2 10.2 0 012.66-.36c.9 0 1.8.12 2.66.36 2.03-1.37 2.92-1.08 2.92-1.08.58 1.47.21 2.56.1 2.83.68.73 1.09 1.67 1.09 2.82 0 4.04-2.46 4.92-4.8 5.18.38.33.72.98.72 1.98 0 1.43-.01 2.58-.01 2.93 0 .28.19.62.73.51C20.1 20.17 23.1 16.24 23.1 11.6 23.1 5.33 18.27.5 12 .5z"/>
