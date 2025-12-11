@@ -128,6 +128,8 @@ router.get("/profile", authMiddleware, async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
+                profilePicture: user.profilePicture || null,
+                authProvider: user.authProvider,
                 createdAt: user.createdAt
             }
         });
@@ -249,5 +251,36 @@ router.get("/github/callback",
         }
     }
 );
+
+// DELETE ACCOUNT (Protected Route)
+router.delete("/delete-account", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Find and delete the user
+        const user = await User.findByIdAndDelete(userId);
+
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        // Clear cookie
+        res.clearCookie("token");
+
+        // Destroy session
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Error destroying session:", err);
+            }
+        });
+
+        console.log("Account deleted:", user.email);
+
+        res.json({ msg: "Account deleted successfully" });
+    } catch (err) {
+        console.error("Delete account error:", err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
 
 module.exports = router;

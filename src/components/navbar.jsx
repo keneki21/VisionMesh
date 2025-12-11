@@ -1,12 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const userData = localStorage.getItem('vm_user');
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
+  }, []);
 
   const handleSignOut = () => {
     localStorage.removeItem('vm_auth');
+    localStorage.removeItem('vm_token');
+    localStorage.removeItem('vm_user');
     navigate('/login');
   };
 
@@ -23,16 +38,53 @@ function Navbar() {
         <div className="flex items-center gap-3 sm:gap-4 ml-6 sm:ml-10 relative">
           <button 
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black border-2 border-white/20 hover:border-cyan-400 hover:scale-110 transition-all duration-300 shadow-lg shadow-cyan-600/30 flex items-center justify-center group"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black border-2 border-white/20 hover:border-cyan-400 hover:scale-110 transition-all duration-300 shadow-lg shadow-cyan-600/30 flex items-center justify-center group overflow-hidden"
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+            {user && user.profilePicture ? (
+              <img 
+                src={user.profilePicture} 
+                alt={user.username || 'User'} 
+                className="w-full h-full object-cover rounded-full"
+              />
+            ) : (
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            )}
           </button>
 
           {/* Dropdown Menu */}
           {showDropdown && (
             <div className="absolute top-12 sm:top-14 right-0 w-44 sm:w-48 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl shadow-black/50 overflow-hidden">
+              {/* User Info Header */}
+              {user && (
+                <div className="px-4 py-3 border-b border-white/10 bg-white/5">
+                  <div className="flex items-center gap-3">
+                    {user.profilePicture ? (
+                      <img 
+                        src={user.profilePicture} 
+                        alt={user.username} 
+                        className="w-10 h-10 rounded-full object-cover border-2 border-cyan-400/30 shadow-lg"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500/30 to-blue-500/30 flex items-center justify-center border-2 border-cyan-400/30">
+                        <span className="text-sm font-bold text-cyan-300">
+                          {user.username?.charAt(0).toUpperCase() || 'U'}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white truncate">
+                        {user.username || 'User'}
+                      </p>
+                      <p className="text-xs text-gray-400 truncate">
+                        {user.email || ''}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <div className="py-1 sm:py-2">
                 <button 
                   onClick={() => {
@@ -62,7 +114,13 @@ function Navbar() {
                   <span className="text-sm">Files</span>
                 </button> */}
 
-                <button className="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-2 sm:gap-3">
+                <button 
+                  onClick={() => {
+                    navigate('/help');
+                    setShowDropdown(false);
+                  }}
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-2 sm:gap-3"
+                >
                   <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>

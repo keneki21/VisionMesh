@@ -1,8 +1,11 @@
+
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 
 function Home() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('upload');
   const [dragActive, setDragActive] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
@@ -15,12 +18,47 @@ function Home() {
   ];
 
   useEffect(() => {
+    // Check for OAuth token and fetch user data
+    const handleOAuthCallback = async () => {
+      const token = searchParams.get('token');
+      const google = searchParams.get('google');
+      const github = searchParams.get('github');
+
+      if (token && (google === 'success' || github === 'success')) {
+        // Store token
+        localStorage.setItem('vm_auth', 'true');
+        localStorage.setItem('vm_token', token);
+
+        // Fetch user profile data from backend
+        try {
+          const response = await axios.get('http://localhost:5000/auth/profile', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true
+          });
+
+          if (response.data.user) {
+            // Store user data including profile picture
+            localStorage.setItem('vm_user', JSON.stringify(response.data.user));
+          }
+
+          // Clean up URL
+          window.history.replaceState({}, document.title, '/home');
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        }
+      }
+    };
+
+    handleOAuthCallback();
+
     const interval = setInterval(() => {
       setTextIndex((prevIndex) => (prevIndex + 1) % textVariations.length);
     }, 3000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [searchParams]);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -496,7 +534,7 @@ function Home() {
               {[...Array(8)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute rounded-full"
+                  className="absolute rounded-full animate-pulse"
                   style={{
                     width: `${2 + Math.random() * 3}px`,
                     height: `${2 + Math.random() * 3}px`,
@@ -507,7 +545,6 @@ function Home() {
                     animationDelay: `${Math.random() * 2}s`,
                     animationDuration: `${3 + Math.random() * 3}s`,
                   }}
-                  className="animate-pulse"
                 />
               ))}
               
@@ -567,7 +604,7 @@ function Home() {
               {[...Array(10)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute rounded-full"
+                  className="absolute rounded-full animate-pulse"
                   style={{
                     width: `${2 + Math.random() * 4}px`,
                     height: `${2 + Math.random() * 4}px`,
@@ -578,7 +615,6 @@ function Home() {
                     animationDelay: `${Math.random() * 2}s`,
                     animationDuration: `${3 + Math.random() * 3}s`,
                   }}
-                  className="animate-pulse"
                 />
               ))}
               

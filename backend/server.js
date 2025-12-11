@@ -10,8 +10,10 @@ const app = express();
 
 // CORS configuration to allow credentials
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5174", // Frontend URL
-    credentials: true // Allow cookies to be sent
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Frontend URL
+    credentials: true, // Allow cookies to be sent
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow DELETE method
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allow Authorization header
 }));
 
 app.use(express.json());

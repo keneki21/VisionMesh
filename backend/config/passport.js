@@ -74,13 +74,19 @@ passport.use(
                 let user = await User.findOne({ githubId: profile.id });
 
                 if (user) {
-                    // User exists, return user
+                    // User exists, update profile picture if needed
+                    const avatarUrl = profile.photos?.[0]?.value || profile._json?.avatar_url || null;
+                    if (avatarUrl && user.profilePicture !== avatarUrl) {
+                        user.profilePicture = avatarUrl;
+                        await user.save();
+                    }
                     console.log("Existing GitHub user found:", user.email);
                     return done(null, user);
                 }
 
                 // GitHub email might not be available or might be array
                 const email = profile.emails?.[0]?.value || `${profile.username}@github.oauth`;
+                const avatarUrl = profile.photos?.[0]?.value || profile._json?.avatar_url || null;
 
                 // Check if user exists with this email (from local auth)
                 if (profile.emails?.[0]?.value) {
@@ -89,7 +95,7 @@ passport.use(
                     if (user) {
                         // Link GitHub account to existing user
                         user.githubId = profile.id;
-                        user.profilePicture = profile.photos?.[0]?.value || null;
+                        user.profilePicture = avatarUrl;
                         user.authProvider = 'github';
                         await user.save();
                         console.log("Linked GitHub to existing user:", user.email);
@@ -103,7 +109,7 @@ passport.use(
                     email: email,
                     password: "github-oauth-" + profile.id, // Placeholder password for OAuth users
                     githubId: profile.id,
-                    profilePicture: profile.photos?.[0]?.value || null,
+                    profilePicture: avatarUrl,
                     authProvider: 'github'
                 });
 
