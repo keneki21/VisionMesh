@@ -3,11 +3,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const authMiddleware = require("../middleware/auth");
+const passport = require("passport");
 
 const router = express.Router();
 
-// HARD-CODED JWT SECRET (no env)
-const JWT_SECRET = "MY_SUPER_SECRET_KEY_123456";
+// Use JWT_SECRET from env
+const JWT_SECRET = process.env.JWT_SECRET || "MY_SUPER_SECRET_KEY_123456";
 
 // REGISTER
 router.post("/register", async (req, res) => {
@@ -168,5 +169,85 @@ router.post("/logout", (req, res) => {
         res.status(500).json({ msg: "Server error" });
     }
 });
+
+// GOOGLE OAUTH ROUTES
+// Initiate Google OAuth
+router.get("/google", passport.authenticate("google", {
+    scope: ["profile", "email"]
+}));
+
+// Google OAuth callback
+router.get("/google/callback", 
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    async (req, res) => {
+        try {
+            // Generate JWT token for the user
+            const token = jwt.sign(
+                { id: req.user._id },
+                JWT_SECRET,
+                { expiresIn: "7d" }
+            );
+
+            // Set JWT in cookie
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: false,
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+                sameSite: "lax"
+            });
+
+            // Set user session
+            req.session.userId = req.user._id;
+
+            console.log("Google OAuth Success - User:", req.user.email);
+
+            // Redirect to frontend with token and user data
+            res.redirect(`${process.env.FRONTEND_URL}/home?token=${token}&google=success`);
+        } catch (err) {
+            console.error("Google OAuth Callback Error:", err);
+            res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
+        }
+    }
+);
+
+// GITHUB OAUTH ROUTES
+// Initiate GitHub OAuth
+router.get("/github", passport.authenticate("github", {
+    scope: ["user:email"]
+}));
+
+// GitHub OAuth callback
+router.get("/github/callback", 
+    passport.authenticate("github", { failureRedirect: "/login" }),
+    async (req, res) => {
+        try {
+            // Generate JWT token for the user
+            const token = jwt.sign(
+                { id: req.user._id },
+                JWT_SECRET,
+                { expiresIn: "7d" }
+            );
+
+            // Set JWT in cookie
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: false,
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+                sameSite: "lax"
+            });
+
+            // Set user session
+            req.session.userId = req.user._id;
+
+            console.log("GitHub OAuth Success - User:", req.user.email);
+
+            // Redirect to frontend with token and user data
+            res.redirect(`${process.env.FRONTEND_URL}/home?token=${token}&github=success`);
+        } catch (err) {
+            console.error("GitHub OAuth Callback Error:", err);
+            res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
+        }
+    }
+);
 
 module.exports = router;

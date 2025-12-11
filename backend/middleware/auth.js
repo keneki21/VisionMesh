@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
-// HARD-CODED JWT SECRET (should match the one in routes/auth.js)
-const JWT_SECRET = "MY_SUPER_SECRET_KEY_123456";
+// Use JWT_SECRET from env
+const JWT_SECRET = process.env.JWT_SECRET || "MY_SUPER_SECRET_KEY_123456";
 
 const authMiddleware = (req, res, next) => {
     try {

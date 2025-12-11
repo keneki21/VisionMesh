@@ -1,9 +1,10 @@
-﻿import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isLogin, setIsLogin] = useState(true); // true for login, false for signup
   const [formData, setFormData] = useState({
     email: '',
@@ -15,6 +16,19 @@ export default function Login() {
 
   // API base URL - adjust according to your backend
   const API_BASE_URL = 'http://localhost:5000';
+
+  // Check for OAuth token in URL on component mount
+  useEffect(() => {
+    const token = searchParams.get('token');
+    const error = searchParams.get('error');
+    
+    if (token) {
+      // OAuth login successful
+      handleLogin(token);
+    } else if (error === 'oauth_failed') {
+      setError('Google login failed. Please try again.');
+    }
+  }, [searchParams]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -375,7 +389,7 @@ export default function Login() {
                 <button 
                   type="button" 
                   className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-white hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
-                  onClick={() => handleSocialLogin('google')}
+                  onClick={handleGoogleLogin}
                 >
                   <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#EA4335" d="M24 9.5c3.9 0 7.3 1.4 10 3.9l7.5-7.5C36.8 2.7 30.8 0 24 0 14.9 0 6.9 5 2.7 12.5l8.8 6.8C12.8 15 17.9 9.5 24 9.5z"/>
@@ -388,7 +402,7 @@ export default function Login() {
                 <button 
                   type="button" 
                   className="w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-[#2a2a2a] border border-white/10 text-white rounded-lg font-medium transition-all duration-300 hover:border-white hover:shadow-[0_4px_15px_rgba(229,9,20,0.2)]" 
-                  onClick={() => handleSocialLogin('github')}
+                  onClick={handleGitHubLogin}
                 >
                   <svg width="16" height="16" className="sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M12 .5C5.73.5.9 5.33.9 11.6c0 4.64 3.01 8.57 7.19 9.96.53.1.72-.23.72-.51 0-.25-.01-.92-.01-1.8-2.92.64-3.53-1.4-3.53-1.4-.48-1.22-1.17-1.55-1.17-1.55-.96-.66.07-.65.07-.65 1.06.08 1.62 1.09 1.62 1.09.94 1.61 2.47 1.14 3.07.87.1-.68.37-1.14.67-1.4-2.33-.27-4.78-1.17-4.78-5.2 0-1.15.41-2.09 1.09-2.82-.11-.27-.48-1.36.1-2.83 0 0 .89-.29 2.92 1.08a10.2 10.2 0 012.66-.36c.9 0 1.8.12 2.66.36 2.03-1.37 2.92-1.08 2.92-1.08.58 1.47.21 2.56.1 2.83.68.73 1.09 1.67 1.09 2.82 0 4.04-2.46 4.92-4.8 5.18.38.33.72.98.72 1.98 0 1.43-.01 2.58-.01 2.93 0 .28.19.62.73.51C20.1 20.17 23.1 16.24 23.1 11.6 23.1 5.33 18.27.5 12 .5z"/>
