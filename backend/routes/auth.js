@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const authMiddleware = require("../middleware/auth");
 const passport = require("passport");
+const { generateVerificationCode, sendVerificationEmail } = require("../config/email");
 
 const router = express.Router();
 
@@ -24,11 +25,25 @@ router.post("/register", async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Generate verification code
+        const verificationCode = generateVerificationCode();
+        const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
         const user = await User.create({
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            isVerified: false,
+            verificationCode,
+            verificationCodeExpires
         });
+
+        // Send verification email
+        const emailSent = await sendVerificationEmail(email, username, verificationCode);
+        
+        if (!emailSent) {
+            console.warn('Failed to send verification email, but user was created');
+        }
 
         // Generate token and set cookie
         const token = jwt.sign(
@@ -49,13 +64,15 @@ router.post("/register", async (req, res) => {
         req.session.userId = user._id;
 
         res.json({ 
-            msg: "User registered successfully", 
+            msg: "User registered successfully. Please check your email for verification code.", 
             token,
             user: {
                 id: user._id,
                 username: user.username,
-                email: user.email
-            }
+                email: user.email,
+                isVerified: user.isVerified
+            },
+            requiresVerification: true
         });
 
     } catch (err) {
@@ -103,9 +120,100 @@ router.post("/login", async (req, res) => {
             user: {
                 id: user._id,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                isVerified: user.isVerified
+            },
+            requiresVerification: !user.isVerified
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
+// VERIFY EMAIL
+router.post("/verify-email", authMiddleware, async (req, res) => {
+    try {
+        const { code } = req.body;
+
+        if (!code) {
+            return res.status(400).json({ msg: "Verification code is required" });
+        }
+
+        const user = await User.findById(req.user.id);
+        
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        if (user.isVerified) {
+            return res.status(400).json({ msg: "Email already verified" });
+        }
+
+        if (!user.verificationCode || !user.verificationCodeExpires) {
+            return res.status(400).json({ msg: "No verification code found. Please request a new one." });
+        }
+
+        if (new Date() > user.verificationCodeExpires) {
+            return res.status(400).json({ msg: "Verification code has expired. Please request a new one." });
+        }
+
+        if (user.verificationCode !== code) {
+            return res.status(400).json({ msg: "Invalid verification code" });
+        }
+
+        // Verify the user
+        user.isVerified = true;
+        user.verificationCode = undefined;
+        user.verificationCodeExpires = undefined;
+        await user.save();
+
+        res.json({ 
+            msg: "Email verified successfully",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                isVerified: user.isVerified
             }
         });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
+// RESEND VERIFICATION CODE
+router.post("/resend-verification", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        if (user.isVerified) {
+            return res.status(400).json({ msg: "Email already verified" });
+        }
+
+        // Generate new verification code
+        const verificationCode = generateVerificationCode();
+        const verificationCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+        user.verificationCode = verificationCode;
+        user.verificationCodeExpires = verificationCodeExpires;
+        await user.save();
+
+        // Send verification email
+        const emailSent = await sendVerificationEmail(user.email, user.username, verificationCode);
+        
+        if (!emailSent) {
+            return res.status(500).json({ msg: "Failed to send verification email" });
+        }
+
+        res.json({ msg: "Verification code sent successfully" });
 
     } catch (err) {
         console.error(err);
@@ -130,6 +238,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
                 email: user.email,
                 profilePicture: user.profilePicture || null,
                 authProvider: user.authProvider,
+                isVerified: user.isVerified,
                 createdAt: user.createdAt
             }
         });
@@ -201,10 +310,10 @@ router.get("/google/callback",
             // Set user session
             req.session.userId = req.user._id;
 
-            console.log("Google OAuth Success - User:", req.user.email);
+            console.log("Google OAuth Success - User:", req.user.email, "Verified:", req.user.isVerified);
 
-            // Redirect to frontend with token and user data
-            res.redirect(`${process.env.FRONTEND_URL}/home?token=${token}&google=success`);
+            // OAuth users are always verified, redirect directly to home
+            res.redirect(`${process.env.FRONTEND_URL}/home`);
         } catch (err) {
             console.error("Google OAuth Callback Error:", err);
             res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
@@ -241,10 +350,10 @@ router.get("/github/callback",
             // Set user session
             req.session.userId = req.user._id;
 
-            console.log("GitHub OAuth Success - User:", req.user.email);
+            console.log("GitHub OAuth Success - User:", req.user.email, "Verified:", req.user.isVerified);
 
-            // Redirect to frontend with token and user data
-            res.redirect(`${process.env.FRONTEND_URL}/home?token=${token}&github=success`);
+            // OAuth users are always verified, redirect directly to home
+            res.redirect(`${process.env.FRONTEND_URL}/home`);
         } catch (err) {
             console.error("GitHub OAuth Callback Error:", err);
             res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);

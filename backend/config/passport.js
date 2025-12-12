@@ -9,7 +9,7 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "/auth/google/callback"
+            callbackURL: "http://localhost:5000/api/auth/google/callback"
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -32,6 +32,9 @@ passport.use(
                     user.googleId = profile.id;
                     user.profilePicture = profile.photos?.[0]?.value || null;
                     user.authProvider = 'google';
+                    user.isVerified = true; // Auto-verify OAuth users
+                    user.verificationCode = undefined;
+                    user.verificationCodeExpires = undefined;
                     await user.save();
                     console.log("Linked Google to existing user:", user.email);
                     return done(null, user);
@@ -44,7 +47,8 @@ passport.use(
                     password: "google-oauth-" + profile.id, // Placeholder password for OAuth users
                     googleId: profile.id,
                     profilePicture: profile.photos?.[0]?.value || null,
-                    authProvider: 'google'
+                    authProvider: 'google',
+                    isVerified: true // OAuth users are pre-verified
                 });
 
                 console.log("New Google user created:", user.email);
@@ -64,7 +68,7 @@ passport.use(
         {
             clientID: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            callbackURL: "/auth/github/callback"
+            callbackURL: "http://localhost:5000/api/auth/github/callback"
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -97,6 +101,9 @@ passport.use(
                         user.githubId = profile.id;
                         user.profilePicture = avatarUrl;
                         user.authProvider = 'github';
+                        user.isVerified = true; // Auto-verify OAuth users
+                        user.verificationCode = undefined;
+                        user.verificationCodeExpires = undefined;
                         await user.save();
                         console.log("Linked GitHub to existing user:", user.email);
                         return done(null, user);
@@ -110,7 +117,8 @@ passport.use(
                     password: "github-oauth-" + profile.id, // Placeholder password for OAuth users
                     githubId: profile.id,
                     profilePicture: avatarUrl,
-                    authProvider: 'github'
+                    authProvider: 'github',
+                    isVerified: true // OAuth users are pre-verified
                 });
 
                 console.log("New GitHub user created:", user.email);

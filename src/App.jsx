@@ -8,6 +8,7 @@ import CodeGeneration from './pages/CodeGeneration';
 import Help from './pages/Help';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import VerifyEmail from './pages/VerifyEmail';
 // import Analyze from './pages/Analyze';
 // import Results from './pages/Results';
 // import About from './pages/About';
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
           path="/*"

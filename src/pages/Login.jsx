@@ -69,7 +69,7 @@ export default function Login() {
     try {
       if (isLogin) {
         // Login request with credentials to receive cookies
-        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
           email: formData.email,
           password: formData.password
         }, {
@@ -79,13 +79,19 @@ export default function Login() {
         if (response.data.token) {
           // Store user data
           localStorage.setItem('vm_user', JSON.stringify(response.data.user));
-          handleLogin(response.data.token);
+          
+          // Check if user needs to verify email
+          if (response.data.requiresVerification) {
+            navigate('/verify-email');
+          } else {
+            handleLogin(response.data.token);
+          }
         } else {
           setError(response.data.msg || 'Login failed');
         }
       } else {
         // Signup request - need username, email, password
-        const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
           username: formData.email.split('@')[0], // Use email prefix as username
           email: formData.email,
           password: formData.password
@@ -96,7 +102,13 @@ export default function Login() {
         if (response.data.token) {
           // Registration now returns token directly
           localStorage.setItem('vm_user', JSON.stringify(response.data.user));
-          handleLogin(response.data.token);
+          
+          // New users need to verify email
+          if (response.data.requiresVerification) {
+            navigate('/verify-email');
+          } else {
+            handleLogin(response.data.token);
+          }
         } else {
           setError(response.data.msg || 'Signup failed');
         }
@@ -111,12 +123,12 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     // Handle Google OAuth
-    window.location.href = `${API_BASE_URL}/auth/google`;
+    window.location.href = `${API_BASE_URL}/api/auth/google`;
   };
 
   const handleGitHubLogin = async () => {
     // Handle GitHub OAuth
-    window.location.href = `${API_BASE_URL}/auth/github`;
+    window.location.href = `${API_BASE_URL}/api/auth/github`;
   };
 
   const toggleMode = () => {

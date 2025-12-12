@@ -32,11 +32,12 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/auth/register', {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           username: formData.username,
           email: formData.email,
@@ -47,9 +48,8 @@ export default function Register() {
       const data = await response.json();
 
       if (response.ok) {
-        // Registration successful, redirect to login
-        alert('Registration successful! Please login.');
-        navigate('/login');
+        // Registration successful, redirect to verification page
+        navigate('/verify-email');
       } else {
         setError(data.msg || 'Registration failed');
       }
