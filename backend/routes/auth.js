@@ -2,6 +2,8 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const UserProfile = require("../models/UserProfile");
+const ProfileChangeLog = require("../models/ProfileChangeLog");
 const authMiddleware = require("../middleware/auth");
 const passport = require("passport");
 const { generateVerificationCode, sendVerificationEmail } = require("../config/email");
@@ -312,8 +314,21 @@ router.get("/google/callback",
 
             console.log("Google OAuth Success - User:", req.user.email, "Verified:", req.user.isVerified);
 
-            // OAuth users are always verified, redirect directly to home
-            res.redirect(`${process.env.FRONTEND_URL}/home`);
+            // Create user data object to pass to frontend
+            const userData = {
+                id: req.user._id,
+                username: req.user.username,
+                email: req.user.email,
+                profilePicture: req.user.profilePicture,
+                authProvider: req.user.authProvider,
+                isVerified: req.user.isVerified
+            };
+
+            // Encode user data as base64 to pass in URL
+            const userDataEncoded = Buffer.from(JSON.stringify(userData)).toString('base64');
+
+            // OAuth users are always verified, redirect directly to home with user data
+            res.redirect(`${process.env.FRONTEND_URL}/home?google=success&token=${token}&user=${userDataEncoded}`);
         } catch (err) {
             console.error("Google OAuth Callback Error:", err);
             res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
@@ -352,14 +367,248 @@ router.get("/github/callback",
 
             console.log("GitHub OAuth Success - User:", req.user.email, "Verified:", req.user.isVerified);
 
-            // OAuth users are always verified, redirect directly to home
-            res.redirect(`${process.env.FRONTEND_URL}/home`);
+            // Create user data object to pass to frontend
+            const userData = {
+                id: req.user._id,
+                username: req.user.username,
+                email: req.user.email,
+                profilePicture: req.user.profilePicture,
+                authProvider: req.user.authProvider,
+                isVerified: req.user.isVerified
+            };
+
+            // Encode user data as base64 to pass in URL
+            const userDataEncoded = Buffer.from(JSON.stringify(userData)).toString('base64');
+
+            // OAuth users are always verified, redirect directly to home with user data
+            res.redirect(`${process.env.FRONTEND_URL}/home?github=success&token=${token}&user=${userDataEncoded}`);
         } catch (err) {
             console.error("GitHub OAuth Callback Error:", err);
             res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
         }
     }
 );
+
+// GET USER PROFILE DATA (Extended)
+router.get("/profile-extended", authMiddleware, async (req, res) => {
+    try {
+        const userProfile = await UserProfile.findOne({ userId: req.user.id });
+        
+        if (!userProfile) {
+            // Return empty profile if none exists
+            return res.json({
+                profile: {
+                    userId: req.user.id,
+                    fullName: '',
+                    bio: '',
+                    phone: '',
+                    location: '',
+                    website: '',
+                    socialLinks: {
+                        twitter: '',
+                        linkedin: '',
+                        facebook: ''
+                    },
+                    preferences: {
+                        theme: 'dark',
+                        language: 'en',
+                        notifications: {
+                            email: true,
+                            push: true
+                        }
+                    }
+                }
+            });
+        }
+
+        res.json({ profile: userProfile });
+    } catch (err) {
+        console.error("Get profile error:", err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
+// GET PROFILE CHANGE HISTORY from separate collection
+router.get("/profile-history", authMiddleware, async (req, res) => {
+    try {
+        const changeLogs = await ProfileChangeLog.find({ userId: req.user.id })
+            .populate('changedBy', 'username email')
+            .sort({ createdAt: -1 }) // Most recent first
+            .limit(50); // Limit to last 50 changes
+        
+        res.json({ 
+            history: changeLogs,
+            count: changeLogs.length
+        });
+    } catch (err) {
+        console.error("Get profile history error:", err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
+// UPDATE USER PROFILE
+router.put("/profile", authMiddleware, async (req, res) => {
+    try {
+        console.log("Profile update request received:", req.body);
+        console.log("User ID from token:", req.user.id);
+        
+        const { fullName, username, email, bio, phone, location, website, socialLinks } = req.body;
+        
+        // Update User model (username and email)
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            console.error("User not found:", req.user.id);
+            return res.status(404).json({ msg: "User not found" });
+        }
+        
+        console.log("Found user:", user.email);
+
+        // Check if email is being changed and if it's already taken
+        if (email && email !== user.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ msg: "Email already in use" });
+            }
+            user.email = email;
+        }
+
+        // Update username if provided
+        if (username && username !== user.username) {
+            user.username = username;
+        }
+
+        await user.save();
+
+        // Update or create UserProfile
+        let userProfile = await UserProfile.findOne({ userId: req.user.id });
+        let changeType = 'update';
+        let beforeState = null;
+        
+        if (userProfile) {
+            // Track changes - capture before state
+            beforeState = {
+                fullName: userProfile.fullName,
+                bio: userProfile.bio,
+                phone: userProfile.phone,
+                location: userProfile.location,
+                website: userProfile.website,
+                socialLinks: {
+                    twitter: userProfile.socialLinks?.twitter || '',
+                    linkedin: userProfile.socialLinks?.linkedin || '',
+                    facebook: userProfile.socialLinks?.facebook || ''
+                }
+            };
+
+            // Update existing profile
+            userProfile.fullName = fullName !== undefined ? fullName : userProfile.fullName;
+            userProfile.bio = bio !== undefined ? bio : userProfile.bio;
+            userProfile.phone = phone !== undefined ? phone : userProfile.phone;
+            userProfile.location = location !== undefined ? location : userProfile.location;
+            userProfile.website = website !== undefined ? website : userProfile.website;
+            if (socialLinks) {
+                userProfile.socialLinks = { ...userProfile.socialLinks, ...socialLinks };
+            }
+        } else {
+            // Create new profile
+            changeType = 'create';
+            userProfile = new UserProfile({
+                userId: req.user.id,
+                fullName: fullName || '',
+                bio: bio || '',
+                phone: phone || '',
+                location: location || '',
+                website: website || '',
+                socialLinks: socialLinks || {}
+            });
+        }
+
+        // Capture after state
+        const afterState = {
+            fullName: userProfile.fullName,
+            bio: userProfile.bio,
+            phone: userProfile.phone,
+            location: userProfile.location,
+            website: userProfile.website,
+            socialLinks: {
+                twitter: userProfile.socialLinks?.twitter || '',
+                linkedin: userProfile.socialLinks?.linkedin || '',
+                facebook: userProfile.socialLinks?.facebook || ''
+            }
+        };
+
+        // Determine which fields changed
+        const fieldsChanged = [];
+        if (changeType === 'create') {
+            fieldsChanged.push('initial_creation');
+        } else {
+            if (beforeState.fullName !== afterState.fullName) fieldsChanged.push('fullName');
+            if (beforeState.bio !== afterState.bio) fieldsChanged.push('bio');
+            if (beforeState.phone !== afterState.phone) fieldsChanged.push('phone');
+            if (beforeState.location !== afterState.location) fieldsChanged.push('location');
+            if (beforeState.website !== afterState.website) fieldsChanged.push('website');
+            if (JSON.stringify(beforeState.socialLinks) !== JSON.stringify(afterState.socialLinks)) {
+                fieldsChanged.push('socialLinks');
+            }
+        }
+
+        // Save profile first
+        await userProfile.save();
+
+        console.log("Profile saved successfully");
+
+        // Create change log entry in separate collection if there are changes
+        if (fieldsChanged.length > 0 || changeType === 'create') {
+            const changeLog = await ProfileChangeLog.create({
+                userId: req.user.id,
+                profileId: userProfile._id,
+                changedBy: req.user.id,
+                changeType: changeType,
+                beforeState: beforeState,
+                afterState: afterState,
+                fieldsChanged: fieldsChanged,
+                userInfo: {
+                    username: user.username,
+                    email: user.email
+                },
+                ipAddress: req.ip || req.connection.remoteAddress,
+                userAgent: req.get('user-agent')
+            });
+
+            console.log("Change log created in separate collection:", {
+                id: changeLog._id,
+                changeType: changeType,
+                fieldsChanged: fieldsChanged,
+                beforeState: beforeState,
+                afterState: afterState
+            });
+        } else {
+            console.log("No fields changed, skipping change log entry");
+        }
+
+        // Return updated user data
+        const updatedUser = await User.findById(req.user.id).select("-password");
+        
+        console.log("Sending response with updated user data");
+        
+        res.json({
+            msg: "Profile updated successfully",
+            user: {
+                id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                profilePicture: updatedUser.profilePicture || null,
+                authProvider: updatedUser.authProvider,
+                isVerified: updatedUser.isVerified,
+                createdAt: updatedUser.createdAt
+            },
+            profile: userProfile
+        });
+    } catch (err) {
+        console.error("Update profile error - Full details:", err);
+        console.error("Error stack:", err.stack);
+        res.status(500).json({ msg: "Server error", error: err.message });
+    }
+});
 
 // DELETE ACCOUNT (Protected Route)
 router.delete("/delete-account", authMiddleware, async (req, res) => {

@@ -19,7 +19,13 @@ passport.use(
                 let user = await User.findOne({ googleId: profile.id });
 
                 if (user) {
-                    // User exists, return user
+                    // User exists, update profile picture if available
+                    const googlePhotoUrl = profile.photos?.[0]?.value || null;
+                    if (googlePhotoUrl && user.profilePicture !== googlePhotoUrl) {
+                        user.profilePicture = googlePhotoUrl;
+                        await user.save();
+                        console.log("Updated Google profile picture for:", user.email);
+                    }
                     console.log("Existing Google user found:", user.email);
                     return done(null, user);
                 }

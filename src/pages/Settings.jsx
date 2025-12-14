@@ -11,6 +11,9 @@ function Settings() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState('');
+  const [profileSuccess, setProfileSuccess] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -22,23 +25,98 @@ function Settings() {
   });
 
   useEffect(() => {
-    // Get user data from localStorage
-    const userData = localStorage.getItem('vm_user');
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-        // Pre-fill form with user data
-        setFormData(prev => ({
-          ...prev,
-          fullName: parsedUser.username || '',
-          email: parsedUser.email || '',
-          username: parsedUser.username || '',
-        }));
-      } catch (e) {
-        console.error('Error parsing user data:', e);
+    // Fetch fresh user data from backend API
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('vm_token');
+      
+      if (token) {
+        try {
+          const response = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true
+          });
+
+          if (response.data.user) {
+            const userData = response.data.user;
+            console.log('User data loaded in Settings:', userData);
+            console.log('Profile picture URL:', userData.profilePicture);
+            // Update localStorage with fresh data
+            localStorage.setItem('vm_user', JSON.stringify(userData));
+            setUser(userData);
+            
+            // Fetch extended profile data
+            try {
+              const profileResponse = await axios.get(`${API_BASE_URL}/api/auth/profile-extended`, {
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                },
+                withCredentials: true
+              });
+              
+              if (profileResponse.data.profile) {
+                const profileData = profileResponse.data.profile;
+                // Pre-fill form with user and profile data
+                setFormData(prev => ({
+                  ...prev,
+                  fullName: profileData.fullName || userData.username || '',
+                  email: userData.email || '',
+                  username: userData.username || '',
+                  bio: profileData.bio || '',
+                }));
+              }
+            } catch (profileError) {
+              console.error('Error fetching profile data:', profileError);
+              // Pre-fill form with just user data
+              setFormData(prev => ({
+                ...prev,
+                fullName: userData.username || '',
+                email: userData.email || '',
+                username: userData.username || '',
+              }));
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          // Fallback to localStorage if API call fails
+          const cachedData = localStorage.getItem('vm_user');
+          if (cachedData) {
+            try {
+              const parsedUser = JSON.parse(cachedData);
+              setUser(parsedUser);
+              setFormData(prev => ({
+                ...prev,
+                fullName: parsedUser.username || '',
+                email: parsedUser.email || '',
+                username: parsedUser.username || '',
+              }));
+            } catch (e) {
+              console.error('Error parsing cached user data:', e);
+            }
+          }
+        }
+      } else {
+        // No token, try localStorage as fallback
+        const cachedData = localStorage.getItem('vm_user');
+        if (cachedData) {
+          try {
+            const parsedUser = JSON.parse(cachedData);
+            setUser(parsedUser);
+            setFormData(prev => ({
+              ...prev,
+              fullName: parsedUser.username || '',
+              email: parsedUser.email || '',
+              username: parsedUser.username || '',
+            }));
+          } catch (e) {
+            console.error('Error parsing cached user data:', e);
+          }
+        }
       }
-    }
+    };
+
+    fetchUserData();
   }, []);
 
   const handleInputChange = (e) => {
@@ -48,10 +126,69 @@ function Settings() {
     });
   };
 
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
-    // Handle profile update logic here
-    console.log('Profile updated:', formData);
+    setProfileLoading(true);
+    setProfileError('');
+    setProfileSuccess('');
+
+    try {
+      const token = localStorage.getItem('vm_token');
+      
+      console.log('Starting profile update...');
+      console.log('Token exists:', !!token);
+      console.log('Form data:', formData);
+      console.log('API URL:', `${API_BASE_URL}/api/auth/profile`);
+      
+      if (!token) {
+        setProfileError('Not authenticated');
+        return;
+      }
+
+      const response = await axios.put(
+        `${API_BASE_URL}/api/auth/profile`,
+        {
+          fullName: formData.fullName,
+          username: formData.username,
+          email: formData.email,
+          bio: formData.bio
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          withCredentials: true
+        }
+      );
+      
+      console.log('Profile update response:', response.data);
+
+      if (response.data) {
+        // Update local user data
+        if (response.data.user) {
+          localStorage.setItem('vm_user', JSON.stringify(response.data.user));
+          setUser(response.data.user);
+          // Dispatch event to notify navbar
+          window.dispatchEvent(new Event('user-updated'));
+        }
+        
+        setProfileSuccess('Profile updated successfully!');
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setProfileSuccess('');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Profile update error:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+      
+      const errorMsg = error.response?.data?.msg || error.response?.data?.error || error.message || 'Failed to update profile. Please try again.';
+      setProfileError(errorMsg);
+    } finally {
+      setProfileLoading(false);
+    }
   };
 
   const handlePasswordUpdate = (e) => {
@@ -72,7 +209,7 @@ function Settings() {
         return;
       }
 
-      const response = await axios.delete(`${API_BASE_URL}/auth/delete-account`, {
+      const response = await axios.delete(`${API_BASE_URL}/api/auth/delete-account`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -302,6 +439,20 @@ function Settings() {
               <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Profile Information</h2>
                 
+                {/* Success Message */}
+                {profileSuccess && (
+                  <div className="mb-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg">
+                    <p className="text-green-400 text-sm">{profileSuccess}</p>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {profileError && (
+                  <div className="mb-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+                    <p className="text-red-400 text-sm">{profileError}</p>
+                  </div>
+                )}
+                
                 {/* Profile Picture */}
                 <div className="mb-6 sm:mb-8">
                   <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2 sm:mb-3">Profile Picture</label>
@@ -312,6 +463,10 @@ function Settings() {
                           src={user.profilePicture} 
                           alt={user.username || 'User'} 
                           className="w-full h-full object-cover"
+                          onError={(e) => {
+                            console.error('Failed to load profile picture:', user.profilePicture);
+                            e.target.style.display = 'none';
+                          }}
                         />
                       ) : (
                         <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,9 +553,20 @@ function Settings() {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30"
+                      disabled={profileLoading}
+                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Save Changes
+                      {profileLoading ? (
+                        <>
+                          <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Saving...
+                        </>
+                      ) : (
+                        'Save Changes'
+                      )}
                     </button>
                   </div>
                 </form>

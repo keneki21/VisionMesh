@@ -23,15 +23,31 @@ function Home() {
       const token = searchParams.get('token');
       const google = searchParams.get('google');
       const github = searchParams.get('github');
+      const userEncoded = searchParams.get('user');
 
       if (token && (google === 'success' || github === 'success')) {
         // Store token
         localStorage.setItem('vm_auth', 'true');
         localStorage.setItem('vm_token', token);
 
-        // Fetch user profile data from backend
+        // Decode user data from URL if available
+        if (userEncoded) {
+          try {
+            const userDataJSON = atob(userEncoded);
+            const userData = JSON.parse(userDataJSON);
+            // Store user data including profile picture
+            localStorage.setItem('vm_user', JSON.stringify(userData));
+            console.log('OAuth user data stored:', userData);
+            // Dispatch event to notify navbar and other components
+            window.dispatchEvent(new Event('user-updated'));
+          } catch (error) {
+            console.error('Error decoding user data:', error);
+          }
+        }
+
+        // Also fetch from backend as backup
         try {
-          const response = await axios.get('http://localhost:5000/auth/profile', {
+          const response = await axios.get('http://localhost:5000/api/auth/profile', {
             headers: {
               'Authorization': `Bearer ${token}`
             },
@@ -39,15 +55,17 @@ function Home() {
           });
 
           if (response.data.user) {
-            // Store user data including profile picture
+            // Update user data with backend response (most reliable source)
             localStorage.setItem('vm_user', JSON.stringify(response.data.user));
+            // Dispatch event to notify navbar and other components
+            window.dispatchEvent(new Event('user-updated'));
           }
-
-          // Clean up URL
-          window.history.replaceState({}, document.title, '/home');
         } catch (error) {
-          console.error('Error fetching user profile:', error);
+          console.error('Error fetching user profile from backend:', error);
         }
+
+        // Clean up URL
+        window.history.replaceState({}, document.title, '/home');
       }
     };
 

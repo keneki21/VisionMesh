@@ -8,14 +8,40 @@ function Navbar() {
 
   useEffect(() => {
     // Get user data from localStorage
-    const userData = localStorage.getItem('vm_user');
-    if (userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (e) {
-        console.error('Error parsing user data:', e);
+    const loadUserData = () => {
+      const userData = localStorage.getItem('vm_user');
+      if (userData) {
+        try {
+          setUser(JSON.parse(userData));
+        } catch (e) {
+          console.error('Error parsing user data:', e);
+        }
       }
-    }
+    };
+
+    // Load initially
+    loadUserData();
+
+    // Listen for storage changes (e.g., after OAuth login)
+    const handleStorageChange = (e) => {
+      if (e.key === 'vm_user') {
+        loadUserData();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Also listen for custom event for same-tab updates
+    const handleUserUpdate = () => {
+      loadUserData();
+    };
+
+    window.addEventListener('user-updated', handleUserUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('user-updated', handleUserUpdate);
+    };
   }, []);
 
   const handleSignOut = () => {
