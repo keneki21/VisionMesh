@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -13,6 +13,17 @@ import VerifyEmail from './pages/VerifyEmail';
 // import Results from './pages/Results';
 // import About from './pages/About';
 // import Contact from './pages/Contact';
+
+function ConditionalFooter() {
+  const location = useLocation();
+  const hideFooterPaths = ['/code-generation', '/evaluation'];
+  
+  if (hideFooterPaths.includes(location.pathname)) {
+    return null;
+  }
+  
+  return <Footer />;
+}
 
 function App() {
   return (
@@ -38,7 +49,7 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} /> */}
               </Routes>
-              <Footer />
+              <ConditionalFooter />
             </>
           }
         />
