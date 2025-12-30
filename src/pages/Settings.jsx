@@ -372,7 +372,7 @@ function Settings() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Sidebar Navigation */}
           <div className="lg:col-span-1">
-            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-1 sm:p-2 flex lg:flex-col overflow-x-auto lg:overflow-x-visible gap-1 sm:gap-0">
+            <div className="bg-black/60 backdrop-blur-xl rounded-xl border border-white/10 p-1 sm:p-2 flex lg:flex-col overflow-x-auto lg:overflow-x-visible gap-1 sm:gap-0">
               <button
                 onClick={() => setActiveTab('profile')}
                 className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-left transition-all duration-300 flex items-center gap-2 sm:gap-3 whitespace-nowrap ${
@@ -436,7 +436,7 @@ function Settings() {
           <div className="lg:col-span-3">
             {/* Profile Tab */}
             {activeTab === 'profile' && (
-              <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
+              <div className="bg-black/50 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Profile Information</h2>
                 
                 {/* Success Message */}
@@ -575,7 +575,7 @@ function Settings() {
 
             {/* Account Tab */}
             {activeTab === 'account' && (
-              <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
+              <div className="bg-black/50 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Account Settings</h2>
                 
                 <div className="space-y-4 sm:space-y-6">
@@ -699,7 +699,7 @@ function Settings() {
 
             {/* Security Tab */}
             {activeTab === 'security' && (
-              <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
+              <div className="bg-black/50 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Security Settings</h2>
                 
                 <form onSubmit={handlePasswordUpdate} className="space-y-4 sm:space-y-6">
@@ -767,7 +767,7 @@ function Settings() {
 
             {/* Notifications Tab */}
             {activeTab === 'notifications' && (
-              <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
+              <div className="bg-black/50 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Notification Preferences</h2>
                 
                 <div className="space-y-4 sm:space-y-6">

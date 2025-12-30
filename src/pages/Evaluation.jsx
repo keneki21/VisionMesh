@@ -527,24 +527,24 @@ function Evaluation() {
     <div className="min-h-screen h-screen flex relative bg-gray-950 overflow-hidden pt-16">
       {/* Cool Background Designs */}
       <div className="absolute inset-0 overflow-hidden z-0">
-        {/* Colorful gradient blobs */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-600/35 to-pink-600/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }}></div>
-        <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-to-tl from-cyan-500/40 to-blue-500/35 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }}></div>
-        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-gradient-to-tr from-indigo-600/35 to-purple-500/30 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }}></div>
-        <div className="absolute bottom-1/3 right-1/3 w-[380px] h-[380px] bg-gradient-to-bl from-teal-500/30 to-cyan-400/30 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '0.5s' }}></div>
+        {/* Colorful gradient blobs - reduced opacity */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-600/20 to-pink-600/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }}></div>
+        <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-to-tl from-cyan-500/25 to-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-gradient-to-tr from-indigo-600/20 to-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '2s' }}></div>
+        <div className="absolute bottom-1/3 right-1/3 w-[380px] h-[380px] bg-gradient-to-bl from-teal-500/18 to-cyan-400/18 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '5.5s', animationDelay: '0.5s' }}></div>
         
-        {/* Additional gradient blobs */}
-        <div className="absolute top-1/2 left-1/6 w-[350px] h-[350px] bg-gradient-to-br from-fuchsia-600/28 to-purple-600/28 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6.5s', animationDelay: '1.5s' }}></div>
-        <div className="absolute top-1/5 right-1/3 w-[420px] h-[420px] bg-gradient-to-bl from-blue-500/32 to-indigo-600/32 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '0.8s' }}></div>
-        <div className="absolute bottom-1/5 right-1/5 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-500/28 to-teal-500/28 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7.5s', animationDelay: '2.5s' }}></div>
+        {/* Additional gradient blobs - reduced opacity */}
+        <div className="absolute top-1/2 left-1/6 w-[350px] h-[350px] bg-gradient-to-br from-fuchsia-600/15 to-purple-600/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6.5s', animationDelay: '1.5s' }}></div>
+        <div className="absolute top-1/5 right-1/3 w-[420px] h-[420px] bg-gradient-to-bl from-blue-500/18 to-indigo-600/18 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '0.8s' }}></div>
+        <div className="absolute bottom-1/5 right-1/5 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-500/15 to-teal-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7.5s', animationDelay: '2.5s' }}></div>
         
-        {/* Flowing wave lines */}
-        <svg className="absolute inset-0 w-full h-full opacity-15" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        {/* Flowing wave lines - reduced opacity */}
+        <svg className="absolute inset-0 w-full h-full opacity-8" viewBox="0 0 1000 1000" preserveAspectRatio="none">
           <defs>
             <linearGradient id="evalGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{ stopColor: 'rgb(168, 85, 247)', stopOpacity: 0.3 }} />
-              <stop offset="50%" style={{ stopColor: 'rgb(34, 211, 238)', stopOpacity: 0.3 }} />
-              <stop offset="100%" style={{ stopColor: 'rgb(236, 72, 153)', stopOpacity: 0.3 }} />
+              <stop offset="0%" style={{ stopColor: 'rgb(168, 85, 247)', stopOpacity: 0.2 }} />
+              <stop offset="50%" style={{ stopColor: 'rgb(34, 211, 238)', stopOpacity: 0.2 }} />
+              <stop offset="100%" style={{ stopColor: 'rgb(236, 72, 153)', stopOpacity: 0.2 }} />
             </linearGradient>
           </defs>
           <path d="M0,200 Q250,150 500,200 T1000,200" stroke="url(#evalGrad1)" strokeWidth="3" fill="none" className="animate-pulse" style={{ animationDuration: '4s' }}/>
@@ -552,7 +552,7 @@ function Evaluation() {
           <path d="M0,600 Q250,550 500,600 T1000,600" stroke="url(#evalGrad1)" strokeWidth="2" fill="none" className="animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}/>
         </svg>
         
-        {/* Scattered light particles */}
+        {/* Scattered light particles - reduced opacity */}
         {[...Array(25)].map((_, i) => (
           <div
             key={i}
@@ -562,12 +562,15 @@ function Evaluation() {
               height: `${2 + Math.random() * 4}px`,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              background: `rgba(${Math.random() > 0.5 ? '168, 85, 247' : '34, 211, 238'}, ${0.2 + Math.random() * 0.2})`,
+              background: `rgba(${Math.random() > 0.5 ? '168, 85, 247' : '34, 211, 238'}, ${0.1 + Math.random() * 0.1})`,
               animationDelay: `${Math.random() * 5}s`,
               animationDuration: `${4 + Math.random() * 4}s`,
             }}
           />
         ))}
+        
+        {/* Dark overlay to dim background and improve text readability */}
+        <div className="absolute inset-0 bg-black/50"></div>
         
         {/* Radial burst effects */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-20">
@@ -840,7 +843,7 @@ function Evaluation() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              Export Report
+              Download Report
             </button>
             {/* <button className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1024,7 +1024,7 @@ Builds the app for production to the \`build\` folder.
   };
 
   return (
-    <div className="min-h-screen h-screen flex relative bg-gray-950 overflow-hidden">
+    <div className="min-h-screen h-screen flex flex-col relative bg-gray-950 overflow-hidden pt-18">
       {/* Cool Background Designs - Full Page - MUCH MORE VISIBLE */}
       <div className="absolute inset-0 overflow-hidden z-0">
         {/* Colorful gradient blobs - ENHANCED VISIBILITY */}
@@ -1141,9 +1141,9 @@ Builds the app for production to the \`build\` folder.
       </div>
 
       {/* Main Content with z-index above background */}
-      <div className="relative z-10 w-full flex flex-col lg:flex-row pt-20">
+      <div className="relative z-10 w-full flex flex-col lg:flex-row flex-1 overflow-hidden">
         {/* Left Side - Process */}
-        <div className="w-full lg:w-[350px] bg-black/40 backdrop-blur-sm border-b lg:border-b-0 lg:border-r border-gray-800 flex flex-col overflow-y-auto max-h-[50vh] lg:max-h-none">
+        <div className="w-full lg:w-[350px] bg-black/40 backdrop-blur-sm border-b lg:border-b-0 lg:border-r border-gray-800 flex flex-col overflow-y-auto">
         {/* Header */}
         {/* <div className="p-4 sm:p-6 border-b border-gray-800 bg-black/30 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
@@ -1207,7 +1207,7 @@ Builds the app for production to the \`build\` folder.
             </svg>
             Download Project
           </button>
-          <button
+          {/* <button
             disabled={isGenerating}
             className={`w-full px-4 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 border ${
               isGenerating
@@ -1219,14 +1219,14 @@ Builds the app for production to the \`build\` folder.
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
             Copy to Clipboard
-          </button>
+          </button> */}
         </div>
       </div>
 
       {/* Right Side - Code/Preview */}
-      <div className="flex-1 bg-black/40 backdrop-blur-sm flex flex-col min-h-[50vh]">
+      <div className="flex-1 bg-black/40 backdrop-blur-sm flex flex-col overflow-hidden">
         {/* Tabs */}
-        <div className="border-b border-gray-800 bg-black/40 backdrop-blur-sm">
+        <div className="border-b border-gray-800 bg-black/40 backdrop-blur-sm flex-shrink-0">
           <div className="flex items-center px-3 sm:px-6 overflow-x-auto">
             <button
               onClick={() => setActiveTab('code')}
