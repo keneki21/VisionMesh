@@ -5,7 +5,7 @@ function Footer() {
     <footer className="relative z-10 bg-black border-t border-gray-900 py-12  px-6">
       <div className="max-w-[1400px] mx-auto">
         {/* Centered Content */}
-        <div className="flex flex-col items-center text-center space-y-6">
+        <div className="flex flex-col items-center text-center space-y-1">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1 text-2xl font-bold hover:opacity-80 transition-opacity">
             <span className="text-white">Vision</span>
@@ -37,7 +37,7 @@ function Footer() {
           </div>
 
           {/* Copyright */}
-          <p className="text-gray-600 text-xs pt-4">
+          <p className="text-gray-600 text-xs pt-2">
             © 2025 VisionMesh. All rights reserved.
           </p>
         </div>
