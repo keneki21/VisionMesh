@@ -9,6 +9,9 @@ function Home() {
   const [activeTab, setActiveTab] = useState('upload');
   const [dragActive, setDragActive] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
 
   const textVariations = [
     "What Vision will you transform into design today?",
@@ -74,17 +77,40 @@ function Home() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      // Handle file upload
-      console.log(e.dataTransfer.files[0]);
+      setFile(e.dataTransfer.files[0]);
+      setUploadError(null);
     }
   };
 
   const handleFileInput = (e) => {
     if (e.target.files && e.target.files[0]) {
-      // Handle file upload
-      console.log(e.target.files[0]);
+      setFile(e.target.files[0]);
+      setUploadError(null);
+    }
+  };
+
+  const handleAnalyze = async () => {
+    if (!file) {
+      setUploadError('Please select a screenshot first.');
+      return;
+    }
+    setLoading(true);
+    setUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append('screenshot', file);
+      const { data: report } = await axios.post(
+        'http://localhost:5000/api/evaluate',
+        formData
+      );
+      const imageUrl = URL.createObjectURL(file);
+      navigate('/evaluation', { state: { report, imageUrl } });
+    } catch (err) {
+      const msg = err.response?.data?.error || err.response?.data?.message || err.message || 'Analysis failed. Please try again.';
+      setUploadError(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -374,9 +400,15 @@ function Home() {
                       </div>
                     </div>
 
-                    <p className="text-white text-sm sm:text-base mb-1 sm:mb-2">
-                      Click to upload or drag and drop
-                    </p>
+                    {file ? (
+                      <p className="text-green-400 text-sm sm:text-base mb-1 sm:mb-2 font-medium truncate px-4">
+                        {file.name}
+                      </p>
+                    ) : (
+                      <p className="text-white text-sm sm:text-base mb-1 sm:mb-2">
+                        Click to upload or drag and drop
+                      </p>
+                    )}
                     <p className="text-gray-300 text-xs sm:text-sm">
                       PNG, JPG, or JPEG (max. 10MB)
                     </p>
@@ -392,13 +424,18 @@ function Home() {
                 </div>
               )}
 
+              {uploadError && (
+                <p className="mt-3 text-red-400 text-sm text-center">{uploadError}</p>
+              )}
+
               {/* Start Analysis Button */}
               <div className="mt-6 sm:mt-8 flex justify-center">
-                <button 
-                  onClick={() => navigate('/evaluation')}
-                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-white to-gray-300 hover:from-gray-200 hover:to-white text-black font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
+                <button
+                  onClick={handleAnalyze}
+                  disabled={loading}
+                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-white to-gray-300 hover:from-gray-200 hover:to-white text-black font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
                 >
-                  Start Analysis
+                  {loading ? 'Analyzing…' : 'Start Analysis'}
                 </button>
               </div>
             </div>

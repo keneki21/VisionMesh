@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -14,6 +14,10 @@ import Register from './pages/Register';
 // import Contact from './pages/Contact';
 
 function App() {
+  const location = useLocation();
+  const hideFooterRoutes = ['/evaluation'];
+  const shouldShowFooter = !hideFooterRoutes.includes(location.pathname);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Routes>
@@ -36,7 +40,7 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} /> */}
               </Routes>
-              <Footer />
+              {shouldShowFooter && <Footer />}
             </>
           }
         />
