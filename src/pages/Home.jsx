@@ -10,6 +10,7 @@ function Home() {
   const [dragActive, setDragActive] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
   const [file, setFile] = useState(null);
+  const [urlInput, setUrlInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
 
@@ -108,6 +109,60 @@ function Home() {
       navigate('/evaluation', { state: { report, imageUrl } });
     } catch (err) {
       const msg = err.response?.data?.error || err.response?.data?.message || err.message || 'Analysis failed. Please try again.';
+      setUploadError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAnalyzeUrl = async () => {
+    if (!urlInput.trim()) {
+      setUploadError('Please enter a URL.');
+      return;
+    }
+    setLoading(true);
+    setUploadError(null);
+    try {
+      const { data } = await axios.post(
+        'http://localhost:5000/api/evaluate-url',
+        { url: urlInput.trim() }
+      );
+
+      // Fetch image from history and create blob URL
+      let imageUrl = null;
+      if (data.historyId) {
+        try {
+          const { data: historyData } = await axios.get(
+            `http://localhost:5000/api/history/${data.historyId}`
+          );
+          console.log('History data imageData type:', typeof historyData.imageData);
+          console.log('History data imageData:', historyData.imageData);
+
+          if (historyData.imageData) {
+            // MongoDB returns Buffer as { type: "Buffer", data: [...] }
+            let imageBuffer;
+            if (historyData.imageData.type === 'Buffer' && Array.isArray(historyData.imageData.data)) {
+              imageBuffer = new Uint8Array(historyData.imageData.data);
+            } else if (historyData.imageData instanceof ArrayBuffer) {
+              imageBuffer = new Uint8Array(historyData.imageData);
+            } else if (Array.isArray(historyData.imageData)) {
+              imageBuffer = new Uint8Array(historyData.imageData);
+            } else {
+              imageBuffer = new Uint8Array(historyData.imageData);
+            }
+
+            const blob = new Blob([imageBuffer], { type: historyData.imageMimeType || 'image/png' });
+            imageUrl = URL.createObjectURL(blob);
+            console.log('Blob URL created:', imageUrl, 'blob size:', blob.size);
+          }
+        } catch (err) {
+          console.error('Error fetching image:', err);
+        }
+      }
+
+      navigate('/evaluation', { state: { report: data.report, imageUrl } });
+    } catch (err) {
+      const msg = err.response?.data?.error || err.message || 'Analysis failed. Please try again.';
       setUploadError(msg);
     } finally {
       setLoading(false);
@@ -419,6 +474,9 @@ function Home() {
                   <input
                     type="url"
                     placeholder="Enter website URL..."
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && !loading && handleAnalyzeUrl()}
                     className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-colors"
                   />
                 </div>
@@ -431,11 +489,11 @@ function Home() {
               {/* Start Analysis Button */}
               <div className="mt-6 sm:mt-8 flex justify-center">
                 <button
-                  onClick={handleAnalyze}
+                  onClick={activeTab === 'url' ? handleAnalyzeUrl : handleAnalyze}
                   disabled={loading}
                   className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-white to-gray-300 hover:from-gray-200 hover:to-white text-black font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
                 >
-                  {loading ? 'Analyzing…' : 'Start Analysis'}
+                  {loading ? (activeTab === 'url' ? 'Capturing screenshot…' : 'Analyzing…') : 'Start Analysis'}
                 </button>
               </div>
             </div>

@@ -5,8 +5,9 @@ const evaluationHistorySchema = new mongoose.Schema({
   score:         { type: Number, required: true },
   grade:         { type: String, required: true },
   report:        { type: mongoose.Schema.Types.Mixed, required: true },
-  imageData:     { type: String },     // base64-encoded screenshot
+  imageData:     { type: Buffer },  // Store as binary, not base64
   imageMimeType: { type: String },
 }, { timestamps: true });
 
 module.exports = mongoose.model('EvaluationHistory', evaluationHistorySchema);
+

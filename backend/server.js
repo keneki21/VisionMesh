@@ -45,6 +45,7 @@ mongoose.connect(MONGO_URI)
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/evaluate", require("./routes/evaluate"));
+app.use("/api/evaluate-url", require("./routes/evaluateUrl"));
 app.use("/api/history", require("./routes/history"));
 
 const PORT = process.env.PORT || 5000;

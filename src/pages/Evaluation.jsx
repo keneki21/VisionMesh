@@ -35,13 +35,21 @@ function Evaluation() {
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
+  useEffect(() => {
+    console.log('Evaluation page - imageUrl:', imageUrl);
+    console.log('Evaluation page - report:', report);
+  }, [imageUrl, report]);
+
   const loadHistoryItem = async (item) => {
     setSelectedId(item.id);
     setReport(item.fullReport || null);
     setImageUrl(null);
     try {
       const { data: full } = await axios.get(`http://localhost:5000/api/history/${item.id}`);
-      if (full.imageData) setImageUrl(`data:${full.imageMimeType};base64,${full.imageData}`);
+      if (full.imageData) {
+        const blob = new Blob([new Uint8Array(full.imageData)], { type: full.imageMimeType || 'image/png' });
+        setImageUrl(URL.createObjectURL(blob));
+      }
     } catch (_) {}
   };
 
@@ -64,7 +72,10 @@ function Evaluation() {
             setReport(items[0].fullReport);
             axios.get(`http://localhost:5000/api/history/${items[0].id}`)
               .then(({ data: full }) => {
-                if (full.imageData) setImageUrl(`data:${full.imageMimeType};base64,${full.imageData}`);
+                if (full.imageData) {
+                  const blob = new Blob([new Uint8Array(full.imageData)], { type: full.imageMimeType || 'image/png' });
+                  setImageUrl(URL.createObjectURL(blob));
+                }
               }).catch(() => {});
           }
         }
@@ -301,7 +312,16 @@ function Evaluation() {
                 {/* Screenshot */}
                 {imageUrl && (
                   <div className="mb-6 bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
-                    <img src={imageUrl} alt="Website Screenshot" className="w-full h-auto object-contain max-h-[480px]" />
+                    <img
+                      src={imageUrl}
+                      alt="Website Screenshot"
+                      className="w-full h-auto object-contain max-h-[480px]"
+                      onError={(e) => {
+                        console.error('Image failed to load:', e);
+                        console.error('Image src was:', imageUrl);
+                      }}
+                      onLoad={() => console.log('Image loaded successfully:', imageUrl)}
+                    />
                   </div>
                 )}
 

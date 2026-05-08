@@ -27,6 +27,42 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Serve image directly
+router.get('/:id/image', async (req, res) => {
+  try {
+    console.log('[image] Fetching image for ID:', req.params.id);
+    const item = await EvaluationHistory.findById(req.params.id);
+
+    if (!item) {
+      console.log('[image] Item not found');
+      return res.status(404).send('Item not found');
+    }
+
+    if (!item.imageData) {
+      console.log('[image] No image data for item');
+      return res.status(404).send('Image data not found');
+    }
+
+    console.log('[image] Found image data, length:', item.imageData.length, 'mimeType:', item.imageMimeType);
+
+    try {
+      const buffer = Buffer.from(item.imageData, 'base64');
+      console.log('[image] Decoded buffer size:', buffer.length);
+
+      res.type(item.imageMimeType || 'image/png');
+      res.set('Cache-Control', 'public, max-age=86400');
+      res.send(buffer);
+      console.log('[image] Sent image successfully');
+    } catch (decodeErr) {
+      console.error('[image] Base64 decode error:', decodeErr.message);
+      res.status(500).send('Error decoding image');
+    }
+  } catch (err) {
+    console.error('[image endpoint] error:', err.message);
+    res.status(500).send('Error retrieving image: ' + err.message);
+  }
+});
+
 // Kept for backward compat (no longer called by frontend)
 router.post('/', async (req, res) => {
   try {
