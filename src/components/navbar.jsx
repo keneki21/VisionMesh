@@ -40,7 +40,7 @@ function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center text-base sm:text-xl font-bold text-white hover:opacity-80 transition-opacity">
+        <Link to="/home" className="flex items-center text-base sm:text-xl font-bold text-white hover:opacity-80 transition-opacity">
           <span className="font-bold text-2xl sm:text-3xl">Vision</span>
           <span className="font-bold text-2xl sm:text-3xl text-cyan-400">Mesh</span>
         </Link>

@@ -191,9 +191,9 @@ function Evaluation() {
   };
 
   return (
-    <div className="min-h-screen h-screen flex relative bg-gray-950 overflow-hidden pt-16">
+    <div className="min-h-screen flex relative bg-gray-950 pt-16">
       {/* Background */}
-      <div className="absolute inset-0 overflow-hidden z-0">
+      <div className="fixed inset-0 overflow-hidden -z-10">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-600/15 to-pink-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }} />
         <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-cyan-500/15 to-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '1s' }} />
         <div className="absolute bottom-1/4 left-1/3 w-[350px] h-[350px] bg-gradient-to-tr from-indigo-600/12 to-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }} />
@@ -279,9 +279,8 @@ function Evaluation() {
       </aside>
 
       {/* ── Main Content ─────────────────────────────────────────────── */}
-      <main className="flex-1 ml-64 flex flex-col relative overflow-hidden">
-        {/* Scrollable report */}
-        <div className="flex-1 overflow-y-auto p-6 pb-28">
+      <main className="flex-1 ml-64">
+        <div className="p-6 pb-8">
           <div className="max-w-4xl mx-auto">
 
             {/* No report state */}
@@ -387,34 +386,33 @@ function Evaluation() {
                     </div>
                   ))}
                 </div>
+
+                {/* Action buttons — end of page */}
+                <div className="border-t border-gray-800 pt-6 pb-4 flex gap-3">
+                  <button
+                    onClick={() => navigate('/code-generation')}
+                    className="px-6 py-3 bg-white hover:bg-gray-100 text-black rounded-lg font-semibold transition-colors flex items-center gap-2 text-sm"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    Generate Optimized Design
+                  </button>
+                  <button
+                    onClick={exportToPDF}
+                    className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border border-gray-700"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download Report
+                  </button>
+                </div>
               </>
             )}
           </div>
         </div>
 
-        {/* ── Sticky bottom action bar ─────────────────────────────────── */}
-        {report && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gray-950/90 backdrop-blur border-t border-gray-800 px-6 py-4 flex gap-3 z-10">
-            <button
-              onClick={() => navigate('/code-generation')}
-              className="px-6 py-3 bg-white hover:bg-gray-100 text-black rounded-lg font-semibold transition-colors flex items-center gap-2 text-sm"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-              Generate Optimized Design
-            </button>
-            <button
-              onClick={exportToPDF}
-              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2 text-sm border border-gray-700"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download Report
-            </button>
-          </div>
-        )}
       </main>
     </div>
   );
