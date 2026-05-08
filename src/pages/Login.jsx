@@ -15,7 +15,7 @@ export default function Login() {
   const [error, setError] = useState('');
 
   // API base URL - adjust according to your backend
-  const API_BASE_URL = 'http://localhost:5000';
+  const API_BASE_URL = 'http://localhost:5000/api';
 
   // Check for OAuth token in URL on component mount
   useEffect(() => {

@@ -34,7 +34,7 @@ function Home() {
 
         // Fetch user profile data from backend
         try {
-          const response = await axios.get('http://localhost:5000/auth/profile', {
+          const response = await axios.get('http://localhost:5000/api/auth/profile', {
             headers: {
               'Authorization': `Bearer ${token}`
             },
