@@ -1,0 +1,22 @@
+{
+  "_name_or_path": "biglab/uiclip_jitteredwebsites-2-224-paraphrased_webpairs",
+  "architectures": [
+    "CLIPModel"
+  ],
+  "initializer_factor": 1.0,
+  "logit_scale_init_value": 2.6592,
+  "model_type": "clip",
+  "projection_dim": 512,
+  "text_config": {
+    "bos_token_id": 0,
+    "dropout": 0.0,
+    "eos_token_id": 2,
+    "model_type": "clip_text_model"
+  },
+  "torch_dtype": "float32",
+  "transformers_version": "4.39.2",
+  "vision_config": {
+    "dropout": 0.0,
+    "model_type": "clip_vision_model"
+  }
+}
