@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 function Evaluation() {
   const navigate  = useNavigate();
   const location  = useLocation();
-  const report    = location.state?.report   || null;
-  const imageUrl  = location.state?.imageUrl || null;
+  const [report,   setReport]   = useState(location.state?.report   || null);
+  const [imageUrl, setImageUrl] = useState(location.state?.imageUrl || null);
   const score100  = report ? Math.round(report.overall_score * 10) : 0;
   const strokeOff = 251.2 - 251.2 * score100 / 100;
   const scoreCol  = score100 >= 70 ? 'text-green-500'  : score100 >= 50 ? 'text-orange-500' : 'text-red-500';
@@ -20,24 +21,63 @@ function Evaluation() {
   };
 
   const [searchQuery,    setSearchQuery]    = useState('');
-  const [selectedIdx,    setSelectedIdx]    = useState(0);
-  const [historyItems]                      = useState([
-    { id: 1,  name: 'BISE Lahore Homepage Analysis', date: 'Nov 15, 2024' },
-    { id: 2,  name: 'Portfolio Website Review',       date: 'Nov 12, 2024' },
-    { id: 3,  name: 'SaaS Dashboard Design',          date: 'Nov 12, 2024' },
-    { id: 4,  name: 'Non-Profit Org Site',            date: 'Nov 08, 2024' },
-    { id: 5,  name: 'Blog Platform UX Review',        date: 'Nov 08, 2024' },
-    { id: 6,  name: 'Educational Site Analysis',      date: 'Nov 07, 2024' },
-    { id: 7,  name: 'Healthcare Portal Review',       date: 'Nov 07, 2024' },
-    { id: 8,  name: 'Travel Agency Site',             date: 'Oct 30, 2024' },
-    { id: 9,  name: 'Restaurant Website UX',          date: 'Oct 30, 2024' },
-  ]);
+  const [selectedId,     setSelectedId]     = useState(null);
+  const [historyItems,   setHistoryItems]   = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
 
-  // Group history by date
+  const formatGroupDate = (iso) => {
+    const d = new Date(iso);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (d.toDateString() === today.toDateString()) return 'Today';
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const loadHistoryItem = async (item) => {
+    setSelectedId(item.id);
+    setReport(item.fullReport || null);
+    setImageUrl(null);
+    try {
+      const { data: full } = await axios.get(`http://localhost:5000/api/history/${item.id}`);
+      if (full.imageData) setImageUrl(`data:${full.imageMimeType};base64,${full.imageData}`);
+    } catch (_) {}
+  };
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/history')
+      .then(({ data }) => {
+        const items = data.map(item => ({
+          id:         item._id,
+          name:       item.filename.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+          score:      item.score,
+          grade:      item.grade,
+          group:      formatGroupDate(item.createdAt),
+          fullReport: item.report,
+        }));
+        setHistoryItems(items);
+        if (items.length > 0) {
+          setSelectedId(items[0].id);
+          // Auto-load most recent if user navigated directly (no report in state)
+          if (!location.state?.report && items[0].fullReport) {
+            setReport(items[0].fullReport);
+            axios.get(`http://localhost:5000/api/history/${items[0].id}`)
+              .then(({ data: full }) => {
+                if (full.imageData) setImageUrl(`data:${full.imageMimeType};base64,${full.imageData}`);
+              }).catch(() => {});
+          }
+        }
+      })
+      .catch(() => {})
+      .finally(() => setHistoryLoading(false));
+  }, []);
+
+  // Group history by date label
   const grouped = historyItems
     .filter(i => i.name.toLowerCase().includes(searchQuery.toLowerCase()))
     .reduce((acc, item) => {
-      (acc[item.date] = acc[item.date] || []).push(item);
+      (acc[item.group] = acc[item.group] || []).push(item);
       return acc;
     }, {});
 
@@ -203,30 +243,36 @@ function Evaluation() {
 
         {/* History grouped by date */}
         <div className="flex-1 overflow-y-auto py-2">
-          {Object.entries(grouped).map(([date, items]) => (
-            <div key={date}>
+          {historyLoading && (
+            <p className="px-3 py-6 text-center text-gray-500 text-sm">Loading...</p>
+          )}
+          {!historyLoading && historyItems.length === 0 && !searchQuery && (
+            <p className="px-3 py-6 text-center text-gray-500 text-sm">No analyses yet</p>
+          )}
+          {Object.entries(grouped).map(([group, items]) => (
+            <div key={group}>
               <p className="px-3 pt-3 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                {date.toUpperCase()}
+                {group}
               </p>
-              {items.map((item) => {
-                const globalIdx = historyItems.findIndex(h => h.id === item.id);
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setSelectedIdx(globalIdx)}
-                    className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-2 group ${
-                      selectedIdx === globalIdx
-                        ? 'bg-gray-800 text-white'
-                        : 'text-gray-300 hover:bg-gray-800/60'
-                    }`}
-                  >
-                    <span className="truncate flex-1">{item.name}</span>
-                  </button>
-                );
-              })}
+              {items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => loadHistoryItem(item)}
+                  className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-2 group ${
+                    selectedId === item.id
+                      ? 'bg-gray-800 text-white'
+                      : 'text-gray-300 hover:bg-gray-800/60'
+                  }`}
+                >
+                  <span className="truncate flex-1 capitalize">{item.name}</span>
+                  <span className={`text-xs font-bold flex-shrink-0 ${
+                    item.score >= 70 ? 'text-green-400' : item.score >= 50 ? 'text-orange-400' : 'text-red-400'
+                  }`}>{item.score}</span>
+                </button>
+              ))}
             </div>
           ))}
-          {Object.keys(grouped).length === 0 && searchQuery && (
+          {!historyLoading && Object.keys(grouped).length === 0 && searchQuery && (
             <p className="px-3 py-6 text-center text-gray-500 text-sm">No results found</p>
           )}
         </div>

@@ -1,10 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     // Get user data from localStorage
@@ -35,7 +46,7 @@ function Navbar() {
         </Link>
 
         {/* User Profile Icon */}
-        <div className="flex items-center gap-3 sm:gap-4 ml-6 sm:ml-10 relative">
+        <div ref={dropdownRef} className="flex items-center gap-3 sm:gap-4 ml-6 sm:ml-10 relative">
           <button 
             onClick={() => setShowDropdown(!showDropdown)}
             className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black border-2 border-white/20 hover:border-cyan-400 hover:scale-110 transition-all duration-300 shadow-lg shadow-cyan-600/30 flex items-center justify-center group overflow-hidden"
