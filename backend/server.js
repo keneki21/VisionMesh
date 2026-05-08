@@ -1,0 +1,52 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+require("dotenv").config();
+const passport = require("./config/passport");
+
+const app = express();
+
+// CORS configuration to allow credentials
+app.use(cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Frontend URL
+    credentials: true, // Allow cookies to be sent
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow DELETE method
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allow Authorization header
+}));
+
+app.use(express.json());
+app.use(cookieParser());
+
+// Session configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET || "MY_SESSION_SECRET_KEY_123456",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // Set to true in production with HTTPS
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// MongoDB (NO .env)
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/visionmesh";
+
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("Connected to MongoDB"))
+    .catch(err => console.error(err));
+
+// Routes
+app.use("/api/auth", require("./routes/auth"));
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
