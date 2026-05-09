@@ -28,24 +28,38 @@ CORS(app, origins=_cors_origins)
 UPLOAD_DIR = Path(__file__).parent / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 
-print("Loading AI models…")
-_scorer    = UIClipScorer()
-_detector  = WebUIDetector()
-_captioner = UICaptioner()
-if not _detector.available:
-    print("  WebUI detector not available — run download_models.py first.")
-if not _captioner.available:
-    print("  BLIP captioner not available — run download_florence.py first.")
-print("Ready.\n")
+# Models are loaded lazily on first request so Flask starts immediately
+# and the healthcheck passes without waiting for heavy model loading.
+_scorer    = None
+_detector  = None
+_captioner = None
+_ready     = False
+
+def _load_models():
+    global _scorer, _detector, _captioner, _ready
+    if _ready:
+        return
+    print("Loading AI models…")
+    _scorer    = UIClipScorer()
+    _detector  = WebUIDetector()
+    _captioner = UICaptioner()
+    if not _detector.available:
+        print("  WebUI detector not available — run download_models.py first.")
+    if not _captioner.available:
+        print("  BLIP captioner not available — run download_florence.py first.")
+    _ready = True
+    print("Ready.\n")
 
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "ok", "models_loaded": _ready})
 
 
 @app.route("/evaluate", methods=["POST"])
 def evaluate():
+    _load_models()
+
     file = request.files.get("screenshot")
     if not file or not file.filename:
         return jsonify({"error": "No screenshot file provided"}), 400
