@@ -1,0 +1,60 @@
+services:
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  - type: web
+    name: visionmesh-frontend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    buildArgs:
+      - key: VITE_API_URL
+        value: https://visionmesh-backend.onrender.com  # update to your backend URL
+    plan: free
+    healthCheckPath: /
+
+  # ── Backend ──────────────────────────────────────────────────────────────────
+  - type: web
+    name: visionmesh-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    envVars:
+      - key: PORT
+        value: "5000"
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false           # set manually in Render dashboard
+      - key: JWT_SECRET
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false           # e.g. https://visionmesh-frontend.onrender.com
+      - key: AI_SERVICE_URL
+        value: https://visionmesh-ai.onrender.com
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+    healthCheckPath: /api/auth/profile
+
+  # ── Python AI service ────────────────────────────────────────────────────────
+  - type: web
+    name: visionmesh-ai
+    runtime: docker
+    dockerfilePath: ./VM AI (NEW)/Dockerfile
+    dockerContext: ./VM AI (NEW)
+    plan: starter             # free tier has 512 MB RAM — ML models need more
+    disk:
+      name: ai-models
+      mountPath: /app/models
+      sizeGB: 5
+    envVars:
+      - key: CORS_ORIGINS
+        sync: false           # e.g. https://visionmesh-backend.onrender.com
+    healthCheckPath: /health

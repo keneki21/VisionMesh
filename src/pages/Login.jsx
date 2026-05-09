@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,8 +15,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // API base URL - adjust according to your backend
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_URL = `${API_BASE_URL}/api`;
 
   // Check for OAuth token in URL on component mount
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function Login() {
     try {
       if (isLogin) {
         // Login request with credentials to receive cookies
-        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+        const response = await axios.post(`${API_URL}/auth/login`, {
           email: formData.email,
           password: formData.password
         }, {
@@ -85,7 +85,7 @@ export default function Login() {
         }
       } else {
         // Signup request - need username, email, password
-        const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+        const response = await axios.post(`${API_URL}/auth/register`, {
           username: formData.email.split('@')[0], // Use email prefix as username
           email: formData.email,
           password: formData.password
@@ -111,12 +111,12 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     // Handle Google OAuth
-    window.location.href = `${API_BASE_URL}/auth/google`;
+    window.location.href = `${API_URL}/auth/google`;
   };
 
   const handleGitHubLogin = async () => {
     // Handle GitHub OAuth
-    window.location.href = `${API_BASE_URL}/auth/github`;
+    window.location.href = `${API_URL}/auth/github`;
   };
 
   const toggleMode = () => {

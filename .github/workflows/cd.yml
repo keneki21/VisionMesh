@@ -1,0 +1,109 @@
+name: CD — Build & Deploy
+
+on:
+  push:
+    branches:
+      - Testing-Frontend
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  # ── Build & push Docker images to GHCR ─────────────────────────────────────
+  build-and-push:
+    name: Build & push images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      image_owner: ${{ steps.owner.outputs.lower }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lowercase image owner
+        id: owner
+        run: echo "lower=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ── Frontend ─────────────────────────────────────────────────────────
+      - name: Build & push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ steps.owner.outputs.lower }}/visionmesh-frontend:latest
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,mode=max,scope=frontend
+
+      # ── Backend ──────────────────────────────────────────────────────────
+      - name: Build & push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ steps.owner.outputs.lower }}/visionmesh-backend:latest
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,mode=max,scope=backend
+
+      # ── AI service ───────────────────────────────────────────────────────
+      - name: Build & push AI service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./VM AI (NEW)
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ steps.owner.outputs.lower }}/visionmesh-ai:latest
+          cache-from: type=gha,scope=ai
+          cache-to: type=gha,mode=max,scope=ai
+
+  # ── Deploy to Render ────────────────────────────────────────────────────────
+  deploy-render:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    # Only runs when RENDER_DEPLOY_HOOK_FRONTEND is set as a repo secret
+    if: ${{ vars.DEPLOY_TARGET == 'render' || secrets.RENDER_DEPLOY_HOOK_FRONTEND != '' }}
+
+    steps:
+      - name: Trigger Render deploy — frontend
+        if: ${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND != '' }}
+        run: curl -s "${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}"
+
+      - name: Trigger Render deploy — backend
+        if: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND != '' }}
+        run: curl -s "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}"
+
+      - name: Trigger Render deploy — AI service
+        if: ${{ secrets.RENDER_DEPLOY_HOOK_AI != '' }}
+        run: curl -s "${{ secrets.RENDER_DEPLOY_HOOK_AI }}"
+
+  # ── Deploy to Railway ───────────────────────────────────────────────────────
+  deploy-railway:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: ${{ secrets.RAILWAY_TOKEN != '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

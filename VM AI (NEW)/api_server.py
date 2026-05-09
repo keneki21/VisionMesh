@@ -4,6 +4,7 @@ REST-only, no HTML UI. Run: python api_server.py
 Port: 5001
 """
 
+import os
 import uuid
 from pathlib import Path
 
@@ -18,7 +19,11 @@ from evaluator.heuristics import check as heuristic_check
 from evaluator.report     import generate
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5000", "http://localhost:5173"])
+_cors_origins = os.environ.get(
+    'CORS_ORIGINS',
+    'http://localhost:5000,http://localhost:5173'
+).split(',')
+CORS(app, origins=_cors_origins)
 
 UPLOAD_DIR = Path(__file__).parent / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)

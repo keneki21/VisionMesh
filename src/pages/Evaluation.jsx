@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -45,7 +46,7 @@ function Evaluation() {
     setReport(item.fullReport || null);
     setImageUrl(null);
     try {
-      const { data: full } = await axios.get(`http://localhost:5000/api/history/${item.id}`);
+      const { data: full } = await axios.get(`${API_BASE_URL}/api/history/${item.id}`);
       if (full.imageData) {
         const blob = new Blob([new Uint8Array(full.imageData)], { type: full.imageMimeType || 'image/png' });
         setImageUrl(URL.createObjectURL(blob));
@@ -54,7 +55,7 @@ function Evaluation() {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/history')
+    axios.get(`${API_BASE_URL}/api/history`)
       .then(({ data }) => {
         const items = data.map(item => ({
           id:         item._id,
@@ -70,7 +71,7 @@ function Evaluation() {
           // Auto-load most recent if user navigated directly (no report in state)
           if (!location.state?.report && items[0].fullReport) {
             setReport(items[0].fullReport);
-            axios.get(`http://localhost:5000/api/history/${items[0].id}`)
+            axios.get(`${API_BASE_URL}/api/history/${items[0].id}`)
               .then(({ data: full }) => {
                 if (full.imageData) {
                   const blob = new Blob([new Uint8Array(full.imageData)], { type: full.imageMimeType || 'image/png' });

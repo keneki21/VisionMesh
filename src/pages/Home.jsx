@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 function Home() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ function Home() {
 
         // Fetch user profile data from backend
         try {
-          const response = await axios.get('http://localhost:5000/api/auth/profile', {
+          const response = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
             headers: {
               'Authorization': `Bearer ${token}`
             },
@@ -102,7 +103,7 @@ function Home() {
       const formData = new FormData();
       formData.append('screenshot', file);
       const { data: report } = await axios.post(
-        'http://localhost:5000/api/evaluate',
+        `${API_BASE_URL}/api/evaluate`,
         formData
       );
       const imageUrl = URL.createObjectURL(file);
@@ -124,7 +125,7 @@ function Home() {
     setUploadError(null);
     try {
       const { data } = await axios.post(
-        'http://localhost:5000/api/evaluate-url',
+        `${API_BASE_URL}/api/evaluate-url`,
         { url: urlInput.trim() }
       );
 
@@ -133,7 +134,7 @@ function Home() {
       if (data.historyId) {
         try {
           const { data: historyData } = await axios.get(
-            `http://localhost:5000/api/history/${data.historyId}`
+            `${API_BASE_URL}/api/history/${data.historyId}`
           );
           console.log('History data imageData type:', typeof historyData.imageData);
           console.log('History data imageData:', historyData.imageData);

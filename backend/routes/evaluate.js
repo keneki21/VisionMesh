@@ -7,6 +7,8 @@ const EvaluationHistory = require("../models/EvaluationHistory");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+
 router.post("/", (req, res) => {
   upload.single("screenshot")(req, res, async (multerErr) => {
     if (multerErr) {
@@ -25,7 +27,7 @@ router.post("/", (req, res) => {
     });
 
     try {
-      const response = await axios.post("http://localhost:5001/evaluate", form, {
+      const response = await axios.post(`${AI_SERVICE_URL}/evaluate`, form, {
         headers: form.getHeaders(),
         maxContentLength: Infinity,
         maxBodyLength: Infinity,

@@ -8,6 +8,8 @@ const path = require('path');
 const os = require('os');
 const EvaluationHistory = require('../models/EvaluationHistory');
 
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+
 router.post('/', async (req, res) => {
   const { url } = req.body;
 
@@ -64,7 +66,7 @@ router.post('/', async (req, res) => {
       contentType: 'image/png',
     });
 
-    const response = await axios.post('http://localhost:5001/evaluate', form, {
+    const response = await axios.post(`${AI_SERVICE_URL}/evaluate`, form, {
       headers: form.getHeaders(),
       maxContentLength: Infinity,
       maxBodyLength: Infinity,
