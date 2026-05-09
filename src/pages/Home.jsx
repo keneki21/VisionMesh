@@ -133,37 +133,11 @@ function Home() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Fetch image from history and create blob URL
-      let imageUrl = null;
-      if (data.historyId) {
-        try {
-          const { data: historyData } = await axios.get(
-            `${API_BASE_URL}/api/history/${data.historyId}`
-          );
-          console.log('History data imageData type:', typeof historyData.imageData);
-          console.log('History data imageData:', historyData.imageData);
-
-          if (historyData.imageData) {
-            // MongoDB returns Buffer as { type: "Buffer", data: [...] }
-            let imageBuffer;
-            if (historyData.imageData.type === 'Buffer' && Array.isArray(historyData.imageData.data)) {
-              imageBuffer = new Uint8Array(historyData.imageData.data);
-            } else if (historyData.imageData instanceof ArrayBuffer) {
-              imageBuffer = new Uint8Array(historyData.imageData);
-            } else if (Array.isArray(historyData.imageData)) {
-              imageBuffer = new Uint8Array(historyData.imageData);
-            } else {
-              imageBuffer = new Uint8Array(historyData.imageData);
-            }
-
-            const blob = new Blob([imageBuffer], { type: historyData.imageMimeType || 'image/png' });
-            imageUrl = URL.createObjectURL(blob);
-            console.log('Blob URL created:', imageUrl, 'blob size:', blob.size);
-          }
-        } catch (err) {
-          console.error('Error fetching image:', err);
-        }
-      }
+      const imageUrl = data.imageBase64
+        ? `data:${data.imageMimeType};base64,${data.imageBase64}`
+        : data.historyId
+          ? `${API_BASE_URL}/api/history/${data.historyId}/image?token=${token}`
+          : null;
 
       navigate('/evaluation', { state: { report: data.report, imageUrl } });
     } catch (err) {

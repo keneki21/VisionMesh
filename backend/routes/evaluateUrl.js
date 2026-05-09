@@ -48,10 +48,11 @@ router.post('/', authMiddleware, async (req, res) => {
     // Brief wait for above-the-fold rendering
     await new Promise(r => setTimeout(r, 1000));
 
-    // Take viewport-only screenshot (faster than full-page)
+    // Take viewport-only screenshot as JPEG for smaller payload
     const screenshotBuffer = await page.screenshot({
       fullPage: false,
-      type: 'png',
+      type: 'jpeg',
+      quality: 75,
     });
 
     await browser.close();
@@ -88,12 +89,14 @@ router.post('/', authMiddleware, async (req, res) => {
       grade:         report.grade || 'N/A',
       report,
       imageData:     Buffer.from(screenshotBuffer),
-      imageMimeType: 'image/png',
+      imageMimeType: 'image/jpeg',
     });
 
     res.json({
       report,
       historyId: historyEntry._id,
+      imageBase64: screenshotBuffer.toString('base64'),
+      imageMimeType: 'image/jpeg',
     });
 
   } catch (err) {
