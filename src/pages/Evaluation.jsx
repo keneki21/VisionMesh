@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+
+const authHeaders = () => ({
+  headers: { Authorization: `Bearer ${localStorage.getItem('vm_token')}` }
+});
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -46,16 +50,13 @@ function Evaluation() {
     setReport(item.fullReport || null);
     setImageUrl(null);
     try {
-      const { data: full } = await axios.get(`${API_BASE_URL}/api/history/${item.id}`);
-      if (full.imageData) {
-        const blob = new Blob([new Uint8Array(full.imageData)], { type: full.imageMimeType || 'image/png' });
-        setImageUrl(URL.createObjectURL(blob));
-      }
+      await axios.get(`${API_BASE_URL}/api/history/${item.id}`, authHeaders());
+      setImageUrl(`${API_BASE_URL}/api/history/${item.id}/image?token=${localStorage.getItem('vm_token')}`);
     } catch (_) {}
   };
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/history`)
+    axios.get(`${API_BASE_URL}/api/history`, authHeaders())
       .then(({ data }) => {
         const items = data.map(item => ({
           id:         item._id,
@@ -71,12 +72,9 @@ function Evaluation() {
           // Auto-load most recent if user navigated directly (no report in state)
           if (!location.state?.report && items[0].fullReport) {
             setReport(items[0].fullReport);
-            axios.get(`${API_BASE_URL}/api/history/${items[0].id}`)
-              .then(({ data: full }) => {
-                if (full.imageData) {
-                  const blob = new Blob([new Uint8Array(full.imageData)], { type: full.imageMimeType || 'image/png' });
-                  setImageUrl(URL.createObjectURL(blob));
-                }
+            axios.get(`${API_BASE_URL}/api/history/${items[0].id}`, authHeaders())
+              .then(() => {
+                setImageUrl(`${API_BASE_URL}/api/history/${items[0].id}/image?token=${localStorage.getItem('vm_token')}`);
               }).catch(() => {});
           }
         }

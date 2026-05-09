@@ -28,11 +28,14 @@ router.get('/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// Serve image directly
-router.get('/:id/image', async (req, res) => {
+// Serve image directly — accepts token via query param for <img src> tags
+router.get('/:id/image', (req, res, next) => {
+  if (req.query.token) req.headers.authorization = `Bearer ${req.query.token}`;
+  next();
+}, authMiddleware, async (req, res) => {
   try {
     console.log('[image] Fetching image for ID:', req.params.id);
-    const item = await EvaluationHistory.findById(req.params.id);
+    const item = await EvaluationHistory.findOne({ _id: req.params.id, userId: req.user.id });
 
     if (!item) {
       console.log('[image] Item not found');
