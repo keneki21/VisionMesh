@@ -8,6 +8,9 @@ const passport = require("./config/passport");
 
 const app = express();
 
+// Trust Railway's reverse proxy so req.protocol is 'https' in production
+app.set("trust proxy", 1);
+
 // CORS configuration to allow credentials
 app.use(cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173", // Frontend URL
