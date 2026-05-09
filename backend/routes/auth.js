@@ -40,16 +40,16 @@ router.post("/register", async (req, res) => {
         // Set JWT in cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false, // Set to true in production with HTTPS
+            secure: process.env.NODE_ENV === "production",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            sameSite: "lax"
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
         });
 
         // Set user session
         req.session.userId = user._id;
 
-        res.json({ 
-            msg: "User registered successfully", 
+        res.json({
+            msg: "User registered successfully",
             token,
             user: {
                 id: user._id,
@@ -89,9 +89,9 @@ router.post("/login", async (req, res) => {
         // Set JWT in cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false, // Set to true in production with HTTPS
+            secure: process.env.NODE_ENV === "production",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            sameSite: "lax"
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
         });
 
         // Set user session
@@ -180,7 +180,7 @@ router.get("/google", passport.authenticate("google", {
 
 // Google OAuth callback
 router.get("/google/callback", 
-    passport.authenticate("google", { failureRedirect: "/login" }),
+    passport.authenticate("google", { failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed` }),
     async (req, res) => {
         try {
             // Generate JWT token for the user
@@ -220,7 +220,7 @@ router.get("/github", passport.authenticate("github", {
 
 // GitHub OAuth callback
 router.get("/github/callback", 
-    passport.authenticate("github", { failureRedirect: "/login" }),
+    passport.authenticate("github", { failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed` }),
     async (req, res) => {
         try {
             // Generate JWT token for the user
