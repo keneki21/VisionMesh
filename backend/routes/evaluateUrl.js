@@ -7,10 +7,11 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const EvaluationHistory = require('../models/EvaluationHistory');
+const authMiddleware = require('../middleware/auth');
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
 
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
@@ -32,20 +33,24 @@ router.post('/', async (req, res) => {
   try {
     browser = await puppeteer.launch({
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage',
+             '--disable-gpu', '--disable-extensions', '--disable-background-networking'],
     });
 
     const page = await browser.newPage();
-    await page.setViewport({ width: 1440, height: 900 });
+    await page.setViewport({ width: 1280, height: 800 });
 
     await page.goto(parsedUrl.href, {
-      waitUntil: 'networkidle2',
-      timeout: 30000,
+      waitUntil: 'domcontentloaded',
+      timeout: 20000,
     });
 
-    // Take full-page screenshot
+    // Brief wait for above-the-fold rendering
+    await new Promise(r => setTimeout(r, 1000));
+
+    // Take viewport-only screenshot (faster than full-page)
     const screenshotBuffer = await page.screenshot({
-      fullPage: true,
+      fullPage: false,
       type: 'png',
     });
 
@@ -77,11 +82,12 @@ router.post('/', async (req, res) => {
 
     // Save to history (fire-and-forget)
     const historyEntry = await EvaluationHistory.create({
+      userId:        req.user?.id,
       filename,
-      score: Math.round((report.overall_score || 0) * 10),
-      grade: report.grade || 'N/A',
+      score:         Math.round((report.overall_score || 0) * 10),
+      grade:         report.grade || 'N/A',
       report,
-      imageData: Buffer.from(screenshotBuffer),  // Ensure it's a proper Buffer
+      imageData:     Buffer.from(screenshotBuffer),
       imageMimeType: 'image/png',
     });
 

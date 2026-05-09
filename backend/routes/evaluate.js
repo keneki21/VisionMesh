@@ -4,12 +4,13 @@ const multer = require("multer");
 const axios = require("axios");
 const FormData = require("form-data");
 const EvaluationHistory = require("../models/EvaluationHistory");
+const authMiddleware = require("../middleware/auth");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
 
-router.post("/", (req, res) => {
+router.post("/", authMiddleware, (req, res) => {
   upload.single("screenshot")(req, res, async (multerErr) => {
     if (multerErr) {
       console.error("[evaluate] multer error:", multerErr.message);
@@ -38,6 +39,7 @@ router.post("/", (req, res) => {
 
       // Persist full evaluation to history (fire-and-forget)
       EvaluationHistory.create({
+        userId:        req.user?.id,
         filename:      req.file.originalname,
         score:         Math.round((report.overall_score || 0) * 10),
         grade:         report.grade || 'N/A',

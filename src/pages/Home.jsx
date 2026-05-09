@@ -102,9 +102,11 @@ function Home() {
     try {
       const formData = new FormData();
       formData.append('screenshot', file);
+      const token = localStorage.getItem('vm_token');
       const { data: report } = await axios.post(
         `${API_BASE_URL}/api/evaluate`,
-        formData
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       const imageUrl = URL.createObjectURL(file);
       navigate('/evaluation', { state: { report, imageUrl } });
@@ -124,9 +126,11 @@ function Home() {
     setLoading(true);
     setUploadError(null);
     try {
+      const token = localStorage.getItem('vm_token');
       const { data } = await axios.post(
         `${API_BASE_URL}/api/evaluate-url`,
-        { url: urlInput.trim() }
+        { url: urlInput.trim() },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       // Fetch image from history and create blob URL

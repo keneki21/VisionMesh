@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const EvaluationHistory = require('../models/EvaluationHistory');
+const authMiddleware = require('../middleware/auth');
 
-// List — excludes heavy imageData for performance
-router.get('/', async (req, res) => {
+// List — only the authenticated user's evaluations
+router.get('/', authMiddleware, async (req, res) => {
   try {
     const items = await EvaluationHistory
-      .find()
+      .find({ userId: req.user.id })
       .select('-imageData')
       .sort({ createdAt: -1 })
       .limit(50);
@@ -16,10 +17,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Single item — full data including imageData
-router.get('/:id', async (req, res) => {
+// Single item — only if it belongs to the authenticated user
+router.get('/:id', authMiddleware, async (req, res) => {
   try {
-    const item = await EvaluationHistory.findById(req.params.id);
+    const item = await EvaluationHistory.findOne({ _id: req.params.id, userId: req.user.id });
     if (!item) return res.status(404).json({ error: 'Not found' });
     res.json(item);
   } catch (err) {
