@@ -118,11 +118,19 @@ HEURISTICS = [
 ]
 
 
+FALLBACK_CLIP = "openai/clip-vit-base-patch32"
+
 class UIClipScorer:
     def __init__(self):
         print("  Loading UIClip model...")
-        self.model = CLIPModel.from_pretrained(str(UICLIP_PATH)).eval()
-        self.processor = CLIPProcessor.from_pretrained(str(PROCESSOR_PATH))
+        try:
+            self.model = CLIPModel.from_pretrained(str(UICLIP_PATH)).eval()
+            self.processor = CLIPProcessor.from_pretrained(str(PROCESSOR_PATH))
+            print("  UIClip loaded from local path.")
+        except Exception as e:
+            print(f"  Local UIClip unavailable ({e}), falling back to {FALLBACK_CLIP}")
+            self.model = CLIPModel.from_pretrained(FALLBACK_CLIP).eval()
+            self.processor = CLIPProcessor.from_pretrained(FALLBACK_CLIP)
 
     # --- image helpers (sliding window, matches UIClip paper) ---
 

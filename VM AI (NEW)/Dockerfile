@@ -20,5 +20,8 @@ RUN mkdir -p uploads
 # LFS, so any large files in git are just pointer stubs at runtime.
 RUN python download_models.py && python download_florence.py
 
+# Pre-download the CLIP fallback model so first request doesn't stall.
+RUN python -c "from transformers import CLIPModel, CLIPProcessor; CLIPModel.from_pretrained('openai/clip-vit-base-patch32'); CLIPProcessor.from_pretrained('openai/clip-vit-base-patch32'); print('CLIP ready.')"
+
 EXPOSE 5001
 CMD ["python", "api_server.py"]
