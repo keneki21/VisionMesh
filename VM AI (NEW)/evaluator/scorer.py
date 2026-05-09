@@ -132,6 +132,15 @@ class UIClipScorer:
             self.model = CLIPModel.from_pretrained(FALLBACK_CLIP).eval()
             self.processor = CLIPProcessor.from_pretrained(FALLBACK_CLIP)
 
+        # Pre-compute all heuristic text embeddings once at startup.
+        # These never change, so computing them per-request wastes ~2s each time.
+        print("  Pre-computing heuristic text embeddings...")
+        all_texts = []
+        for h in HEURISTICS:
+            all_texts.append(f"ui screenshot. well-designed. {h['description']}")
+            all_texts.append(f"ui screenshot. poor design. {h['description']}")
+        self._text_embs = self._text_embedding(all_texts)  # shape: (20, dim)
+
     # --- image helpers (sliding window, matches UIClip paper) ---
 
     def _preresize(self, image: Image.Image) -> Image.Image:
@@ -179,10 +188,8 @@ class UIClipScorer:
     def score(self, image: Image.Image) -> list:
         img_emb = self._image_embedding(image)
         results = []
-        for h in HEURISTICS:
-            good = f"ui screenshot. well-designed. {h['description']}"
-            poor = f"ui screenshot. poor design. {h['description']}"
-            txt_emb = self._text_embedding([good, poor])
+        for i, h in enumerate(HEURISTICS):
+            txt_emb = self._text_embs[i * 2 : i * 2 + 2]
             sims = (LOGIT_SCALE * img_emb @ txt_emb.T).squeeze(0)
             probs = sims.softmax(dim=0)
             results.append({

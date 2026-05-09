@@ -18,7 +18,7 @@ BLIP_PATH  = BASE_DIR / "models" / "blip-captioner"
 
 _MIN_SIDE  = 20   # skip crops smaller than this (px)
 _MAX_TOKENS = 30  # keep captions brief
-_MAX_ELEMENTS = 15  # only caption the N largest elements for speed
+_MAX_ELEMENTS = 8   # only caption the N largest elements for speed
 _BATCH_SIZE = 8     # process crops in batches
 
 
