@@ -40,18 +40,9 @@ export default function CodeGeneration() {
     setSummary('');
 
     try {
-      // If imageUrl is a data: URL, extract base64 + mimeType for multimodal
-      let imageBase64 = null;
-      let imageMimeType = null;
-      if (imageUrl?.startsWith('data:')) {
-        const [meta, data] = imageUrl.split(',');
-        imageMimeType = meta.match(/data:([^;]+)/)?.[1] || 'image/jpeg';
-        imageBase64 = data;
-      }
-
       const { data } = await axios.post(
         `${API_BASE_URL}/api/code-generation`,
-        { report, imageBase64, imageMimeType },
+        { report },
         authHeaders()
       );
 
