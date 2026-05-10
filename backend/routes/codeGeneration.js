@@ -33,11 +33,11 @@ ${issues || 'Maximize quality across all usability heuristics.'}
 
 Generate exactly these 5 files as a single JSON object. Each must be COMPLETE and production-ready.
 
-1. src/App.jsx — React Router v6, routes "/" and "/contact", Navbar + Footer on every page
-2. src/components/Navbar.jsx — responsive, mobile hamburger, active links, accessible
+1. src/App.jsx — React Router v6, routes "/" and "/contact", Navbar + Footer on every page. Main content must have pt-20 to avoid navbar overlap.
+2. src/components/Navbar.jsx — fixed top navbar (fixed top-0 left-0 right-0 z-50). Responsive, mobile hamburger, active links, accessible.
 3. src/components/Footer.jsx — full footer, links, social icons, copyright
-4. src/pages/Home.jsx — FULL landing page: hero, 6 feature cards, 4 stats, 3 testimonials, CTA. Tailwind only. Real content. Fix ALL issues above.
-5. preview.html — Self-contained using ONLY these CDNs:
+4. src/pages/Home.jsx — FULL landing page with pt-20 at top to clear fixed navbar: hero, 6 feature cards, 4 stats, 3 testimonials, CTA. Tailwind only. Real content. Fix ALL issues above.
+5. preview.html — Self-contained using ONLY these CDNs. The page wrapper must have pt-20 to account for the fixed navbar:
    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
