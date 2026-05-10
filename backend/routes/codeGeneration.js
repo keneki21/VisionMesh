@@ -3,9 +3,9 @@ const router  = express.Router();
 const OpenAI  = require('openai');
 const authMiddleware = require('../middleware/auth');
 
-const together = new OpenAI({
-  apiKey:  process.env.CEREBRAS_API_KEY,
-  baseURL: 'https://api.cerebras.ai/v1',
+const deepseek = new OpenAI({
+  apiKey:  process.env.DEEPSEEK_API_KEY,
+  baseURL: 'https://api.deepseek.com/v1',
 });
 
 router.post('/', authMiddleware, async (req, res) => {
@@ -21,34 +21,35 @@ router.post('/', authMiddleware, async (req, res) => {
       .join('\n');
     const filename     = report.filename || 'website';
     const elements     = report.elements || [];
-    const elementTypes = [...new Set(elements.map(e => e.class || e.label).filter(Boolean))].slice(0, 8).join(', ');
+    const elementTypes = [...new Set(elements.map(e => e.class || e.label).filter(Boolean))].slice(0, 6).join(', ');
 
     const prompt = `You are an expert React 18 + Tailwind CSS developer. Generate a complete website fixing all UX issues.
 
-Site: "${filename}"${elementTypes ? `. Detected UI elements: ${elementTypes}` : ''}.
-Score: ${score}/100 (${grade}).
+Site: "${filename}"${elementTypes ? `. UI elements: ${elementTypes}` : ''}. Score: ${score}/100 (${grade}).
 
 FIXES REQUIRED:
 ${issues || 'Maximize quality across all usability heuristics.'}
 
-Generate exactly these 5 files as a single JSON object. Each must be COMPLETE and production-ready.
+Generate exactly 5 files. Make each COMPLETE and production-ready.
 
-1. src/App.jsx — React Router v6, routes "/" and "/contact", Navbar + Footer on every page. Main content must have pt-20 to avoid navbar overlap.
-2. src/components/Navbar.jsx — fixed top navbar (fixed top-0 left-0 right-0 z-50). Responsive, mobile hamburger, active links, accessible.
-3. src/components/Footer.jsx — full footer, links, social icons, copyright
-4. src/pages/Home.jsx — FULL landing page with pt-20 at top to clear fixed navbar: hero, 6 feature cards, 4 stats, 3 testimonials, CTA. Tailwind only. Real content. Fix ALL issues above.
-5. preview.html — Self-contained using ONLY these CDNs. The page wrapper must have pt-20 to account for the fixed navbar:
+CRITICAL LAYOUT RULE: Navbar must be fixed (fixed top-0 z-50). All page content must have pt-20 to clear the navbar. Never let navbar overlap content.
+
+1. src/App.jsx — React Router v6, routes "/" and "/contact", Navbar + Footer on all pages, main content wrapped in <main className="pt-20">
+2. src/components/Navbar.jsx — fixed top navbar, mobile hamburger, active links, aria labels
+3. src/components/Footer.jsx — full footer, grouped links, copyright
+4. src/pages/Home.jsx — complete landing page: hero, 6 feature cards, 4 stats, 3 testimonials, CTA. All sections use Tailwind. Real content, no Lorem Ipsum.
+5. preview.html — standalone HTML with these CDNs only:
    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
    <script src="https://cdn.tailwindcss.com"></script>
-   All JSX in one <script type="text/babel">. ReactDOM.createRoot renders full homepage with Navbar + Footer.
+   One <script type="text/babel"> with all components inline. Body has pt-20. ReactDOM.createRoot renders App with Navbar + Home + Footer.
 
-Respond ONLY with valid JSON, no markdown:
+Respond ONLY with valid JSON (no markdown, no explanation outside JSON):
 {"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved and why"}`;
 
-    const completion = await together.chat.completions.create({
-      model: 'qwen-3-235b-a22b-instruct-2507',
+    const completion = await deepseek.chat.completions.create({
+      model: 'deepseek-chat',
       messages: [
         {
           role: 'system',
