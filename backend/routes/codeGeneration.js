@@ -62,7 +62,7 @@ OUTPUT FORMAT (respond with valid JSON only, no markdown, no explanation outside
 
 Generate at least 3 files. Make the code complete and runnable.`;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
     let result;
     if (imageBase64 && imageMimeType) {
