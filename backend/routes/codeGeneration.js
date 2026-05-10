@@ -3,9 +3,13 @@ const router  = express.Router();
 const OpenAI  = require('openai');
 const authMiddleware = require('../middleware/auth');
 
-const deepseek = new OpenAI({
-  apiKey:  process.env.DEEPSEEK_API_KEY,
-  baseURL: 'https://api.deepseek.com/v1',
+const openrouter = new OpenAI({
+  apiKey:  process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1',
+  defaultHeaders: {
+    'HTTP-Referer': 'https://visionmesh-production.up.railway.app',
+    'X-Title': 'VisionMesh',
+  },
 });
 
 router.post('/', authMiddleware, async (req, res) => {
@@ -48,8 +52,8 @@ CRITICAL LAYOUT RULE: Navbar must be fixed (fixed top-0 z-50). All page content 
 Respond ONLY with valid JSON (no markdown, no explanation outside JSON):
 {"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved and why"}`;
 
-    const completion = await deepseek.chat.completions.create({
-      model: 'deepseek-chat',
+    const completion = await openrouter.chat.completions.create({
+      model: 'deepseek/deepseek-r1:free',
       messages: [
         {
           role: 'system',
