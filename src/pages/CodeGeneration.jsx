@@ -158,52 +158,54 @@ export default function CodeGeneration() {
   const location  = useLocation();
   const { report, imageUrl } = location.state || {};
 
-  const [phase,        setPhase]        = useState('idle');   // idle | loading | terminal | done | error
+  const [phase,        setPhase]        = useState('idle');   // idle | terminal | waiting | done | error
   const [files,        setFiles]        = useState([]);
   const [summary,      setSummary]      = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [activeTab,    setActiveTab]    = useState('code');   // code | preview
   const [copied,       setCopied]       = useState(false);
   const [error,        setError]        = useState(null);
-  const apiResultRef = useRef(null);
+  const apiResultRef    = useRef(null);
+  const terminalDoneRef = useRef(false);
 
   useEffect(() => { if (!report) navigate('/evaluation'); }, [report, navigate]);
 
-  const generate = async () => {
-    setPhase('loading');
-    setError(null);
-    setFiles([]);
-    setSummary('');
-    apiResultRef.current = null;
-
-    // Start API call and terminal animation simultaneously
-    const apiCall = axios.post(
-      `${API_BASE_URL}/api/code-generation`,
-      { report },
-      authHeaders()
-    ).then(res => { apiResultRef.current = res.data; })
-     .catch(err => { apiResultRef.current = { error: err.response?.data?.error || err.message }; });
-
-    setPhase('terminal');
-    await apiCall; // ensure API call is done when terminal finishes
-  };
-
-  const onTerminalDone = () => {
-    const result = apiResultRef.current;
-    if (!result) {
-      setError('No response received. Please try again.');
-      setPhase('error');
-      return;
-    }
-    if (result.error) {
-      setError(result.error);
-      setPhase('error');
-      return;
-    }
+  const processResult = (result) => {
+    if (!result) { setError('No response received.'); setPhase('error'); return; }
+    if (result.error) { setError(result.error); setPhase('error'); return; }
     setFiles(result.files || []);
     setSummary(result.summary || '');
     setSelectedFile(result.files?.[0] || null);
     setPhase('done');
+  };
+
+  const generate = () => {
+    setPhase('terminal');
+    setError(null);
+    setFiles([]);
+    setSummary('');
+    apiResultRef.current    = null;
+    terminalDoneRef.current = false;
+
+    // API call runs in background — result stored in ref
+    axios.post(`${API_BASE_URL}/api/code-generation`, { report }, authHeaders())
+      .then(res  => { apiResultRef.current = res.data; })
+      .catch(err => { apiResultRef.current = { error: err.response?.data?.error || err.message }; })
+      .finally(() => {
+        // If terminal already finished, process now; else terminal's onDone will handle it
+        if (terminalDoneRef.current) processResult(apiResultRef.current);
+      });
+  };
+
+  const onTerminalDone = () => {
+    terminalDoneRef.current = true;
+    if (apiResultRef.current) {
+      // API already done — show results immediately
+      processResult(apiResultRef.current);
+    } else {
+      // API still running — show waiting spinner
+      setPhase('waiting');
+    }
   };
 
   const previewFile = files.find(f => f.path === 'preview.html');
@@ -319,12 +321,30 @@ export default function CodeGeneration() {
         </div>
       )}
 
+      {/* ── Waiting phase (terminal done but API still running) ── */}
+      {phase === 'waiting' && (
+        <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
+          <div className="w-12 h-12 border-4 border-white/20 border-t-purple-400 rounded-full animate-spin" />
+          <h2 className="text-lg font-semibold">Qwen is still reasoning...</h2>
+          <p className="text-gray-400 text-sm text-center max-w-sm">
+            QwQ 32B thinks through the problem before writing code — this produces higher quality results.
+            Usually takes 20–60 seconds total.
+          </p>
+          <div className="flex gap-1 mt-2">
+            {[0,1,2].map(i => (
+              <div key={i} className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+                style={{ animationDelay: `${i * 0.15}s` }} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Terminal phase ── */}
-      {(phase === 'loading' || phase === 'terminal') && (
+      {phase === 'terminal' && (
         <div className="flex-1 flex flex-col items-center justify-center gap-6 p-6">
           <div className="text-center mb-2">
             <h2 className="text-lg font-semibold text-white mb-1">Building your optimized website...</h2>
-            <p className="text-gray-500 text-sm">Llama 3.3 70B is generating {files.length || 7} files</p>
+            <p className="text-gray-500 text-sm">Qwen QwQ 32B is reasoning through 5 files</p>
           </div>
           {phase === 'terminal' && <Terminal onDone={onTerminalDone} />}
         </div>
