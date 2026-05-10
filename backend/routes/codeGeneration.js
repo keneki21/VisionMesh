@@ -1,9 +1,12 @@
-const express = require('express');
-const router  = express.Router();
-const Groq    = require('groq-sdk');
+const express  = require('express');
+const router   = express.Router();
+const OpenAI   = require('openai');
 const authMiddleware = require('../middleware/auth');
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const together = new OpenAI({
+  apiKey:  process.env.TOGETHER_API_KEY,
+  baseURL: 'https://api.together.xyz/v1',
+});
 
 router.post('/', authMiddleware, async (req, res) => {
   try {
@@ -46,8 +49,8 @@ Generate these 5 files as a single JSON object. Make each file COMPLETE and prod
 Respond ONLY with valid JSON, no markdown:
 {"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved"}`;
 
-    const completion = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+    const completion = await together.chat.completions.create({
+      model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
       messages: [
         {
           role: 'system',
@@ -56,7 +59,7 @@ Respond ONLY with valid JSON, no markdown:
         { role: 'user', content: prompt },
       ],
       temperature: 0.65,
-      max_tokens: 20000,
+      max_tokens: 16000,
     });
 
     const text  = completion.choices[0]?.message?.content?.trim() || '';

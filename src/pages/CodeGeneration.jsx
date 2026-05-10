@@ -343,7 +343,7 @@ export default function CodeGeneration() {
         <div className="flex-1 flex flex-col items-center justify-center gap-6 p-6">
           <div className="text-center mb-2">
             <h2 className="text-lg font-semibold text-white mb-1">Building your optimized website...</h2>
-            <p className="text-gray-500 text-sm">Llama 3.3 70B is generating 5 files</p>
+            <p className="text-gray-500 text-sm">Llama 3.3 70B Turbo is generating 5 files</p>
           </div>
           {phase === 'terminal' && <Terminal onDone={onTerminalDone} />}
         </div>
