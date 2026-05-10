@@ -48,7 +48,7 @@ Respond ONLY with valid JSON, no markdown:
 {"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved and why"}`;
 
     const completion = await together.chat.completions.create({
-      model: 'llama-3.3-70b',
+      model: 'llama3.3-70b',
       messages: [
         {
           role: 'system',
