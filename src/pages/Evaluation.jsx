@@ -409,7 +409,7 @@ function Evaluation() {
                 {/* Action buttons — end of page */}
                 <div className="border-t border-gray-800 pt-6 pb-4 flex gap-3">
                   <button
-                    onClick={() => navigate('/code-generation')}
+                    onClick={() => navigate('/code-generation', { state: { report, imageUrl } })}
                     className="px-6 py-3 bg-white hover:bg-gray-100 text-black rounded-lg font-semibold transition-colors flex items-center gap-2 text-sm"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

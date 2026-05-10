@@ -53,6 +53,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/evaluate", require("./routes/evaluate"));
 app.use("/api/evaluate-url", require("./routes/evaluateUrl"));
 app.use("/api/history", require("./routes/history"));
+app.use("/api/code-generation", require("./routes/codeGeneration"));
 
 const PORT = process.env.PORT || 5000;
 
