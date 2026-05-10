@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const Groq = require('groq-sdk');
 const authMiddleware = require('../middleware/auth');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 router.post('/', authMiddleware, async (req, res) => {
   try {
@@ -62,25 +62,20 @@ OUTPUT FORMAT (respond with valid JSON only, no markdown, no explanation outside
 
 Generate at least 3 files. Make the code complete and runnable.`;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
-    let result;
-    if (imageBase64 && imageMimeType) {
-      // Multimodal — send screenshot + prompt
-      result = await model.generateContent([
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
         {
-          inlineData: {
-            mimeType: imageMimeType,
-            data: imageBase64,
-          },
+          role: 'system',
+          content: 'You are an expert React and Tailwind CSS developer. You only respond with valid JSON. Never include markdown code fences or explanation outside the JSON object.'
         },
-        prompt,
-      ]);
-    } else {
-      result = await model.generateContent(prompt);
-    }
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 8000,
+    });
 
-    const text = result.response.text().trim();
+    const text = completion.choices[0]?.message?.content?.trim() || '';
 
     // Strip markdown code fences if Gemini wraps in ```json
     const clean = text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim();
