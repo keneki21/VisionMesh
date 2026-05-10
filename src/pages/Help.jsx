@@ -81,7 +81,7 @@ function Help() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 pt-16 sm:pt-20 relative overflow-hidden">
+    <div className="min-h-screen bg-gray-950 pt-20 sm:pt-24 relative overflow-hidden">
       {/* Cool Background Designs */}
       <div className="absolute inset-0 overflow-hidden z-0">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-600/60 to-pink-600/50 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }}></div>

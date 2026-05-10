@@ -201,7 +201,7 @@ function Evaluation() {
   };
 
   return (
-    <div className="min-h-screen flex relative bg-gray-950 pt-16">
+    <div className="min-h-screen flex relative bg-gray-950 pt-20 sm:pt-24">
       {/* Background */}
       <div className="fixed inset-0 overflow-hidden -z-10">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-600/15 to-pink-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s' }} />
@@ -211,7 +211,7 @@ function Evaluation() {
       </div>
 
       {/* ── Left Sidebar ─────────────────────────────────────────────── */}
-      <aside className="w-64 bg-gray-900/80 backdrop-blur-md border-r border-gray-700/60 flex flex-col z-50 flex-shrink-0 fixed left-0 top-16 bottom-0">
+      <aside className="w-64 bg-gray-900/80 backdrop-blur-md border-r border-gray-700/60 flex flex-col z-50 flex-shrink-0 fixed left-0 top-20 sm:top-24 bottom-0">
         {/* New Analysis */}
         <div className="p-3">
           <button

@@ -212,7 +212,7 @@ function Home() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-32">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 pt-20 sm:pt-24 pb-24 sm:pb-32">
         
         {/* Main Headline */}
         <div className="h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center mb-4 sm:mb-6 max-w-5xl px-4 relative z-10">

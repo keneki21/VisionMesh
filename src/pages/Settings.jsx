@@ -96,7 +96,7 @@ function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 pt-16 sm:pt-20 relative overflow-hidden">
+    <div className="min-h-screen bg-gray-950 pt-20 sm:pt-24 relative overflow-hidden">
       {/* Cool Background Designs - Full Page */}
       <div className="absolute inset-0 overflow-hidden z-0">
         {/* Colorful gradient blobs */}

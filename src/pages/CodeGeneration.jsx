@@ -234,7 +234,7 @@ export default function CodeGeneration() {
   const tree     = buildTree(files.filter(f => f.path !== 'preview.html'));
 
   return (
-    <div className="h-screen bg-gray-950 text-white flex flex-col overflow-hidden">
+    <div className="min-h-screen pt-20 sm:pt-24 bg-gray-950 text-white flex flex-col overflow-hidden">
 
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800 bg-gray-900 flex-shrink-0">
