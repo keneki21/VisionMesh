@@ -15,7 +15,7 @@ function Help() {
   }, [searchParams]);
 
   const faqs = {
-    'getting-started': [
+    'getting-started': [ 
       {
         question: 'What is VisionMesh?',
         answer: 'VisionMesh is an advanced platform that analyzes images and generates corresponding code. It helps developers quickly convert visual designs into functional code.'
