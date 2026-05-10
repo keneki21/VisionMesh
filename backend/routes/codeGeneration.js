@@ -53,7 +53,7 @@ Respond ONLY with valid JSON (no markdown, no explanation outside JSON):
 {"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved and why"}`;
 
     const completion = await openrouter.chat.completions.create({
-      model: 'qwen/qwen3-coder-480b-a35b:free',
+      model: 'qwen/qwen3-coder:free',
       messages: [
         {
           role: 'system',
