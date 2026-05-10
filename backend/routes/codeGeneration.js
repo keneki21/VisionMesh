@@ -47,7 +47,7 @@ Respond ONLY with valid JSON, no markdown:
 {"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved"}`;
 
     const completion = await groq.chat.completions.create({
-      model: 'qwen-qwq-32b',
+      model: 'llama-3.3-70b-versatile',
       messages: [
         {
           role: 'system',
@@ -56,7 +56,7 @@ Respond ONLY with valid JSON, no markdown:
         { role: 'user', content: prompt },
       ],
       temperature: 0.65,
-      max_tokens: 12000,
+      max_tokens: 16000,
     });
 
     const text  = completion.choices[0]?.message?.content?.trim() || '';

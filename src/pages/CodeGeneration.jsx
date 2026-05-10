@@ -325,10 +325,9 @@ export default function CodeGeneration() {
       {phase === 'waiting' && (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6">
           <div className="w-12 h-12 border-4 border-white/20 border-t-purple-400 rounded-full animate-spin" />
-          <h2 className="text-lg font-semibold">Qwen is still reasoning...</h2>
+          <h2 className="text-lg font-semibold">Generating your website...</h2>
           <p className="text-gray-400 text-sm text-center max-w-sm">
-            QwQ 32B thinks through the problem before writing code — this produces higher quality results.
-            Usually takes 20–60 seconds total.
+            Llama 3.3 70B is writing 5 complete files. Almost done — usually 15–30 seconds total.
           </p>
           <div className="flex gap-1 mt-2">
             {[0,1,2].map(i => (
@@ -344,7 +343,7 @@ export default function CodeGeneration() {
         <div className="flex-1 flex flex-col items-center justify-center gap-6 p-6">
           <div className="text-center mb-2">
             <h2 className="text-lg font-semibold text-white mb-1">Building your optimized website...</h2>
-            <p className="text-gray-500 text-sm">Qwen QwQ 32B is reasoning through 5 files</p>
+            <p className="text-gray-500 text-sm">Llama 3.3 70B is generating 5 files</p>
           </div>
           {phase === 'terminal' && <Terminal onDone={onTerminalDone} />}
         </div>
