@@ -118,7 +118,8 @@ HEURISTICS = [
 ]
 
 
-FALLBACK_CLIP = "openai/clip-vit-base-patch32"
+HF_UICLIP    = "keneki21/visionmesh-uiclip"
+HF_PROCESSOR = "keneki21/visionmesh-clip-processor"
 
 class UIClipScorer:
     def __init__(self):
@@ -127,10 +128,11 @@ class UIClipScorer:
             self.model = CLIPModel.from_pretrained(str(UICLIP_PATH)).eval()
             self.processor = CLIPProcessor.from_pretrained(str(PROCESSOR_PATH))
             print("  UIClip loaded from local path.")
-        except Exception as e:
-            print(f"  Local UIClip unavailable ({e}), falling back to {FALLBACK_CLIP}")
-            self.model = CLIPModel.from_pretrained(FALLBACK_CLIP).eval()
-            self.processor = CLIPProcessor.from_pretrained(FALLBACK_CLIP)
+        except Exception:
+            print(f"  Downloading UIClip from HuggingFace Hub ({HF_UICLIP})...")
+            self.model = CLIPModel.from_pretrained(HF_UICLIP).eval()
+            self.processor = CLIPProcessor.from_pretrained(HF_PROCESSOR)
+            print("  UIClip loaded from Hub.")
 
         # Pre-compute all heuristic text embeddings once at startup.
         # These never change, so computing them per-request wastes ~2s each time.

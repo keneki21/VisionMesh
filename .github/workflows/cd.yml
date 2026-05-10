@@ -66,6 +66,8 @@ jobs:
           context: ./VM AI (NEW)
           push: true
           tags: ${{ env.REGISTRY }}/${{ steps.owner.outputs.lower }}/visionmesh-ai:latest
+          build-args: |
+            HF_TOKEN=${{ secrets.HF_TOKEN }}
           cache-from: type=gha,scope=ai
           cache-to: type=gha,mode=max,scope=ai
 
