@@ -327,7 +327,7 @@ export default function CodeGeneration() {
           <div className="w-12 h-12 border-4 border-white/20 border-t-purple-400 rounded-full animate-spin" />
           <h2 className="text-lg font-semibold">Generating your website...</h2>
           <p className="text-gray-400 text-sm text-center max-w-sm">
-            Llama 3.3 70B is writing 5 complete files. Almost done — usually 15–30 seconds total.
+            Qwen2.5-Coder 7B is writing 5 complete files on Railway CPU. Usually 5–10 minutes — grab a coffee ☕
           </p>
           <div className="flex gap-1 mt-2">
             {[0,1,2].map(i => (
