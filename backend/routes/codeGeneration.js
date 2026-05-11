@@ -5,6 +5,7 @@ const authMiddleware = require('../middleware/auth');
 
 // Ollama is OpenAI-compatible at /v1
 // Uses Railway internal networking — free, no internet required
+// Railway internal networking — no port needed, Railway routes automatically
 const ollama = new OpenAI({
   apiKey:  'ollama',
   baseURL: `${process.env.OLLAMA_URL || 'http://localhost:11434'}/v1`,
