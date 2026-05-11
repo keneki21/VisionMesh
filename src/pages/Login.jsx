@@ -48,23 +48,33 @@ export default function Login() {
     navigate('/home');
   };
 
+  const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.email.trim()) return 'Email is required.';
+    if (!emailRegex.test(formData.email.trim())) return 'Please enter a valid email address.';
+    if (!formData.password) return 'Password is required.';
+    if (formData.password.length < 6) return 'Password must be at least 6 characters.';
+
+    if (!isLogin) {
+      if (formData.password !== formData.confirmPassword) return 'Passwords do not match.';
+      if (formData.password.length < 8) return 'Password must be at least 8 characters for signup.';
+    }
+
+    return null;
+  };
+
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setLoading(true);
-
-    // Validate form
-    if (!formData.email || !formData.password) {
-      setError('Email and password are required');
-      setLoading(false);
-      return;
-    }
-
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
 
     try {
       if (isLogin) {

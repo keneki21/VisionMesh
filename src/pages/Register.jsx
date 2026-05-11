@@ -24,11 +24,26 @@ export default function Register() {
     e.preventDefault();
     setError('');
 
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.username.trim())
+      return setError('Username is required.');
+    if (formData.username.trim().length < 3)
+      return setError('Username must be at least 3 characters.');
+    if (/\s/.test(formData.username))
+      return setError('Username cannot contain spaces.');
+    if (!formData.email.trim())
+      return setError('Email is required.');
+    if (!emailRegex.test(formData.email.trim()))
+      return setError('Please enter a valid email address.');
+    if (!formData.password)
+      return setError('Password is required.');
+    if (formData.password.length < 8)
+      return setError('Password must be at least 8 characters.');
+    if (!/[0-9]/.test(formData.password) && !/[^a-zA-Z0-9]/.test(formData.password))
+      return setError('Password must contain at least one number or special character.');
+    if (formData.password !== formData.confirmPassword)
+      return setError('Passwords do not match.');
 
     setLoading(true);
 

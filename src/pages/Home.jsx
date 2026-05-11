@@ -97,6 +97,15 @@ function Home() {
       setUploadError('Please select a screenshot first.');
       return;
     }
+    const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      setUploadError('Only PNG, JPG, and WebP images are supported.');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('File size must be under 10 MB.');
+      return;
+    }
     setLoading(true);
     setUploadError(null);
     try {
@@ -119,8 +128,16 @@ function Home() {
   };
 
   const handleAnalyzeUrl = async () => {
-    if (!urlInput.trim()) {
+    const trimmed = urlInput.trim();
+    if (!trimmed) {
       setUploadError('Please enter a URL.');
+      return;
+    }
+    try {
+      const full = trimmed.startsWith('http') ? trimmed : `https://${trimmed}`;
+      new URL(full);
+    } catch {
+      setUploadError('Please enter a valid URL (e.g. https://example.com).');
       return;
     }
     setLoading(true);

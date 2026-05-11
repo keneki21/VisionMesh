@@ -252,6 +252,67 @@ router.get("/github/callback",
     }
 );
 
+// UPDATE PROFILE (local users only — OAuth users can't change name/email)
+router.put("/profile", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ msg: "User not found" });
+
+        if (user.authProvider !== 'local') {
+            return res.status(403).json({ msg: "OAuth users cannot change profile details." });
+        }
+
+        const { username, email } = req.body;
+
+        if (username) {
+            if (username.trim().length < 3) return res.status(400).json({ msg: "Username must be at least 3 characters." });
+            const taken = await User.findOne({ username: username.trim(), _id: { $ne: user._id } });
+            if (taken) return res.status(400).json({ msg: "Username already taken." });
+            user.username = username.trim();
+        }
+
+        if (email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.trim())) return res.status(400).json({ msg: "Invalid email address." });
+            const taken = await User.findOne({ email: email.trim(), _id: { $ne: user._id } });
+            if (taken) return res.status(400).json({ msg: "Email already in use." });
+            user.email = email.trim();
+        }
+
+        await user.save();
+        res.json({ msg: "Profile updated successfully", user: { id: user._id, username: user.username, email: user.email } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
+// CHANGE PASSWORD (local users only)
+router.put("/password", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ msg: "User not found" });
+
+        if (user.authProvider !== 'local') {
+            return res.status(403).json({ msg: "OAuth users cannot change password." });
+        }
+
+        const { currentPassword, newPassword } = req.body;
+        if (!currentPassword || !newPassword) return res.status(400).json({ msg: "All fields are required." });
+        if (newPassword.length < 8) return res.status(400).json({ msg: "New password must be at least 8 characters." });
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) return res.status(400).json({ msg: "Current password is incorrect." });
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+        res.json({ msg: "Password changed successfully." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
 // DELETE ACCOUNT (Protected Route)
 router.delete("/delete-account", authMiddleware, async (req, res) => {
     try {

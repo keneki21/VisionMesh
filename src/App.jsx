@@ -8,42 +8,44 @@ import CodeGeneration from './pages/CodeGeneration';
 import Help from './pages/Help';
 import Login from './pages/Login';
 import Register from './pages/Register';
-// import Analyze from './pages/Analyze';
-// import Results from './pages/Results';
-// import About from './pages/About';
-// import Contact from './pages/Contact';
 
-function App() {
+// Blocks unauthenticated access — redirects to /login
+function ProtectedRoute({ children }) {
+  const token  = localStorage.getItem('vm_token');
+  const isAuth = localStorage.getItem('vm_auth');
+  if (!token || !isAuth) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function AppLayout() {
   const location = useLocation();
-  const hideFooterRoutes = ['/evaluation'];
+  const hideFooterRoutes = ['/evaluation', '/code-generation'];
   const shouldShowFooter = !hideFooterRoutes.includes(location.pathname);
 
   return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/home"            element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/evaluation"      element={<ProtectedRoute><Evaluation /></ProtectedRoute>} />
+        <Route path="/settings"        element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/code-generation" element={<ProtectedRoute><CodeGeneration /></ProtectedRoute>} />
+        <Route path="/help"            element={<ProtectedRoute><Help /></ProtectedRoute>} />
+        <Route path="*"                element={<Navigate to="/login" replace />} />
+      </Routes>
+      {shouldShowFooter && <Footer />}
+    </>
+  );
+}
+
+function App() {
+  return (
     <div className="min-h-screen flex flex-col">
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login"    element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route
-          path="/*"
-          element={
-            <>
-              <Navbar />
-              <Routes>
-                <Route path="/home" element={<Home />} />
-                <Route path="/evaluation" element={<Evaluation />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/code-generation" element={<CodeGeneration />} />
-                <Route path="/help" element={<Help />} />
-                {/* <Route path="/analyze" element={<Analyze />} />
-                <Route path="/results" element={<Results />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} /> */}
-              </Routes>
-              {shouldShowFooter && <Footer />}
-            </>
-          }
-        />
+        <Route path="/"         element={<Navigate to="/login" replace />} />
+        <Route path="/*"        element={<AppLayout />} />
       </Routes>
     </div>
   );

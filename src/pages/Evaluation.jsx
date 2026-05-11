@@ -25,6 +25,7 @@ function Evaluation() {
     low:    { bg: 'bg-yellow-500/20', text: 'text-yellow-400', label: 'Warning'  },
   };
 
+  const [sidebarOpen,    setSidebarOpen]    = useState(false);
   const [searchQuery,    setSearchQuery]    = useState('');
   const [selectedId,     setSelectedId]     = useState(null);
   const [historyItems,   setHistoryItems]   = useState([]);
@@ -210,8 +211,23 @@ function Evaluation() {
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
+      {/* Mobile sidebar toggle */}
+      <button
+        onClick={() => setSidebarOpen(o => !o)}
+        className="fixed bottom-4 left-4 z-[60] md:hidden bg-gray-800 text-white p-3 rounded-full shadow-lg border border-gray-700"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* ── Left Sidebar ─────────────────────────────────────────────── */}
-      <aside className="w-64 bg-gray-900/80 backdrop-blur-md border-r border-gray-700/60 flex flex-col z-50 flex-shrink-0 fixed left-0 top-20 sm:top-24 bottom-0">
+      <aside className={`w-64 bg-gray-900/80 backdrop-blur-md border-r border-gray-700/60 flex flex-col z-50 flex-shrink-0 fixed left-0 top-20 sm:top-24 bottom-0 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         {/* New Analysis */}
         <div className="p-3">
           <button
@@ -289,7 +305,7 @@ function Evaluation() {
       </aside>
 
       {/* ── Main Content ─────────────────────────────────────────────── */}
-      <main className="flex-1 ml-64">
+      <main className="flex-1 ml-0 md:ml-64">
         <div className="p-6 pb-8">
           <div className="max-w-4xl mx-auto">
 

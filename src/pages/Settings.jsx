@@ -4,91 +4,107 @@ import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
 function Settings() {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('profile');
-  const [user, setUser] = useState(null);
+  const navigate  = useNavigate();
+  const token     = localStorage.getItem('vm_token');
+  const authHdr   = { headers: { Authorization: `Bearer ${token}` } };
+
+  const [activeTab,       setActiveTab]       = useState('profile');
+  const [user,            setUser]            = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [deleteError, setDeleteError] = useState('');
+  const [deleteLoading,   setDeleteLoading]   = useState(false);
+  const [deleteError,     setDeleteError]     = useState('');
+  const [profileMsg,      setProfileMsg]      = useState('');
+  const [profileErr,      setProfileErr]      = useState('');
+  const [profileLoading,  setProfileLoading]  = useState(false);
+  const [passwordMsg,     setPasswordMsg]     = useState('');
+  const [passwordErr,     setPasswordErr]     = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    username: '',
-    bio: '',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    fullName: '', email: '', username: '', bio: '',
+    currentPassword: '', newPassword: '', confirmPassword: '',
   });
 
+  const isOAuth = user?.authProvider && user.authProvider !== 'local';
+
+  // Fetch fresh profile from API on mount
   useEffect(() => {
-    // Get user data from localStorage
-    const userData = localStorage.getItem('vm_user');
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-        // Pre-fill form with user data
+    axios.get(`${API_BASE_URL}/api/auth/profile`, authHdr)
+      .then(({ data }) => {
+        const u = data.user;
+        setUser(u);
+        localStorage.setItem('vm_user', JSON.stringify(u));
         setFormData(prev => ({
           ...prev,
-          fullName: parsedUser.username || '',
-          email: parsedUser.email || '',
-          username: parsedUser.username || '',
+          fullName: u.username || '',
+          email:    u.email    || '',
+          username: u.username || '',
         }));
-      } catch (e) {
-        console.error('Error parsing user data:', e);
-      }
-    }
+      })
+      .catch(() => {
+        // fallback to localStorage
+        try {
+          const u = JSON.parse(localStorage.getItem('vm_user') || '{}');
+          setUser(u);
+          setFormData(prev => ({ ...prev, fullName: u.username || '', email: u.email || '', username: u.username || '' }));
+        } catch {}
+      });
   }, []);
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
-    // Handle profile update logic here
-    console.log('Profile updated:', formData);
+    setProfileMsg(''); setProfileErr('');
+    if (isOAuth) return;
+    setProfileLoading(true);
+    try {
+      const { data } = await axios.put(`${API_BASE_URL}/api/auth/profile`,
+        { username: formData.username, email: formData.email }, authHdr);
+      setProfileMsg(data.msg || 'Profile updated.');
+      const updated = { ...user, username: data.user.username, email: data.user.email };
+      setUser(updated);
+      localStorage.setItem('vm_user', JSON.stringify(updated));
+    } catch (err) {
+      setProfileErr(err.response?.data?.msg || 'Failed to update profile.');
+    } finally {
+      setProfileLoading(false);
+    }
   };
 
-  const handlePasswordUpdate = (e) => {
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
-    // Handle password update logic here
-    console.log('Password updated');
+    setPasswordMsg(''); setPasswordErr('');
+    if (isOAuth) return;
+    if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword)
+      return setPasswordErr('All password fields are required.');
+    if (formData.newPassword.length < 8)
+      return setPasswordErr('New password must be at least 8 characters.');
+    if (formData.newPassword !== formData.confirmPassword)
+      return setPasswordErr('New passwords do not match.');
+    setPasswordLoading(true);
+    try {
+      const { data } = await axios.put(`${API_BASE_URL}/api/auth/password`,
+        { currentPassword: formData.currentPassword, newPassword: formData.newPassword }, authHdr);
+      setPasswordMsg(data.msg || 'Password changed successfully.');
+      setFormData(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
+    } catch (err) {
+      setPasswordErr(err.response?.data?.msg || 'Failed to change password.');
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   const handleDeleteAccount = async () => {
-    setDeleteLoading(true);
-    setDeleteError('');
-
+    setDeleteLoading(true); setDeleteError('');
     try {
-      const token = localStorage.getItem('vm_token');
-      
-      if (!token) {
-        setDeleteError('Not authenticated');
-        return;
-      }
-
-      const response = await axios.delete(`${API_BASE_URL}/auth/delete-account`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        withCredentials: true
-      });
-
-      if (response.data) {
-        // Clear all localStorage
-        localStorage.removeItem('vm_auth');
-        localStorage.removeItem('vm_token');
-        localStorage.removeItem('vm_user');
-        
-        // Redirect to login
-        navigate('/login');
-      }
+      await axios.delete(`${API_BASE_URL}/api/auth/delete-account`, authHdr);
+      localStorage.removeItem('vm_auth');
+      localStorage.removeItem('vm_token');
+      localStorage.removeItem('vm_user');
+      navigate('/login');
     } catch (error) {
-      console.error('Delete account error:', error);
       setDeleteError(error.response?.data?.msg || 'Failed to delete account. Please try again.');
     } finally {
       setDeleteLoading(false);
@@ -336,6 +352,15 @@ function Settings() {
                   </div>
                 </div>
 
+                {isOAuth && (
+                  <div className="mb-4 px-4 py-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-yellow-400 text-sm">
+                    You signed in with {user?.authProvider === 'google' ? 'Google' : 'GitHub'} — profile details are managed by your OAuth provider and cannot be changed here.
+                  </div>
+                )}
+
+                {profileMsg && <div className="mb-4 px-4 py-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-sm">{profileMsg}</div>}
+                {profileErr && <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">{profileErr}</div>}
+
                 <form onSubmit={handleProfileUpdate} className="space-y-4 sm:space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div>
@@ -346,7 +371,8 @@ function Settings() {
                         value={formData.fullName}
                         onChange={handleInputChange}
                         placeholder="John Doe"
-                        className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                        disabled={isOAuth}
+                        className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors ${isOAuth ? 'opacity-50 cursor-not-allowed' : ''}`}
                       />
                     </div>
 
@@ -358,7 +384,8 @@ function Settings() {
                         value={formData.username}
                         onChange={handleInputChange}
                         placeholder="johndoe"
-                        className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                        disabled={isOAuth}
+                        className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors ${isOAuth ? 'opacity-50 cursor-not-allowed' : ''}`}
                       />
                     </div>
                   </div>
@@ -371,19 +398,8 @@ function Settings() {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="john@example.com"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">Bio</label>
-                    <textarea
-                      name="bio"
-                      value={formData.bio}
-                      onChange={handleInputChange}
-                      placeholder="Tell us about yourself..."
-                      rows={4}
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors resize-none"
+                      disabled={isOAuth}
+                      className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors ${isOAuth ? 'opacity-50 cursor-not-allowed' : ''}`}
                     />
                   </div>
 
@@ -395,12 +411,15 @@ function Settings() {
                     >
                       Cancel
                     </button>
-                    <button
-                      type="submit"
-                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30"
-                    >
-                      Save Changes
-                    </button>
+                    {!isOAuth && (
+                      <button
+                        type="submit"
+                        disabled={profileLoading}
+                        className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30 disabled:opacity-50"
+                      >
+                        {profileLoading ? 'Saving...' : 'Save Changes'}
+                      </button>
+                    )}
                   </div>
                 </form>
               </div>
@@ -451,13 +470,14 @@ function Settings() {
                   <div className="pb-4 sm:pb-6 border-b border-white/10">
                     <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Account Created</h3>
                     <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">Member since</p>
-                    <div className="px-4 py-3 bg-white/5 rounded-lg border border-white/10">
+                    <div className="px-4 py-3 bg-white/5 rounded-lg border border-white/10 flex items-center gap-3">
+                      <svg className="w-4 h-4 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
                       <span className="text-white text-sm">
-                        {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        }) : 'N/A'}
+                        {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric', month: 'long', day: 'numeric'
+                        }) : 'Loading...'}
                       </span>
                     </div>
                   </div>
@@ -534,67 +554,71 @@ function Settings() {
             {activeTab === 'security' && (
               <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 sm:p-6 lg:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Security Settings</h2>
-                
-                <form onSubmit={handlePasswordUpdate} className="space-y-4 sm:space-y-6">
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">Current Password</label>
-                    <input
-                      type="password"
-                      name="currentPassword"
-                      value={formData.currentPassword}
-                      onChange={handleInputChange}
-                      placeholder="Enter current password"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                    />
-                  </div>
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">New Password</label>
-                    <input
-                      type="password"
-                      name="newPassword"
-                      value={formData.newPassword}
-                      onChange={handleInputChange}
-                      placeholder="Enter new password"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                    />
+                {isOAuth ? (
+                  <div className="px-4 py-6 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-center">
+                    <svg className="w-10 h-10 text-yellow-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <p className="text-yellow-400 font-medium mb-1">Password not available</p>
+                    <p className="text-gray-400 text-sm">
+                      You signed in with {user?.authProvider === 'google' ? 'Google' : 'GitHub'}. Password management is handled by your OAuth provider.
+                    </p>
                   </div>
+                ) : (
+                  <>
+                    {passwordMsg && <div className="mb-4 px-4 py-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-sm">{passwordMsg}</div>}
+                    {passwordErr && <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">{passwordErr}</div>}
 
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">Confirm New Password</label>
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      placeholder="Confirm new password"
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                    />
-                  </div>
+                    <form onSubmit={handlePasswordUpdate} className="space-y-4 sm:space-y-6">
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">Current Password</label>
+                        <input
+                          type="password"
+                          name="currentPassword"
+                          value={formData.currentPassword}
+                          onChange={handleInputChange}
+                          placeholder="Enter current password"
+                          className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                        />
+                      </div>
 
-                  <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4">
-                    <button
-                      type="button"
-                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-white/5 hover:bg-white/10 text-white rounded-lg font-medium transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30"
-                    >
-                      Update Password
-                    </button>
-                  </div>
-                </form>
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">New Password</label>
+                        <input
+                          type="password"
+                          name="newPassword"
+                          value={formData.newPassword}
+                          onChange={handleInputChange}
+                          placeholder="Min 8 characters"
+                          className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                        />
+                      </div>
 
-                <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-white/10">
-                  <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Two-Factor Authentication</h3>
-                  <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">Add an extra layer of security to your account</p>
-                  <button className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-white/10 hover:bg-white/15 text-white rounded-lg font-medium transition-colors">
-                    Enable 2FA
-                  </button>
-                </div>
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">Confirm New Password</label>
+                        <input
+                          type="password"
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          placeholder="Repeat new password"
+                          className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-3 sm:pt-4">
+                        <button
+                          type="submit"
+                          disabled={passwordLoading}
+                          className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-cyan-400 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors shadow-lg shadow-cyan-600/30 disabled:opacity-50"
+                        >
+                          {passwordLoading ? 'Updating...' : 'Update Password'}
+                        </button>
+                      </div>
+                    </form>
+                  </>
+                )}
               </div>
             )}
 
