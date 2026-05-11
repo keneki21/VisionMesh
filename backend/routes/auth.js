@@ -203,8 +203,8 @@ router.get("/google/callback",
 
             console.log("Google OAuth Success - User:", req.user.email);
 
-            // Redirect to frontend with token and user data
-            res.redirect(`${process.env.FRONTEND_URL}/home?token=${token}&google=success`);
+            // Redirect to login page — Login.jsx reads token from URL and navigates to /home
+            res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}&google=success`);
         } catch (err) {
             console.error("Google OAuth Callback Error:", err);
             res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
@@ -243,8 +243,8 @@ router.get("/github/callback",
 
             console.log("GitHub OAuth Success - User:", req.user.email);
 
-            // Redirect to frontend with token and user data
-            res.redirect(`${process.env.FRONTEND_URL}/home?token=${token}&github=success`);
+            // Redirect to login page — Login.jsx reads token from URL and navigates to /home
+            res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}&github=success`);
         } catch (err) {
             console.error("GitHub OAuth Callback Error:", err);
             res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
