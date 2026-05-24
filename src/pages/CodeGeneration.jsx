@@ -153,30 +153,51 @@ function Terminal({ onDone }) {
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
+const SESSION_KEY = 'vm_codegen_session';
+
 export default function CodeGeneration() {
   const navigate  = useNavigate();
   const location  = useLocation();
-  const { report, imageUrl } = location.state || {};
 
-  const [phase,        setPhase]        = useState('idle');   // idle | terminal | waiting | done | error
-  const [files,        setFiles]        = useState([]);
-  const [summary,      setSummary]      = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [activeTab,    setActiveTab]    = useState('code');   // code | preview
+  // Restore report/imageUrl from sessionStorage if navigation state is gone (after refresh)
+  const locationReport   = location.state?.report;
+  const locationImageUrl = location.state?.imageUrl;
+  const session = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } })();
+
+  const report   = locationReport   || session?.report;
+  const imageUrl = locationImageUrl || session?.imageUrl;
+
+  const [phase,        setPhase]        = useState(() => session?.files?.length ? 'done' : 'idle');
+  const [files,        setFiles]        = useState(() => session?.files || []);
+  const [summary,      setSummary]      = useState(() => session?.summary || '');
+  const [selectedFile, setSelectedFile] = useState(() => session?.files?.[0] || null);
+  const [activeTab,    setActiveTab]    = useState('code');
   const [copied,       setCopied]       = useState(false);
   const [error,        setError]        = useState(null);
   const apiResultRef    = useRef(null);
   const terminalDoneRef = useRef(false);
+
+  // Persist report + imageUrl to session on first load so refresh can restore them
+  useEffect(() => {
+    if (locationReport) {
+      const existing = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } })();
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...existing, report: locationReport, imageUrl: locationImageUrl }));
+    }
+  }, [locationReport, locationImageUrl]);
 
   useEffect(() => { if (!report) navigate('/evaluation'); }, [report, navigate]);
 
   const processResult = (result) => {
     if (!result) { setError('No response received.'); setPhase('error'); return; }
     if (result.error) { setError(result.error); setPhase('error'); return; }
-    setFiles(result.files || []);
+    const newFiles = result.files || [];
+    setFiles(newFiles);
     setSummary(result.summary || '');
-    setSelectedFile(result.files?.[0] || null);
+    setSelectedFile(newFiles[0] || null);
     setPhase('done');
+    // Save generated code to session so refresh restores it
+    const existing = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch { return null; } })();
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...existing, files: newFiles, summary: result.summary || '' }));
   };
 
   const generate = () => {
@@ -239,7 +260,7 @@ export default function CodeGeneration() {
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800 bg-gray-900 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/evaluation')}
+          <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); navigate('/evaluation'); }}
             className="flex items-center gap-1.5 text-gray-400 hover:text-white transition-colors text-sm">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -307,7 +328,7 @@ export default function CodeGeneration() {
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Generate Optimized Website</h2>
             <p className="text-gray-400 text-sm mb-8 max-w-md">
-              Llama 3.3 70B will generate a complete React + Tailwind website with live preview,
+              Gemini will generate a complete React + Tailwind website with live preview,
               fixing every heuristic violation from your evaluation.
             </p>
             <button onClick={generate}
@@ -327,7 +348,7 @@ export default function CodeGeneration() {
           <div className="w-12 h-12 border-4 border-white/20 border-t-purple-400 rounded-full animate-spin" />
           <h2 className="text-lg font-semibold">Generating your website...</h2>
           <p className="text-gray-400 text-sm text-center max-w-sm">
-            Qwen2.5-Coder 7B is writing 5 complete files on Railway CPU. Usually 5–10 minutes — grab a coffee ☕
+            Gemini is generating 5 complete files. Usually under a minute — almost there...
           </p>
           <div className="flex gap-1 mt-2">
             {[0,1,2].map(i => (
@@ -343,7 +364,7 @@ export default function CodeGeneration() {
         <div className="flex-1 flex flex-col items-center justify-center gap-6 p-6">
           <div className="text-center mb-2">
             <h2 className="text-lg font-semibold text-white mb-1">Building your optimized website...</h2>
-            <p className="text-gray-500 text-sm">Llama 3.3 70B Turbo is generating 5 files</p>
+            <p className="text-gray-500 text-sm">Gemini is generating 5 files</p>
           </div>
           {phase === 'terminal' && <Terminal onDone={onTerminalDone} />}
         </div>
@@ -400,7 +421,7 @@ export default function CodeGeneration() {
               )}
             </div>
             <div className="p-2 border-t border-gray-800">
-              <button onClick={generate}
+              <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); generate(); }}
                 className="w-full py-1.5 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded transition-colors">
                 ↻ Regenerate
               </button>
@@ -479,7 +500,7 @@ export default function CodeGeneration() {
               srcDoc={previewFile.code}
               className="flex-1 w-full border-0 bg-white"
               title="Live Preview"
-              sandbox="allow-scripts"
+              sandbox="allow-scripts allow-same-origin allow-popups"
             />
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 text-sm">

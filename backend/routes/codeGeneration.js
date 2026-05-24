@@ -1,17 +1,11 @@
 const express = require('express');
 const router  = express.Router();
-const OpenAI  = require('openai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const authMiddleware = require('../middleware/auth');
 
-// Ollama is OpenAI-compatible at /v1
-// Uses Railway internal networking — free, no internet required
-// Railway internal networking — no port needed, Railway routes automatically
-const ollama = new OpenAI({
-  apiKey:  'ollama',
-  baseURL: `${process.env.OLLAMA_URL || 'http://localhost:11434'}/v1`,
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const MODEL = process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b';
+const MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 
 router.post('/', authMiddleware, async (req, res) => {
   try {
@@ -43,44 +37,92 @@ CRITICAL LAYOUT RULE: Navbar must be fixed (fixed top-0 z-50). All page content 
 2. src/components/Navbar.jsx — fixed top navbar, mobile hamburger, active links, aria labels
 3. src/components/Footer.jsx — full footer, grouped links, copyright
 4. src/pages/Home.jsx — complete landing page: hero, 6 feature cards, 4 stats, 3 testimonials, CTA. Tailwind only. Real content. Fix ALL issues above.
-5. preview.html — standalone HTML with these CDNs only:
-   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-   <script src="https://cdn.tailwindcss.com"></script>
-   One <script type="text/babel"> with all components inline. Body has pt-20. ReactDOM.createRoot renders full homepage.
+5. preview.html — A self-contained HTML file. Follow this EXACT structure:
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Preview</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+// ALL components defined here inline — NO import/export statements
+const Navbar = () => ( ... );
+const Footer = () => ( ... );
+const Home = () => ( ... );
+const App = () => (
+  <div>
+    <Navbar />
+    <main className="pt-20"><Home /></main>
+    <Footer />
+  </div>
+);
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
+CRITICAL RULES for preview.html:
+- NO import or export statements anywhere
+- NO React Router — no BrowserRouter, Routes, Route, Link — preview has no routing
+- ALL components in ONE <script type="text/babel"> block
+- App component renders Navbar + Home content + Footer directly, no router wrapper
+- Last line MUST be: ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App))
+- Only CDNs available: React, ReactDOM, Babel, Tailwind — nothing else
 
-Respond ONLY with valid JSON (no markdown):
+Return a JSON object with this exact shape:
 {"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved and why"}`;
 
-    const completion = await ollama.chat.completions.create({
-      model:       MODEL,
-      messages: [
-        {
-          role:    'system',
-          content: 'You are an expert React and Tailwind CSS developer. Respond ONLY with a valid JSON object. No markdown fences. No text outside JSON.',
-        },
-        { role: 'user', content: prompt },
-      ],
-      temperature: 0.65,
-      // Ollama does not enforce max_tokens the same way — set num_predict via options
-      options: { num_predict: 8000 },
+    const model = genAI.getGenerativeModel({
+      model: MODEL,
+      systemInstruction: 'You are an expert React and Tailwind CSS developer. Return only valid JSON matching the requested schema.',
+      generationConfig: {
+        temperature:      0.65,
+        maxOutputTokens:  8192,
+        responseMimeType: 'application/json',
+      },
     });
 
-    const text  = completion.choices[0]?.message?.content?.trim() || '';
-    const clean = text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim();
+    let parsed = null;
+    const MAX_RETRIES = 2;
 
-    let parsed;
-    try {
-      parsed = JSON.parse(clean);
-    } catch {
-      const match = clean.match(/\{[\s\S]*\}/);
-      if (match) {
-        try { parsed = JSON.parse(match[0]); }
-        catch { return res.status(500).json({ error: 'Could not parse response', raw: text.slice(0, 500) }); }
-      } else {
-        return res.status(500).json({ error: 'Invalid response format', raw: text.slice(0, 500) });
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      if (attempt > 0) console.log(`[code-generation] retry attempt ${attempt}...`);
+      try {
+        const result = await model.generateContent(prompt);
+        const text   = result.response.text().trim();
+        console.log(`[code-generation] attempt ${attempt} raw (first 200):`, text.slice(0, 200));
+        parsed = JSON.parse(text);
+        if (parsed?.files?.length) break;
+        parsed = null;
+      } catch (parseErr) {
+        console.warn(`[code-generation] attempt ${attempt} parse error:`, parseErr.message);
       }
+    }
+
+    if (!parsed) {
+      return res.status(500).json({ error: 'Could not generate valid code after 3 attempts. Please try again.' });
+    }
+
+    // Post-process preview.html to fix common model mistakes
+    if (parsed.files) {
+      parsed.files = parsed.files.map(file => {
+        if (file.path !== 'preview.html') return file;
+
+        let html = file.code || '';
+
+        // Fix "X as Y" destructuring → "X: Y" (ES module syntax invalid in browser script)
+        html = html.replace(/\{([^}]*)\}/g, (match) =>
+          match.replace(/(\w+)\s+as\s+(\w+)/g, '$1: $2')
+        );
+
+        return { ...file, code: html };
+      });
     }
 
     res.json(parsed);
