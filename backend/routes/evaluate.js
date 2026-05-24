@@ -5,6 +5,7 @@ const axios = require("axios");
 const FormData = require("form-data");
 const EvaluationHistory = require("../models/EvaluationHistory");
 const authMiddleware = require("../middleware/auth");
+const { refineReport } = require("../utils/refineReport");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -35,9 +36,12 @@ router.post("/", authMiddleware, (req, res) => {
         timeout: 120000,
       });
 
-      const report = response.data;
+      const rawReport = response.data;
 
-      // Persist full evaluation to history (fire-and-forget)
+      // Refine report with Gemini Vision — removes hallucinated issues
+      const report = await refineReport(rawReport, req.file.buffer, req.file.mimetype);
+
+      // Persist refined evaluation to history (fire-and-forget)
       EvaluationHistory.create({
         userId:        req.user?.id,
         filename:      req.file.originalname,

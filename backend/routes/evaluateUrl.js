@@ -8,6 +8,7 @@ const path = require('path');
 const os = require('os');
 const EvaluationHistory = require('../models/EvaluationHistory');
 const authMiddleware = require('../middleware/auth');
+const { refineReport } = require('../utils/refineReport');
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
 
@@ -79,9 +80,12 @@ router.post('/', authMiddleware, async (req, res) => {
       timeout: 120000,
     });
 
-    const report = response.data;
+    const rawReport = response.data;
 
-    // Save to history (fire-and-forget)
+    // Refine report with Gemini Vision — removes hallucinated issues
+    const report = await refineReport(rawReport, Buffer.from(screenshotBuffer), 'image/jpeg');
+
+    // Save refined report to history (fire-and-forget)
     const historyEntry = await EvaluationHistory.create({
       userId:        req.user?.id,
       filename,

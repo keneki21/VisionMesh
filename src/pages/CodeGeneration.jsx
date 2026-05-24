@@ -93,28 +93,22 @@ const TERMINAL_STEPS = [
   { delay: 0,    text: '$ visionmesh generate --fix-all',          color: 'text-green-400' },
   { delay: 400,  text: '> Analyzing evaluation results...',         color: 'text-gray-300' },
   { delay: 900,  text: '> Identifying heuristic violations...',     color: 'text-gray-300' },
-  { delay: 1400, text: '> Scaffolding project structure...',        color: 'text-gray-300' },
+  { delay: 1400, text: '> Scaffolding HTML structure...',           color: 'text-gray-300' },
   { delay: 1900, text: '',                                           color: '' },
-  { delay: 2000, text: '  Installing dependencies:',                color: 'text-gray-400' },
-  { delay: 2300, text: '  + react@18.3.0',                          color: 'text-cyan-400' },
-  { delay: 2550, text: '  + react-dom@18.3.0',                      color: 'text-cyan-400' },
-  { delay: 2800, text: '  + react-router-dom@6.22.0',               color: 'text-cyan-400' },
-  { delay: 3050, text: '  + tailwindcss@3.4.0',                     color: 'text-cyan-400' },
-  { delay: 3300, text: '  + @headlessui/react@1.7.0',               color: 'text-cyan-400' },
+  { delay: 2000, text: '  Tech stack:',                             color: 'text-gray-400' },
+  { delay: 2300, text: '  + HTML5 semantic markup',                 color: 'text-cyan-400' },
+  { delay: 2600, text: '  + Tailwind CSS (CDN)',                    color: 'text-cyan-400' },
+  { delay: 2900, text: '  + Vanilla JS interactions',               color: 'text-cyan-400' },
+  { delay: 3200, text: '  + Accessible ARIA labels',                color: 'text-cyan-400' },
   { delay: 3600, text: '',                                           color: '' },
-  { delay: 3700, text: '  Generating components:',                  color: 'text-gray-400' },
-  { delay: 4000, text: '  ✓ src/App.jsx',                           color: 'text-green-400' },
-  { delay: 4300, text: '  ✓ src/components/Navbar.jsx',             color: 'text-green-400' },
-  { delay: 4600, text: '  ✓ src/components/Footer.jsx',             color: 'text-green-400' },
-  { delay: 4900, text: '  ✓ src/pages/Home.jsx',                    color: 'text-green-400' },
-  { delay: 5200, text: '  ✓ src/pages/About.jsx',                   color: 'text-green-400' },
-  { delay: 5500, text: '  ✓ src/pages/Contact.jsx',                 color: 'text-green-400' },
-  { delay: 5800, text: '  ✓ preview.html',                          color: 'text-green-400' },
-  { delay: 6200, text: '',                                           color: '' },
-  { delay: 6300, text: '  Applying heuristic fixes...',             color: 'text-gray-400' },
-  { delay: 6800, text: '  Building optimized bundle...',            color: 'text-gray-400' },
-  { delay: 7400, text: '',                                           color: '' },
-  { delay: 7500, text: '✅ Generation complete!',                    color: 'text-green-300 font-bold' },
+  { delay: 3700, text: '  Generating files:',                       color: 'text-gray-400' },
+  { delay: 4100, text: '  ✓ index.html',                            color: 'text-green-400' },
+  { delay: 4500, text: '  ✓ contact.html',                          color: 'text-green-400' },
+  { delay: 5000, text: '',                                           color: '' },
+  { delay: 5100, text: '  Applying heuristic fixes...',             color: 'text-gray-400' },
+  { delay: 5800, text: '  Optimizing for accessibility...',         color: 'text-gray-400' },
+  { delay: 6400, text: '',                                           color: '' },
+  { delay: 6500, text: '✅ Generation complete!',                    color: 'text-green-300 font-bold' },
 ];
 
 function Terminal({ onDone }) {
@@ -126,7 +120,7 @@ function Terminal({ onDone }) {
     const timers = TERMINAL_STEPS.map(({ delay, text, color }) =>
       setTimeout(() => setLines(l => [...l, { text, color }]), delay)
     );
-    const done = setTimeout(onDone, 8200);
+    const done = setTimeout(onDone, 7200);
     const blink = setInterval(() => setCursor(c => !c), 530);
     return () => { timers.forEach(clearTimeout); clearTimeout(done); clearInterval(blink); };
   }, [onDone]);
@@ -229,7 +223,7 @@ export default function CodeGeneration() {
     }
   };
 
-  const previewFile = files.find(f => f.path === 'preview.html');
+  const previewFile = files.find(f => f.path === 'index.html') || files.find(f => f.path === 'preview.html');
 
   const copyFile = () => {
     if (!selectedFile) return;
@@ -252,7 +246,7 @@ export default function CodeGeneration() {
 
   const score100 = report ? Math.round((report.overall_score || 0) * 10) : 0;
   const scoreCol = score100 >= 70 ? 'text-green-400' : score100 >= 50 ? 'text-orange-400' : 'text-red-400';
-  const tree     = buildTree(files.filter(f => f.path !== 'preview.html'));
+  const tree     = buildTree(files);
 
   return (
     <div className="min-h-screen pt-20 sm:pt-24 bg-gray-950 text-white flex flex-col overflow-hidden">
@@ -328,7 +322,7 @@ export default function CodeGeneration() {
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Generate Optimized Website</h2>
             <p className="text-gray-400 text-sm mb-8 max-w-md">
-              Gemini will generate a complete React + Tailwind website with live preview,
+              Claude will generate a complete HTML + Tailwind website with live preview,
               fixing every heuristic violation from your evaluation.
             </p>
             <button onClick={generate}
@@ -348,7 +342,7 @@ export default function CodeGeneration() {
           <div className="w-12 h-12 border-4 border-white/20 border-t-purple-400 rounded-full animate-spin" />
           <h2 className="text-lg font-semibold">Generating your website...</h2>
           <p className="text-gray-400 text-sm text-center max-w-sm">
-            Gemini is generating 5 complete files. Usually under a minute — almost there...
+            Claude is generating your website. Usually under 30 seconds — almost there...
           </p>
           <div className="flex gap-1 mt-2">
             {[0,1,2].map(i => (
@@ -364,7 +358,7 @@ export default function CodeGeneration() {
         <div className="flex-1 flex flex-col items-center justify-center gap-6 p-6">
           <div className="text-center mb-2">
             <h2 className="text-lg font-semibold text-white mb-1">Building your optimized website...</h2>
-            <p className="text-gray-500 text-sm">Gemini is generating 5 files</p>
+            <p className="text-gray-500 text-sm">Claude is generating your website files</p>
           </div>
           {phase === 'terminal' && <Terminal onDone={onTerminalDone} />}
         </div>
@@ -407,18 +401,6 @@ export default function CodeGeneration() {
               {Object.entries(tree).map(([k, v]) => (
                 <TreeNode key={k} name={k} node={v} selectedFile={selectedFile} onSelect={setSelectedFile} />
               ))}
-              {previewFile && (
-                <button
-                  onClick={() => setSelectedFile(previewFile)}
-                  className={`w-full text-left flex items-center gap-2 py-1 px-2 rounded text-sm transition-colors ml-0 ${
-                    selectedFile?.path === 'preview.html' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
-                  style={{ paddingLeft: '8px' }}
-                >
-                  <FileIcon path="preview.html" />
-                  <span>preview.html</span>
-                </button>
-              )}
             </div>
             <div className="p-2 border-t border-gray-800">
               <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); generate(); }}

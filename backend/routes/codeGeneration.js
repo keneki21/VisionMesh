@@ -1,11 +1,11 @@
-const express = require('express');
-const router  = express.Router();
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const express  = require('express');
+const router   = express.Router();
+const Anthropic = require('@anthropic-ai/sdk');
 const authMiddleware = require('../middleware/auth');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const CODEGEN_MODEL = process.env.CODEGEN_MODEL || 'claude-sonnet-4-6';
 
 router.post('/', authMiddleware, async (req, res) => {
   try {
@@ -18,111 +18,94 @@ router.post('/', authMiddleware, async (req, res) => {
       .filter(h => h.score < 7)
       .map(h => `- ${h.name} (${Math.round(h.score * 10)}/100): ${h.solution}`)
       .join('\n');
-    const filename     = report.filename || 'website';
+    const filename     = report.filename || report.file || 'website';
     const elements     = report.elements || [];
     const elementTypes = [...new Set(elements.map(e => e.class || e.label).filter(Boolean))].slice(0, 6).join(', ');
 
-    const prompt = `You are an expert React 18 + Tailwind CSS developer. Generate a complete website fixing all UX issues.
+    const prompt = `You are an expert HTML5 + Tailwind CSS developer. Generate a complete, high-quality website that fixes all the UX issues listed below.
 
-Site: "${filename}"${elementTypes ? `. UI elements: ${elementTypes}` : ''}. Score: ${score}/100 (${grade}).
+Site: "${filename}"${elementTypes ? `. Detected UI elements: ${elementTypes}` : ''}
+Original score: ${score}/100 (${grade})
 
-FIXES REQUIRED:
-${issues || 'Maximize quality across all usability heuristics.'}
+ISSUES TO FIX:
+${issues || 'No specific issues — maximize quality across all usability heuristics.'}
 
-Generate exactly 5 files. Make each COMPLETE and production-ready.
+Generate exactly 2 files. Each must be COMPLETE, polished, and production-ready.
 
-CRITICAL LAYOUT RULE: Navbar must be fixed (fixed top-0 z-50). All page content must have pt-20 to clear the navbar.
+TECH STACK: HTML5 + Tailwind CSS via CDN + vanilla JS only.
+NO React, NO Vue, NO build tools, NO import/export statements.
 
-1. src/App.jsx — React Router v6, routes "/" and "/contact", Navbar + Footer on all pages, main content in <main className="pt-20">
-2. src/components/Navbar.jsx — fixed top navbar, mobile hamburger, active links, aria labels
-3. src/components/Footer.jsx — full footer, grouped links, copyright
-4. src/pages/Home.jsx — complete landing page: hero, 6 feature cards, 4 stats, 3 testimonials, CTA. Tailwind only. Real content. Fix ALL issues above.
-5. preview.html — A self-contained HTML file. Follow this EXACT structure:
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Preview</title>
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-<div id="root"></div>
-<script type="text/babel">
-// ALL components defined here inline — NO import/export statements
-const Navbar = () => ( ... );
-const Footer = () => ( ... );
-const Home = () => ( ... );
-const App = () => (
-  <div>
-    <Navbar />
-    <main className="pt-20"><Home /></main>
-    <Footer />
-  </div>
-);
-ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
-</script>
-</body>
-</html>
-CRITICAL RULES for preview.html:
-- NO import or export statements anywhere
-- NO React Router — no BrowserRouter, Routes, Route, Link — preview has no routing
-- ALL components in ONE <script type="text/babel"> block
-- App component renders Navbar + Home content + Footer directly, no router wrapper
-- Last line MUST be: ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App))
-- Only CDNs available: React, ReactDOM, Babel, Tailwind — nothing else
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILE 1 — index.html (complete landing page)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Must include:
+- <head> with charset, viewport, title, Tailwind CDN script
+- Fixed navbar: logo left, nav links right, mobile hamburger (JS toggle), active states, aria-label
+- Hero: bold headline, subheadline, primary CTA button, optional secondary CTA
+- Features: 6 cards with icon, title, description
+- Stats: 4 numbers with labels (e.g. "10K+ Users")
+- Testimonials: 3 cards with quote, name, role, avatar initial
+- CTA banner: full-width section with headline and button
+- Footer: logo, 3 link columns, copyright line
+- Smooth scroll, hover transitions, focus rings for accessibility
+- Tailwind CDN: <script src="https://cdn.tailwindcss.com"></script>
+- All JS inline in a single <script> at bottom of body
 
-Return a JSON object with this exact shape:
-{"files":[{"path":"src/App.jsx","language":"jsx","code":"..."},{"path":"src/components/Navbar.jsx","language":"jsx","code":"..."},{"path":"src/components/Footer.jsx","language":"jsx","code":"..."},{"path":"src/pages/Home.jsx","language":"jsx","code":"..."},{"path":"preview.html","language":"html","code":"..."}],"summary":"what was improved and why"}`;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILE 2 — contact.html (contact page)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Must include:
+- Same navbar and footer as index.html (copy exactly)
+- Contact form: name, email, subject, message fields
+- All fields have visible labels, required markers (*)
+- Inline validation on submit — highlight empty/invalid fields in red with error text
+- Success state after submit (replace form with thank-you message)
+- Company info sidebar: address, email, phone, hours
+- Tailwind CDN same as index.html
 
-    const model = genAI.getGenerativeModel({
-      model: MODEL,
-      systemInstruction: 'You are an expert React and Tailwind CSS developer. Return only valid JSON matching the requested schema.',
-      generationConfig: {
-        temperature:      0.65,
-        maxOutputTokens:  8192,
-        responseMimeType: 'application/json',
-      },
-    });
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CRITICAL RULES:
+- Navbar links: index.html ↔ contact.html (relative hrefs)
+- Real content — no "Lorem ipsum", no placeholder text
+- Rich, modern Tailwind design — gradients, shadows, rounded corners
+- Fix EVERY issue listed above — each solution must be visibly addressed
+- Both files fully self-contained — no external CSS files, no external JS files
 
-    let parsed = null;
+Return ONLY a valid JSON object, no markdown fences, no explanation:
+{"files":[{"path":"index.html","language":"html","code":"..."},{"path":"contact.html","language":"html","code":"..."}],"summary":"2-3 sentences on what was improved and why"}`;
+
+    const tryParse = (text) => {
+      const clean = text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```[\s\S]*$/i, '').trim();
+      try { return JSON.parse(clean); } catch {}
+      const m = clean.match(/\{[\s\S]*"files"[\s\S]*\}/);
+      if (m) { try { return JSON.parse(m[0]); } catch {} }
+      return null;
+    };
+
+    let parsed   = null;
+    let lastText = '';
     const MAX_RETRIES = 2;
 
     for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
       if (attempt > 0) console.log(`[code-generation] retry attempt ${attempt}...`);
-      try {
-        const result = await model.generateContent(prompt);
-        const text   = result.response.text().trim();
-        console.log(`[code-generation] attempt ${attempt} raw (first 200):`, text.slice(0, 200));
-        parsed = JSON.parse(text);
-        if (parsed?.files?.length) break;
-        parsed = null;
-      } catch (parseErr) {
-        console.warn(`[code-generation] attempt ${attempt} parse error:`, parseErr.message);
-      }
+
+      const response = await client.messages.create({
+        model:      CODEGEN_MODEL,
+        max_tokens: 8192,
+        system:     'You are an expert HTML and Tailwind CSS developer. Return only a valid JSON object. No markdown fences. No text outside the JSON.',
+        messages: [{ role: 'user', content: prompt }],
+      });
+
+      lastText = response.content[0].text.trim();
+      console.log(`[code-generation] attempt ${attempt} raw (first 200):`, lastText.slice(0, 200));
+      parsed = tryParse(lastText);
+      if (parsed?.files?.length) break;
+      parsed = null;
     }
 
     if (!parsed) {
+      console.error('[code-generation] all attempts failed. Last raw:', lastText.slice(0, 500));
       return res.status(500).json({ error: 'Could not generate valid code after 3 attempts. Please try again.' });
-    }
-
-    // Post-process preview.html to fix common model mistakes
-    if (parsed.files) {
-      parsed.files = parsed.files.map(file => {
-        if (file.path !== 'preview.html') return file;
-
-        let html = file.code || '';
-
-        // Fix "X as Y" destructuring → "X: Y" (ES module syntax invalid in browser script)
-        html = html.replace(/\{([^}]*)\}/g, (match) =>
-          match.replace(/(\w+)\s+as\s+(\w+)/g, '$1: $2')
-        );
-
-        return { ...file, code: html };
-      });
     }
 
     res.json(parsed);
