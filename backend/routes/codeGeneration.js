@@ -1,5 +1,5 @@
-const express  = require('express');
-const router   = express.Router();
+const express   = require('express');
+const router    = express.Router();
 const Anthropic = require('@anthropic-ai/sdk');
 const authMiddleware = require('../middleware/auth');
 
@@ -7,108 +7,140 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const CODEGEN_MODEL = process.env.CODEGEN_MODEL || 'claude-sonnet-4-6';
 
+// Shared context built from the evaluation report
+function buildContext(report) {
+  const score        = Math.round((report.overall_score || 0) * 10);
+  const grade        = report.grade || 'N/A';
+  const filename     = report.filename || report.file || 'website';
+  const elements     = report.elements || [];
+  const elementTypes = [...new Set(elements.map(e => e.class || e.label).filter(Boolean))].slice(0, 6).join(', ');
+  const issues       = (report.heuristics || [])
+    .filter(h => h.score < 7)
+    .map(h => `- ${h.name} (${Math.round(h.score * 10)}/100): ${h.solution}`)
+    .join('\n') || 'No specific issues — maximize quality across all usability heuristics.';
+
+  return { score, grade, filename, elementTypes, issues };
+}
+
+// Generate one file per call to avoid token truncation
+async function generateFile(fileSpec, ctx, sharedNav) {
+  const { score, grade, filename, elementTypes, issues } = ctx;
+
+  const isIndex = fileSpec === 'index';
+
+  const prompt = isIndex
+    ? `You are an expert HTML5 + Tailwind CSS developer.
+
+Generate index.html — a COMPLETE, production-ready landing page.
+
+Site: "${filename}"${elementTypes ? `. UI elements: ${elementTypes}` : ''}
+Score: ${score}/100 (${grade})
+
+ISSUES TO FIX:
+${issues}
+
+REQUIREMENTS:
+- Fixed navbar: logo left, nav links right (Home, Contact), mobile hamburger with JS toggle, aria-labels
+- Hero: bold headline, subheadline, prominent CTA button, optional secondary CTA
+- Features section: 6 cards each with an SVG icon, title, and 2-sentence description
+- Stats section: 4 numbers with labels (e.g. "10K+ Users", "99% Uptime")
+- Testimonials: 3 cards with quote, name, role, and avatar (initials in a colored circle)
+- CTA banner: full-width with headline and button
+- Footer: logo, 3 columns of links, copyright
+- Smooth scroll, hover transitions, visible focus rings
+- Tailwind CDN: <script src="https://cdn.tailwindcss.com"></script>
+- All JS inline in ONE <script> at end of body
+- Link to contact.html in navbar and CTA buttons where appropriate
+
+DESIGN: Rich modern Tailwind — gradients, shadows, rounded-xl, real content, NO Lorem ipsum.
+Fix EVERY issue listed. Each solution must be visibly addressed in the page.
+
+Return ONLY the raw HTML. No JSON. No markdown. Just the complete HTML file starting with <!DOCTYPE html>.`
+
+    : `You are an expert HTML5 + Tailwind CSS developer.
+
+Generate contact.html — a COMPLETE, production-ready contact page.
+
+Site: "${filename}"
+Score: ${score}/100 (${grade})
+
+USE THIS EXACT NAVBAR AND FOOTER (copy verbatim):
+${sharedNav}
+
+REQUIREMENTS:
+- Same fixed navbar and footer as above (copy exactly, links: index.html and contact.html)
+- Contact form with fields: Full Name*, Email*, Subject*, Message*
+- Visible labels above every field, red asterisk for required
+- On submit: validate all fields — highlight invalid ones in red with error text below
+- On success: replace form with a styled thank-you message
+- Sidebar with company info: address, email, phone, business hours
+- Tailwind CDN: <script src="https://cdn.tailwindcss.com"></script>
+- All JS inline in ONE <script> at end of body
+
+DESIGN: Match the style of index.html. Real content, NO Lorem ipsum.
+
+Return ONLY the raw HTML. No JSON. No markdown. Just the complete HTML file starting with <!DOCTYPE html>.`;
+
+  const response = await client.messages.create({
+    model:      CODEGEN_MODEL,
+    max_tokens: 8000,
+    system:     'You are an expert HTML and Tailwind CSS developer. Return only raw HTML. No markdown. No explanation. Start directly with <!DOCTYPE html>.',
+    messages:   [{ role: 'user', content: prompt }],
+  });
+
+  let html = response.content[0].text.trim();
+  // Strip any accidental markdown fences
+  html = html.replace(/^```html?\n?/i, '').replace(/\n?```$/i, '').trim();
+  return html;
+}
+
+// Extract navbar + footer block from generated index.html so contact.html matches exactly
+function extractNavAndFooter(indexHtml) {
+  const navMatch    = indexHtml.match(/<nav[\s\S]*?<\/nav>/i);
+  const footerMatch = indexHtml.match(/<footer[\s\S]*?<\/footer>/i);
+  const nav    = navMatch    ? navMatch[0]    : '';
+  const footer = footerMatch ? footerMatch[0] : '';
+  return nav && footer ? `NAVBAR:\n${nav}\n\nFOOTER:\n${footer}` : '';
+}
+
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const { report } = req.body;
     if (!report) return res.status(400).json({ error: 'Evaluation report is required' });
 
-    const score        = Math.round((report.overall_score || 0) * 10);
-    const grade        = report.grade || 'N/A';
-    const issues       = (report.heuristics || [])
-      .filter(h => h.score < 7)
-      .map(h => `- ${h.name} (${Math.round(h.score * 10)}/100): ${h.solution}`)
-      .join('\n');
-    const filename     = report.filename || report.file || 'website';
-    const elements     = report.elements || [];
-    const elementTypes = [...new Set(elements.map(e => e.class || e.label).filter(Boolean))].slice(0, 6).join(', ');
+    const ctx = buildContext(report);
 
-    const prompt = `You are an expert HTML5 + Tailwind CSS developer. Generate a complete, high-quality website that fixes all the UX issues listed below.
+    // Step 1: generate index.html
+    console.log('[code-generation] generating index.html...');
+    const indexHtml = await generateFile('index', ctx, null);
+    console.log('[code-generation] index.html done, length:', indexHtml.length);
 
-Site: "${filename}"${elementTypes ? `. Detected UI elements: ${elementTypes}` : ''}
-Original score: ${score}/100 (${grade})
+    // Step 2: extract nav/footer, generate contact.html
+    const sharedNav = extractNavAndFooter(indexHtml);
+    console.log('[code-generation] generating contact.html...');
+    const contactHtml = await generateFile('contact', ctx, sharedNav);
+    console.log('[code-generation] contact.html done, length:', contactHtml.length);
 
-ISSUES TO FIX:
-${issues || 'No specific issues — maximize quality across all usability heuristics.'}
+    // Step 3: build summary
+    const summaryResponse = await client.messages.create({
+      model:      CODEGEN_MODEL,
+      max_tokens: 200,
+      system:     'You are a UX expert. Be concise.',
+      messages:   [{
+        role:    'user',
+        content: `In 2-3 sentences, summarize what UX improvements were made to fix these issues:\n${ctx.issues}`,
+      }],
+    });
+    const summary = summaryResponse.content[0].text.trim();
 
-Generate exactly 2 files. Each must be COMPLETE, polished, and production-ready.
+    res.json({
+      files: [
+        { path: 'index.html',   language: 'html', code: indexHtml   },
+        { path: 'contact.html', language: 'html', code: contactHtml },
+      ],
+      summary,
+    });
 
-TECH STACK: HTML5 + Tailwind CSS via CDN + vanilla JS only.
-NO React, NO Vue, NO build tools, NO import/export statements.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FILE 1 — index.html (complete landing page)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Must include:
-- <head> with charset, viewport, title, Tailwind CDN script
-- Fixed navbar: logo left, nav links right, mobile hamburger (JS toggle), active states, aria-label
-- Hero: bold headline, subheadline, primary CTA button, optional secondary CTA
-- Features: 6 cards with icon, title, description
-- Stats: 4 numbers with labels (e.g. "10K+ Users")
-- Testimonials: 3 cards with quote, name, role, avatar initial
-- CTA banner: full-width section with headline and button
-- Footer: logo, 3 link columns, copyright line
-- Smooth scroll, hover transitions, focus rings for accessibility
-- Tailwind CDN: <script src="https://cdn.tailwindcss.com"></script>
-- All JS inline in a single <script> at bottom of body
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FILE 2 — contact.html (contact page)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Must include:
-- Same navbar and footer as index.html (copy exactly)
-- Contact form: name, email, subject, message fields
-- All fields have visible labels, required markers (*)
-- Inline validation on submit — highlight empty/invalid fields in red with error text
-- Success state after submit (replace form with thank-you message)
-- Company info sidebar: address, email, phone, hours
-- Tailwind CDN same as index.html
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL RULES:
-- Navbar links: index.html ↔ contact.html (relative hrefs)
-- Real content — no "Lorem ipsum", no placeholder text
-- Rich, modern Tailwind design — gradients, shadows, rounded corners
-- Fix EVERY issue listed above — each solution must be visibly addressed
-- Both files fully self-contained — no external CSS files, no external JS files
-
-Return ONLY a valid JSON object, no markdown fences, no explanation:
-{"files":[{"path":"index.html","language":"html","code":"..."},{"path":"contact.html","language":"html","code":"..."}],"summary":"2-3 sentences on what was improved and why"}`;
-
-    const tryParse = (text) => {
-      const clean = text.replace(/^```(?:json)?\n?/i, '').replace(/\n?```[\s\S]*$/i, '').trim();
-      try { return JSON.parse(clean); } catch {}
-      const m = clean.match(/\{[\s\S]*"files"[\s\S]*\}/);
-      if (m) { try { return JSON.parse(m[0]); } catch {} }
-      return null;
-    };
-
-    let parsed   = null;
-    let lastText = '';
-    const MAX_RETRIES = 2;
-
-    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-      if (attempt > 0) console.log(`[code-generation] retry attempt ${attempt}...`);
-
-      const response = await client.messages.create({
-        model:      CODEGEN_MODEL,
-        max_tokens: 8192,
-        system:     'You are an expert HTML and Tailwind CSS developer. Return only a valid JSON object. No markdown fences. No text outside the JSON.',
-        messages: [{ role: 'user', content: prompt }],
-      });
-
-      lastText = response.content[0].text.trim();
-      console.log(`[code-generation] attempt ${attempt} raw (first 200):`, lastText.slice(0, 200));
-      parsed = tryParse(lastText);
-      if (parsed?.files?.length) break;
-      parsed = null;
-    }
-
-    if (!parsed) {
-      console.error('[code-generation] all attempts failed. Last raw:', lastText.slice(0, 500));
-      return res.status(500).json({ error: 'Could not generate valid code after 3 attempts. Please try again.' });
-    }
-
-    res.json(parsed);
   } catch (err) {
     console.error('[code-generation] error:', err.message);
     res.status(500).json({ error: err.message });
