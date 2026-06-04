@@ -321,7 +321,7 @@ export default function CodeGeneration() {
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Generate Optimized Website</h2>
             <p className="text-gray-400 text-sm mb-8 max-w-md">
-              Claude will generate a complete HTML + Tailwind website with live preview,
+              VM AI will generate a complete HTML + Tailwind website with live preview,
               fixing every heuristic violation from your evaluation.
             </p>
             <button onClick={generate}
@@ -341,7 +341,7 @@ export default function CodeGeneration() {
           <div className="w-12 h-12 border-4 border-white/20 border-t-purple-400 rounded-full animate-spin" />
           <h2 className="text-lg font-semibold">Generating your website...</h2>
           <p className="text-gray-400 text-sm text-center max-w-sm">
-            Claude is generating your website. Usually under 30 seconds — almost there...
+            VM AI is generating your website. Usually under 30 seconds — almost there...
           </p>
           <div className="flex gap-1 mt-2">
             {[0,1,2].map(i => (
@@ -357,7 +357,7 @@ export default function CodeGeneration() {
         <div className="flex-1 flex flex-col items-center justify-center gap-6 p-6">
           <div className="text-center mb-2">
             <h2 className="text-lg font-semibold text-white mb-1">Building your optimized website...</h2>
-            <p className="text-gray-500 text-sm">Claude is generating your website files</p>
+            <p className="text-gray-500 text-sm">VM AI is generating your website files</p>
           </div>
           {phase === 'terminal' && <Terminal onDone={onTerminalDone} />}
         </div>
