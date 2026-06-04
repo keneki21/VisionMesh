@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
@@ -19,6 +19,10 @@ function Settings() {
   const [passwordMsg,     setPasswordMsg]     = useState('');
   const [passwordErr,     setPasswordErr]     = useState('');
   const [passwordLoading, setPasswordLoading] = useState(false);
+  const [avatarLoading, setAvatarLoading] = useState(false);
+  const [avatarErr,     setAvatarErr]     = useState('');
+  const fileInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
     fullName: '', email: '', username: '', bio: '',
     currentPassword: '', newPassword: '', confirmPassword: '',
@@ -108,6 +112,58 @@ function Settings() {
       setDeleteError(error.response?.data?.msg || 'Failed to delete account. Please try again.');
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const compressImage = (file) => new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 256;
+      const ratio = Math.min(MAX / img.width, MAX / img.height, 1);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowed.includes(file.type)) return setAvatarErr('Only JPG, PNG, WebP, or GIF images are allowed.');
+    if (file.size > 5 * 1024 * 1024) return setAvatarErr('Image must be under 5MB.');
+
+    setAvatarLoading(true); setAvatarErr('');
+    try {
+      const base64 = await compressImage(file);
+      const { data } = await axios.put(`${API_BASE_URL}/api/auth/profile-picture`, { base64 }, authHdr);
+      const updated = { ...user, profilePicture: data.profilePicture };
+      setUser(updated);
+      localStorage.setItem('vm_user', JSON.stringify(updated));
+    } catch (err) {
+      setAvatarErr(err.response?.data?.msg || 'Failed to upload picture.');
+    } finally {
+      setAvatarLoading(false);
+    }
+  };
+
+  const handleAvatarRemove = async () => {
+    setAvatarLoading(true); setAvatarErr('');
+    try {
+      await axios.delete(`${API_BASE_URL}/api/auth/profile-picture`, authHdr);
+      const updated = { ...user, profilePicture: null };
+      setUser(updated);
+      localStorage.setItem('vm_user', JSON.stringify(updated));
+    } catch (err) {
+      setAvatarErr(err.response?.data?.msg || 'Failed to remove picture.');
+    } finally {
+      setAvatarLoading(false);
     }
   };
 
@@ -340,14 +396,38 @@ function Settings() {
                           Profile picture from {user.authProvider === 'google' ? 'Google' : 'GitHub'}
                         </p>
                       )}
-                      <div className="flex gap-2 sm:gap-3">
-                        <button type="button" className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-white/10 hover:bg-white/15 text-white rounded-lg font-medium transition-colors">
-                          Upload New
-                        </button>
-                        <button type="button" className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg font-medium transition-colors">
-                          Remove
-                        </button>
-                      </div>
+                      {!isOAuth && (
+                        <div className="flex flex-col gap-2">
+                          <div className="flex gap-2 sm:gap-3">
+                            <input
+                              ref={fileInputRef}
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp,image/gif"
+                              className="hidden"
+                              onChange={handleAvatarUpload}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => fileInputRef.current?.click()}
+                              disabled={avatarLoading}
+                              className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-white/10 hover:bg-white/15 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                            >
+                              {avatarLoading ? 'Uploading...' : 'Upload New'}
+                            </button>
+                            {user?.profilePicture && (
+                              <button
+                                type="button"
+                                onClick={handleAvatarRemove}
+                                disabled={avatarLoading}
+                                className="px-3 sm:px-4 py-2 text-xs sm:text-sm bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg font-medium transition-colors disabled:opacity-50"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                          {avatarErr && <p className="text-red-400 text-xs">{avatarErr}</p>}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -252,6 +252,47 @@ router.get("/github/callback",
     }
 );
 
+// UPLOAD PROFILE PICTURE (local users only)
+router.put("/profile-picture", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ msg: "User not found" });
+        if (user.authProvider !== 'local')
+            return res.status(403).json({ msg: "OAuth users cannot change profile picture." });
+
+        const { base64 } = req.body;
+        if (!base64 || !base64.startsWith('data:image/'))
+            return res.status(400).json({ msg: "Invalid image data." });
+
+        if (base64.length > 2.7 * 1024 * 1024)
+            return res.status(400).json({ msg: "Image too large. Max 2MB." });
+
+        user.profilePicture = base64;
+        await user.save();
+        res.json({ msg: "Profile picture updated.", profilePicture: base64 });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
+// REMOVE PROFILE PICTURE (local users only)
+router.delete("/profile-picture", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ msg: "User not found" });
+        if (user.authProvider !== 'local')
+            return res.status(403).json({ msg: "OAuth users cannot change profile picture." });
+
+        user.profilePicture = null;
+        await user.save();
+        res.json({ msg: "Profile picture removed." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+});
+
 // UPDATE PROFILE (local users only — OAuth users can't change name/email)
 router.put("/profile", authMiddleware, async (req, res) => {
     try {
