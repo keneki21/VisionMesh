@@ -75,12 +75,12 @@ passport.use(
                 let user = await User.findOne({ githubId: profile.id });
 
                 if (user) {
-                    // User exists, update profile picture if needed
+                    // User exists, ensure authProvider and profile picture are up to date
                     const avatarUrl = profile.photos?.[0]?.value || profile._json?.avatar_url || null;
-                    if (avatarUrl && user.profilePicture !== avatarUrl) {
-                        user.profilePicture = avatarUrl;
-                        await user.save();
-                    }
+                    let dirty = false;
+                    if (avatarUrl && user.profilePicture !== avatarUrl) { user.profilePicture = avatarUrl; dirty = true; }
+                    if (user.authProvider !== 'github') { user.authProvider = 'github'; dirty = true; }
+                    if (dirty) await user.save();
                     console.log("Existing GitHub user found:", user.email);
                     return done(null, user);
                 }

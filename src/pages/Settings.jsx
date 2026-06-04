@@ -28,7 +28,7 @@ function Settings() {
     currentPassword: '', newPassword: '', confirmPassword: '',
   });
 
-  const isOAuth = user?.authProvider && user.authProvider !== 'local';
+  const isOAuth = user?.authProvider === 'google' || user?.authProvider === 'github';
 
   // Fetch fresh profile from API on mount
   useEffect(() => {
@@ -391,12 +391,12 @@ function Settings() {
                       )}
                     </div>
                     <div className="flex flex-col gap-2">
-                      {user && user.authProvider !== 'local' && (
+                      {isOAuth && (
                         <p className="text-xs text-gray-400">
                           Profile picture from {user.authProvider === 'google' ? 'Google' : 'GitHub'}
                         </p>
                       )}
-                      {!isOAuth && (
+                      {user && !isOAuth && (
                         <div className="flex flex-col gap-2">
                           <div className="flex gap-2 sm:gap-3">
                             <input
