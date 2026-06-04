@@ -156,7 +156,7 @@ function Help() {
 
             {/* Quick Links */}
             <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-              <a
+              {/* <a
                 href="#"
                 className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 hover:bg-white/10 transition-colors"
               >
@@ -167,9 +167,9 @@ function Help() {
                   <h4 className="text-white font-semibold text-sm">Documentation</h4>
                 </div>
                 <p className="text-gray-400 text-xs">Complete API docs</p>
-              </a>
+              </a> */}
 
-              <a
+              {/* <a
                 href="#"
                 className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-4 hover:bg-white/10 transition-colors"
               >
@@ -193,7 +193,7 @@ function Help() {
                   <h4 className="text-white font-semibold text-sm">Community</h4>
                 </div>
                 <p className="text-gray-400 text-xs">Join discussions</p>
-              </a>
+              </a> */}
             </div>
           </div>
         </div>

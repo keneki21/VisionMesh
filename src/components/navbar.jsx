@@ -66,7 +66,7 @@ function Navbar() {
 
           {/* Dropdown Menu */}
           {showDropdown && (
-            <div className="absolute top-12 sm:top-14 right-0 w-44 sm:w-48 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl shadow-black/50 overflow-hidden">
+            <div className="absolute top-12 sm:top-14 right-0 w-44 sm:w-48 bg-black/20 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl shadow-black/50 overflow-hidden">
               {/* User Info Header */}
               {user && (
                 <div className="px-4 py-3 border-b border-white/10 bg-white/5">
