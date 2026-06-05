@@ -43,7 +43,7 @@ Edit `backend/.env` — minimum required:
 MONGO_URI=mongodb://localhost:27017/visionmesh
 JWT_SECRET=<random-64-char-string>
 SESSION_SECRET=<random-64-char-string>
-ANTHROPIC_API_KEY=<your-key>
+
 ```
 
 ---
