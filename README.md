@@ -9,7 +9,7 @@ AI-powered UI design evaluation platform — React frontend, Node.js backend, Py
 - Node.js 18+
 - Python 3.10+
 - MongoDB (local or Atlas)
-- An Anthropic API key
+
 
 ---
 
