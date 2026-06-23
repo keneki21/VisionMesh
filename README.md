@@ -1,6 +1,6 @@
 # VisionMesh
 
-AI-powered UI design evaluation platform — React frontend, Node.js backend, Python AI service, MongoDB.
+AI-powered UI design evaluation platform — React frontend, Node.js backend, Python AI service, MongoDB.        
 
 ---
 
